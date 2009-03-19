@@ -1,0 +1,36 @@
+﻿<Window x:Class="BlipFace.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Window1" Height="400" Width="350">
+    <StackPanel>
+        <ListView  Background="#cdcdcd" MinHeight="240">
+            <ListViewItem  Content="osoba1: ale fajny ten blip" />
+            <ListViewItem  Content="osoba1: ale fajny ten blip" />
+            <ListViewItem  Content="osoba1: ale fajny ten blip" />
+            <ListViewItem  Content="osoba1: ale fajny ten blip" />
+            <ListViewItem  Content="osoba1: ale fajny ten blip" />
+            <ListViewItem  Content="osoba1: ale fajny ten blip" />
+
+        </ListView>
+        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="tbMessage" AcceptsReturn="True" Background="AliceBlue"  BorderThickness="3"
+                   Height="83" ClipToBounds="False" TextWrapping="Wrap"  TextChanged="tbMessage_TextChanged">
+        </TextBox>
+        <Grid>
+            <Grid.RowDefinitions>
+
+                <RowDefinition MinHeight="30"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+
+            </Grid.ColumnDefinitions>
+
+            <TextBlock  Grid.Row="1" Grid.Column="0" x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#a0a0a0" 
+                Text="120">
+            </TextBlock>
+            <Button Grid.Column="1" Grid.Row="1" Margin="0,0,6,0" Name="btnSendBlip">Blip</Button>
+        </Grid>
+
+    </StackPanel>
+</Window>
