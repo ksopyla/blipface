@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BlipFace
+namespace BlipFace.Service.Entities
 {
     public class BlipStatus
     {
