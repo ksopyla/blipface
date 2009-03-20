@@ -1,24 +1,80 @@
-﻿<Window x:Class="BlipFace.Window1"
+﻿<Window x:Class="BlipFace.MainView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Window1" Height="400" Width="350">
-    <StackPanel>
-        <ListView  Background="#cdcdcd" MinHeight="240">
-            <ListViewItem  Content="osoba1: ale fajny ten blip" />
-            <ListViewItem  Content="osoba1: ale fajny ten blip" />
-            <ListViewItem  Content="osoba1: ale fajny ten blip" />
-            <ListViewItem  Content="osoba1: ale fajny ten blip" />
-            <ListViewItem  Content="osoba1: ale fajny ten blip" />
-            <ListViewItem  Content="osoba1: ale fajny ten blip" />
+        xmlns:blp="clr-namespace:BlipFace"
+    Title="BlipFace" Height="400" Width="350" BorderThickness="0" FontSize="12" FontWeight="Normal">
 
-        </ListView>
-        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="tbMessage" AcceptsReturn="True" Background="AliceBlue"  BorderThickness="3"
-                   Height="83" ClipToBounds="False" TextWrapping="Wrap"  TextChanged="tbMessage_TextChanged">
-        </TextBox>
-        <Grid>
+    <!--tymczasowo wrzucam jako resource, aby jakieś statusy się pojawiały w design view-->
+    <Window.Resources>
+        <x:ArrayExtension x:Key="tmpStatusList" Type="{x:Type blp:BlipStatus}">
+            <blp:BlipStatus Id="1" Autor="ksirg" Content="Witaj blipie z nowej aplikacji blipface" StatusTime="" Medium="blipface"/>
+            <blp:BlipStatus Id="2" Autor="cinek" Content="Inny zaskakujący opis, ciekaw jestem reakcji ludzi na niego" StatusTime="" Medium="gadu-gadu"/>
+            <blp:BlipStatus Id="3" Autor="wacław" Content="W życiu piękne są tylko chwile" StatusTime="" Medium="blipface"/>
+            <blp:BlipStatus Id="4" Autor="ksirg" Content="Nie ma to jak nowa żarówka w lampce przy biurku dawno się tak z niczego nie ciszyłem" StatusTime="" Medium="www"/>
+            <blp:BlipStatus Id="1" Autor="ksirg" Content="Witaj blipie z nowej aplikacji blipface" StatusTime="" Medium="blipface"/>
+            <blp:BlipStatus Id="2" Autor="cinek" Content="Inny zaskakujący opis, ciekaw jestem reakcji ludzi na niego" StatusTime="" Medium="gadu-gadu"/>
+            <blp:BlipStatus Id="3" Autor="wacław" Content="W życiu piękne są tylko chwile" StatusTime="" Medium="blipface"/>
+            <blp:BlipStatus Id="4" Autor="ksirg" Content="Nie ma to jak nowa żarówka w lampce przy biurku dawno się tak z niczego nie ciszyłem" StatusTime="" Medium="www"/>
+
+        </x:ArrayExtension>
+
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="160"></RowDefinition>
+            <RowDefinition MinHeight="90" MaxHeight="160"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ListBox  Grid.Column="0" Grid.Row="0"  x:Name="lstbStatusList" Background="#ededed"
+                  ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  
+                  ItemsSource="{StaticResource tmpStatusList}" FontSize="14"
+                  HorizontalContentAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Blue" Margin="3" Padding="3" 
+ BorderThickness="2" CornerRadius="5">
+                        <Grid Background="AliceBlue">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+
+                            </Grid.RowDefinitions>
+
+                            <Label Content="{Binding Autor}"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+                            <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Content}" FontWeight="Bold"  Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" />
+                            
+                            <Label Content="{Binding Id}" Grid.Column="0" Grid.Row="2"/>
+                            
+                            <Label Content="{Binding Medium}" Grid.Column="1" Grid.Row="2"/>
+                        </Grid>
+                        <!--
+                        <StackPanel Background="AliceBlue">
+                            <Label Content="{Binding Content}" FontWeight="Bold" />
+                            <Label Content="{Binding Autor}" />
+                            <Label Content="{Binding Id}" />
+                        </StackPanel>
+                        -->
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+        
+        <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
-
-                <RowDefinition MinHeight="30"></RowDefinition>
+                <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="40"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
@@ -26,11 +82,15 @@
 
             </Grid.ColumnDefinitions>
 
+            <TextBox MaxHeight="80" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="tbMessage" AcceptsReturn="True" Background="AliceBlue"  BorderThickness="3"
+                   ClipToBounds="False" TextWrapping="Wrap"  TextChanged="tbMessage_TextChanged">
+            </TextBox>
+
             <TextBlock  Grid.Row="1" Grid.Column="0" x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#a0a0a0" 
                 Text="120">
             </TextBlock>
             <Button Grid.Column="1" Grid.Row="1" Margin="0,0,6,0" Name="btnSendBlip">Blip</Button>
         </Grid>
 
-    </StackPanel>
+    </Grid>
 </Window>

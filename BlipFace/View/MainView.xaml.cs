@@ -17,13 +17,13 @@ namespace BlipFace
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class MainView : Window
     {
 
         const int BlipSize = 120;
         int charLeft=BlipSize;
 
-        public Window1()
+        public MainView()
         {
             InitializeComponent();
         }
