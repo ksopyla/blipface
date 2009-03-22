@@ -5,8 +5,7 @@
         
         xmlns:blpSrv="clr-namespace:BlipFace.Service.Entities;assembly=BlipFace.Service"
         Title="BlipFace" Height="400" Width="350" 
-        BorderThickness="0" FontSize="12" FontWeight="Normal"
-        >
+        BorderThickness="0" FontSize="12" FontWeight="Normal" Loaded="Window_Loaded">
 
     <!--tymczasowo wrzucam jako resource, aby jakieś statusy się pojawiały w design view-->
     <Window.Resources>

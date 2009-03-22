@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BlipFace.Service.Communication;
 
 namespace BlipFace
 {
@@ -28,6 +29,8 @@ namespace BlipFace
             InitializeComponent();
         }
 
+
+
         private void tbMessage_TextChanged(object sender, TextChangedEventArgs e)
         {
             charLeft = BlipSize - tbMessage.Text.Length;
@@ -41,6 +44,15 @@ namespace BlipFace
             }
 
             tblCharLeft.Text = charLeft.ToString();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            //blipface testowe konto do aplikacji
+            BlipCommunication blpCom = new BlipCommunication("blipface", @"12Faceewq");
+
+            lstbStatusList.ItemsSource = blpCom.GetAllStatuses(10, true);
         }
     }
 }

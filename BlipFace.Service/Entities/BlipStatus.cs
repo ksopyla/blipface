@@ -2,18 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace BlipFace.Service.Entities
 {
+    
+    /// <summary>
+    /// Klasa reprezentuje pojedynczy status z blipa, któy zwracany jes w postaci json
+    /// {"type":"Status",
+    ///"user_path":"\/users\/ksirg",
+    ///"created_at":"2009-03-22 14:10:13",
+    ///"body":"#mix shoct hanselman jak zwykle wymiata, http:\/\/rdir.pl\/ensg",
+    ///"id":8185940,
+    ///"transport":{"name":"gg","id":5}}
+    /// </summary>
+    [DataContract()]
     public class BlipStatus
     {
         /// <summary>
         /// status id 
         /// </summary>
+        [DataMember(Name="id")]
         public int Id { get; set; }
 
+
+        [DataMember(Name="body")]
         public string Content { get; set; }
         
+        [DataMember(Name="user_path")]
         public string Autor { get; set; }
 
         /// <summary>
@@ -24,17 +40,15 @@ namespace BlipFace.Service.Entities
         /// <summary>
         /// Date and time when status was saved
         /// </summary>
-        public DateTime StatusTime { get; set; }
+        [DataMember(Name="created_at")]
+        public string StatusTime { get; set; }
         
         /// <summary>
         /// Program which was used to save a status e.g. gadu-gadu, www,
         /// </summary>
+        
         public string Medium { get; set; }
         
-        /// <summary>
-        /// Url to status
-        /// </summary>
-        public Uri StatusUrl { get; set; }
 
     }
 }
