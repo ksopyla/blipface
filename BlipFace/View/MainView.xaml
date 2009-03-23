@@ -101,7 +101,7 @@
 
 			<TextBlock  Grid.Row="1" Grid.Column="0" x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#a0a0a0" 
 				Text="120" HorizontalAlignment="Stretch" Margin="15,0,8,0"/>
-			<Button Grid.Column="1" Grid.Row="1" Margin="4,0,2,0" x:Name="btnSendBlip" Content="Blip"/>
+			<Button Grid.Column="1" Grid.Row="1" Margin="4,0,2,0" x:Name="btnSendBlip" Content="Blip" Click="btnSendBlip_Click" />
 		</Grid>
 
 	</Grid>

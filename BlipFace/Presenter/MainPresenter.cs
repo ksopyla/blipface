@@ -70,7 +70,7 @@ namespace BlipFace.Presenter
         /// </summary>
         public void AddStatus(string content)
         {
-
+            blpCom.AddStatusAsync(content);
         }
 
 

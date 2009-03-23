@@ -64,7 +64,8 @@ namespace BlipFace.View
        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           // preseneter.LoadStatuses();
+           
+            // preseneter.LoadStatuses();
 
             preseneter.LoadUserDashboard("blipface");
             
@@ -109,5 +110,10 @@ namespace BlipFace.View
         }
 
         #endregion
+
+        private void btnSendBlip_Click(object sender, RoutedEventArgs e)
+        {
+            preseneter.AddStatus(tbMessage.Text);
+        }
     }
 }

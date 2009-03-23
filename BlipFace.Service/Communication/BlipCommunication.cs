@@ -141,6 +141,18 @@ namespace BlipFace.Service.Communication
         }
 
 
+
+        public void AddStatusAsync(string content)
+        {
+            string query = "/updates"; 
+            
+            
+            blipHttpClient.Post(query,HttpContent.Create(string.Format(@"body={0}",content)) );
+            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+          //  blipHttpClient.BeginSend(
+          //      new HttpRequestMessage("POST", query), new AsyncCallback(AfterGetUpdates), blipHttpClient);
+            
+        }
     }
 
 
