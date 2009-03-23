@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 
 namespace BlipFace.Service.Entities
 {
-    
+
     /// <summary>
     /// Klasa reprezentuje pojedynczy status z blipa, któy zwracany jes w postaci json
     /// {"type":"Status",
@@ -22,33 +22,45 @@ namespace BlipFace.Service.Entities
         /// <summary>
         /// status id 
         /// </summary>
-        [DataMember(Name="id")]
+        [DataMember(Name = "id")]
         public int Id { get; set; }
 
 
-        [DataMember(Name="body")]
+        [DataMember(Name = "body")]
         public string Content { get; set; }
-        
-        [DataMember(Name="user_path")]
-        public string Autor { get; set; }
 
-        /// <summary>
-        /// Name of user whoom autor reply to
-        /// </summary>
-        public string ReplyTo { get; set; }
+        [DataMember(Name = "user_path")]
+        public string UserPath { get; set; }
         
+        [DataMember(Name = "user")]
+        public BlipUser User { get; set; }
+
+        [DataMember(Name = "recipient_path")]
+        public string RecipientPath { get; set; }
+
+        [DataMember(Name = "recipient")]
+        public BlipUser Recipient { get; set; }
         /// <summary>
         /// Date and time when status was saved
         /// </summary>
-        [DataMember(Name="created_at")]
+        [DataMember(Name = "created_at")]
         public string StatusTime { get; set; }
-        
-        /// <summary>
-        /// Program which was used to save a status e.g. gadu-gadu, www,
-        /// </summary>
-        
-        public string Medium { get; set; }
-        
+
+
+
+
+
+        [DataMember(Name = "pictures_path")]
+        public string PicturesPath { get; set; }
+
+        [DataMember(Name = "recording_path")]
+        public string RecordingPath { get; set; }
+
+        [DataMember(Name = "movie_path")]
+        public string MoviePath { get; set; }
+
+
+
 
     }
 }

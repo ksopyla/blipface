@@ -12,21 +12,29 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BlipFace.Service.Communication;
+using BlipFace.Service.Entities;
+using BlipFace.View;
+using BlipFace.Presenter;
+using BlipFace.Model;
 
-namespace BlipFace
+namespace BlipFace.View
 {
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class MainView : Window
+    public partial class MainView : Window, IMainView
     {
 
         const int BlipSize = 120;
         int charLeft=BlipSize;
 
+        private MainPresenter preseneter;
+
         public MainView()
         {
             InitializeComponent();
+
+            preseneter = new MainPresenter(this);
         }
 
 
@@ -46,13 +54,51 @@ namespace BlipFace
             tblCharLeft.Text = charLeft.ToString();
         }
 
+       
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
-            //blipface testowe konto do aplikacji
-            BlipCommunication blpCom = new BlipCommunication("blipface", @"12Faceewq");
-
-            lstbStatusList.ItemsSource = blpCom.GetAllStatuses(10, true);
+            preseneter.LoadStatuses();
+            
         }
+
+       
+
+
+
+        #region IMainView Members
+
+        public IEnumerable<StatusViewModel> Statuses
+        {
+            get
+            {
+                return lstbStatusList.ItemsSource as IEnumerable<StatusViewModel>;
+            }
+            set
+            {
+
+                //statusy będą ustawiane asynchronicznie przez prezetnera
+                //więc potrzeba obiektu Dispatcher
+                Dispatcher.Invoke(new Action<IEnumerable<StatusViewModel>>(delegate(IEnumerable<StatusViewModel> statusesCollection)
+                {
+                    lstbStatusList.ItemsSource = statusesCollection;
+
+                }), value);
+            }
+        }
+
+        //todo: to może powinno być jako StatusViewModel
+        public BlipStatus MainStatus
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

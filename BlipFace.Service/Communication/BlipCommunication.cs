@@ -6,6 +6,7 @@ using Microsoft.Http;
 using System.Runtime.Serialization.Json;
 using System.Net;
 using BlipFace.Service.Entities;
+using System.Runtime.Serialization;
 
 namespace BlipFace.Service.Communication
 {
@@ -18,6 +19,10 @@ namespace BlipFace.Service.Communication
     /// </summary>
     public class BlipCommunication
     {
+
+
+        public event EventHandler<StatusesLoadingEventArgs> StatusesLoaded;
+
         /// <summary>
         /// Klasa z WCF Rest Starter Kit (http://msdn.microsoft.com/netframework/cc950529(en-us).aspx)
         /// </summary>
@@ -27,14 +32,22 @@ namespace BlipFace.Service.Communication
         private string userName;
         private string password;
 
-
+        /// <summary>
+        /// Konstruktor, ustawia dane do autentykacji, oraz niezbędne
+        /// nagłówki do komunikacji z blipem
+        /// </summary>
+        /// <param name="_userName">nazwa użytkownika</param>
+        /// <param name="_password">hasło</param>
         public BlipCommunication(string _userName, string _password)
         {
 
             userName = _userName;
             password = _password;
+
+            //potrzeba dodać obowiązkowy nagłówek gdy korzystamy z api blip'a
             blipHttpClient.DefaultHeaders.Add("X-Blip-API", "0.02");
 
+            //także wymagane przez blipa
             blipHttpClient.DefaultHeaders.Accept.Add(
                 new Microsoft.Http.Headers.StringWithOptionalQuality("application/json"));
 
@@ -43,35 +56,93 @@ namespace BlipFace.Service.Communication
                 string.Format("{0}:{1}", userName, password));
             string authHeader = "Basic " + Convert.ToBase64String(credentialBuffer);
 
+            //nagłówek autoryzacja - zakodowane w base64
             blipHttpClient.DefaultHeaders.Add("Authorization", authHeader);
 
-            //a3Npcmc6bm92cGFqYWsyNUAl
+            //ustawienie nagłówka UserAgent - po tym blip rozpoznaje transport
+            blipHttpClient.DefaultHeaders.UserAgent.Add(
+                new Microsoft.Http.Headers.ProductOrComment("BlipFace"));
 
-            blipHttpClient.DefaultHeaders.UserAgent.Add(new Microsoft.Http.Headers.ProductOrComment("BlipFace"));
-            
-            
-            
 
-NetworkCredential networkCredentials =new NetworkCredential(userName,password).GetCredential(new Uri("http://api.blip.pl"),"Basic");
-
-       
-            blipHttpClient.TransportSettings.Credentials = new NetworkCredential(userName,password).GetCredential(new Uri("http://api.blip.pl"),"Basic");
-            
         }
 
 
-        public IList<BlipStatus> GetAllStatuses(int limit, bool withDirectMessage)
+        /// <summary>
+        /// Pobiera listę statusów, w sposób synchroniczny
+        /// </summary>
+        /// <param name="limit">limit statusów</param>
+        /// <returns></returns>
+        public IList<BlipStatus> GetUpdates(int limit)
         {
 
-            HttpResponseMessage resp = blipHttpClient.Get("updates");
-            //, new HttpQueryString().Add("limit", limit.ToString()));
-
+            string query = string.Format("updates?include=user,user[avatar]&amp;limit={0}", limit.ToString());
+            HttpResponseMessage resp = blipHttpClient.Get(query);
+            //sprawdzamy czy komunikacja się powiodła
             resp.EnsureStatusIsSuccessful();
+
 
             var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
 
 
             return statuses;
+        }
+
+
+        /// <summary>
+        /// Pobiera statusy asynchronicznie, gdy już pobierze to zgłasza że pobrał
+        /// i w callbacku ustawia statusy w widoku
+        /// </summary>
+        /// <param name="limi"></param>
+        public void GetUpdatesAsync(int limit)
+        {
+            string query = string.Format("updates?include=user,user[avatar]&amp;limit={0}", limit.ToString());
+
+
+            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+            blipHttpClient.BeginSend(
+                new HttpRequestMessage("GET", query),new AsyncCallback(AfterGetUpdates), blipHttpClient);
+            
+            //blipHttpClient.SendCompleted+=new EventHandler<SendCompletedEventArgs>(blipHttpClient_SendCompleted);
+            //blipHttpClient.SendAsync(new HttpRequestMessage("GET",query);
+        }
+
+        //void blipHttpClient_SendCompleted(object sender, SendCompletedEventArgs e)
+        //{
+        //                throw new NotImplementedException();
+        //}
+
+        private void AfterGetUpdates(IAsyncResult result)
+        {
+
+            //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
+            //przekazaliśmy ten obiekt jako state
+            var client = result.AsyncState as HttpClient;
+            
+            //pobieramy odpowiedź
+            var resp = client.EndSend(result);
+
+            //deserializujemy z json
+            var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+
+            //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+            StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
+        }
+
+
+    }
+
+
+
+    /// <summary>
+    /// klasa reprezentująca Statusy przekazane jako argumenty wywołania zdarzenia
+    /// </summary>
+    public class StatusesLoadingEventArgs : EventArgs
+    {
+        public IList<BlipStatus> Statuses { get; private set; }
+
+        public StatusesLoadingEventArgs(IList<BlipStatus> statuses)
+        {
+            Statuses = statuses;
         }
     }
 }

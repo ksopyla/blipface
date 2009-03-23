@@ -1,4 +1,4 @@
-﻿<Window x:Class="BlipFace.MainView"
+﻿<Window x:Class="BlipFace.View.MainView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:blp="clr-namespace:BlipFace"
@@ -7,7 +7,7 @@
         Title="BlipFace" Height="400" Width="350" 
         BorderThickness="0" FontSize="12" FontWeight="Normal" Loaded="Window_Loaded">
 
-    <!--tymczasowo wrzucam jako resource, aby jakieś statusy się pojawiały w design view-->
+    <!--tymczasowo wrzucam jako resource, aby jakieś statusy się pojawiały w design view
     <Window.Resources>
         <x:ArrayExtension x:Key="tmpStatusList" Type="{x:Type blpSrv:BlipStatus}">
             <blpSrv:BlipStatus Id="1" Autor="ksirg" Content="Witaj blipie z nowej aplikacji blipface" StatusTime="" Medium="blipface"/>
@@ -23,7 +23,7 @@
 
 
     </Window.Resources>
-
+   -->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -36,8 +36,7 @@
                   ScrollViewer.CanContentScroll="True" 
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  
-                  ItemsSource="{StaticResource tmpStatusList}" FontSize="14"
+                  FontSize="14"
                   HorizontalContentAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -55,12 +54,22 @@
 
                             </Grid.RowDefinitions>
 
-                            <Label Content="{Binding Autor}"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
-                            <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Content}" FontWeight="Bold"  Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" />
+                            <Label Content="{Binding UserLogin}"  Grid.Column="0" Grid.Row="0"/>
+                            <!--<Label Content="{Binding StatusTime}"  Grid.Column="1" Grid.Row="0"/> -->
 
-                            <Label Content="{Binding Id}" Grid.Column="0" Grid.Row="2"/>
+                            <!--" -->
+                            <Image   Grid.Column="0" Grid.Row="1" 
+                                     Source="{Binding UserAvatar30}" Width="30" Height="30"
+                            />
+                               
+                            
+                            <TextBlock TextWrapping="WrapWithOverflow" 
+                                       Text="{Binding Content}" FontWeight="Bold" 
+                                       Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" />
 
-                            <Label Content="{Binding Medium}" Grid.Column="1" Grid.Row="2"/>
+                            <Label Content="{Binding StatusId}" Grid.Column="0" Grid.Row="2"/>
+
+                            <Label Content="{Binding CreationDate}" Grid.Column="1" Grid.Row="2"/>
                         </Grid>
                         <!--
                         <StackPanel Background="AliceBlue">

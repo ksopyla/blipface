@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BlipFace.Service.Entities;
+using BlipFace.Model;
 
 namespace BlipFace.View
 {
@@ -18,7 +19,7 @@ namespace BlipFace.View
         /// <summary>
         /// Lista wszystkich statusów użytkowników w onie
         /// </summary>
-        IList<BlipStatus> Statuses { get; set; }
+        IEnumerable<StatusViewModel> Statuses { get; set; }
 
         /// <summary>
         /// Główny(ostatni) status użytkownika
