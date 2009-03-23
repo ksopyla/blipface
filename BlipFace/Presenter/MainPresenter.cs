@@ -56,7 +56,7 @@ namespace BlipFace.Presenter
                     StatusId = status.Id,
                     UserId = status.User.Id,
                     Content = status.Content,
-                    UserAvatar30 = @"http://blip.pl" + status.User.Avatar.Url30,
+                    UserAvatar50 = @"http://blip.pl" + status.User.Avatar.Url50,
                     CreationDate = status.StatusTime,
                     UserLogin = status.User.Login
                 });
@@ -87,5 +87,11 @@ namespace BlipFace.Presenter
             blpCom.GetUpdatesAsync(30);
         }
 
+
+       public void LoadUserDashboard(string user)
+        {
+            blpCom.GetUserDashboard(user, 30); 
+           
+        }
     }
 }

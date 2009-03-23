@@ -25,7 +25,7 @@ namespace BlipFace.View
     public partial class MainView : Window, IMainView
     {
 
-        const int BlipSize = 120;
+        const int BlipSize = 160;
         int charLeft=BlipSize;
 
         private MainPresenter preseneter;
@@ -46,8 +46,15 @@ namespace BlipFace.View
             {
                 tblCharLeft.Foreground = new SolidColorBrush(Color.FromRgb(200,100,100));
                 btnSendBlip.IsEnabled = false;
-            }else {
-                tblCharLeft.Foreground = new SolidColorBrush(Color.FromRgb(160,160,160));
+            }
+            else if (charLeft == 0)
+            {
+                tblCharLeft.Foreground = new SolidColorBrush(Color.FromRgb(120, 180, 120));
+                btnSendBlip.IsEnabled = true;
+            }
+            else
+            {
+                tblCharLeft.Foreground = new SolidColorBrush(Color.FromRgb(160, 160, 160));
                 btnSendBlip.IsEnabled = true;
             }
 
@@ -57,7 +64,9 @@ namespace BlipFace.View
        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            preseneter.LoadStatuses();
+           // preseneter.LoadStatuses();
+
+            preseneter.LoadUserDashboard("blipface");
             
         }
 

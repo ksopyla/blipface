@@ -13,7 +13,7 @@ namespace BlipFace.Model
 
         public string UserLogin { get; set; }
 
-        public string UserAvatar30 { get; set; }
+        public string UserAvatar50 { get; set; }
 
         public string Content { get; set; }
 

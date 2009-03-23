@@ -106,10 +106,22 @@ namespace BlipFace.Service.Communication
             //blipHttpClient.SendAsync(new HttpRequestMessage("GET",query);
         }
 
-        //void blipHttpClient_SendCompleted(object sender, SendCompletedEventArgs e)
-        //{
-        //                throw new NotImplementedException();
-        //}
+        /// <summary>
+        /// Metoda asynchronicznie pobiera statusy z dashboardu użytkownika, gdy 
+        /// zostaną pobrane zgłaszane jest zdarzenie 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="limit"></param>
+        public void GetUserDashboard(string user, int limit)
+        {
+            string query = string.Format("/users/{0}/dashboard?include=user,user[avatar]&amp;limit={1}",user, limit.ToString());
+
+
+            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+            blipHttpClient.BeginSend(
+                new HttpRequestMessage("GET", query), new AsyncCallback(AfterGetUpdates), blipHttpClient);
+            
+        }
 
         private void AfterGetUpdates(IAsyncResult result)
         {

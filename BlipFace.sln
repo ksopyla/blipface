@@ -5,6 +5,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlipFace", "BlipFace\BlipFa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlipFace.Service", "BlipFace.Service\BlipFace.Service.csproj", "{5F4344B8-C62C-41DF-AFED-195B091E6D28}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{BE6B08B1-ECC2-411C-B31F-6579ADD520BA}"
+	ProjectSection(SolutionItems) = preProject
+		Libs\Microsoft.Http.dll = Libs\Microsoft.Http.dll
+		Libs\Microsoft.Http.Extensions.dll = Libs\Microsoft.Http.Extensions.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

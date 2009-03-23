@@ -4,5 +4,8 @@
     StartupUri="View/MainView.xaml">
     <Application.Resources>
          
+    	<SolidColorBrush x:Key="ListBorder" Color="#828790"/>
+    	
+         
     </Application.Resources>
 </Application>
