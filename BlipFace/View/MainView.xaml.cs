@@ -38,7 +38,11 @@ namespace BlipFace.View
         }
 
 
-
+        /// <summary>
+        /// Służy tylko do wyliczania ilości znaków pozostałych do wpisania
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tbMessage_TextChanged(object sender, TextChangedEventArgs e)
         {
             charLeft = BlipSize - tbMessage.Text.Length;
@@ -72,23 +76,26 @@ namespace BlipFace.View
         }
 
        
-
+private void btnSendBlip_Click(object sender, RoutedEventArgs e)
+        {
+            preseneter.AddStatus(tbMessage.Text);
+        }
 
 
         #region IMainView Members
 
-        public IEnumerable<StatusViewModel> Statuses
+        public IList<StatusViewModel> Statuses
         {
             get
             {
-                return lstbStatusList.ItemsSource as IEnumerable<StatusViewModel>;
+                return lstbStatusList.ItemsSource as IList<StatusViewModel>;
             }
             set
             {
 
                 //statusy będą ustawiane asynchronicznie przez prezetnera
                 //więc potrzeba obiektu Dispatcher
-                Dispatcher.Invoke(new Action<IEnumerable<StatusViewModel>>(delegate(IEnumerable<StatusViewModel> statusesCollection)
+                Dispatcher.Invoke(new Action<IList<StatusViewModel>>(delegate(IList<StatusViewModel> statusesCollection)
                 {
                     lstbStatusList.ItemsSource = statusesCollection;
 
@@ -97,7 +104,7 @@ namespace BlipFace.View
         }
 
         //todo: to może powinno być jako StatusViewModel
-        public BlipStatus MainStatus
+        public StatusViewModel MainStatus
         {
             get
             {
@@ -109,11 +116,26 @@ namespace BlipFace.View
             }
         }
 
-        #endregion
-
-        private void btnSendBlip_Click(object sender, RoutedEventArgs e)
+        public string TextMessage
         {
-            preseneter.AddStatus(tbMessage.Text);
+            get
+            {
+                return tbMessage.Text;
+            }
+            set
+            {
+                //tekst wiadomości ustawiany asynchronicznie przez prezetnera
+                //więc potrzeba obiektu Dispatcher
+                Dispatcher.Invoke(new Action<string>(delegate(string textMessage)
+                {
+                    tbMessage.Text = textMessage;
+                }), value);
+            }
         }
+
+       
+       
+
+        #endregion
     }
 }

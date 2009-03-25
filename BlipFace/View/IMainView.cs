@@ -19,13 +19,19 @@ namespace BlipFace.View
         /// <summary>
         /// Lista wszystkich statusów użytkowników w onie
         /// </summary>
-        IEnumerable<StatusViewModel> Statuses { get; set; }
+        IList<StatusViewModel> Statuses { get; set; }
 
         /// <summary>
         /// Główny(ostatni) status użytkownika
         /// </summary>
-        BlipStatus MainStatus { get; set; }
+        StatusViewModel MainStatus { get; set; }
 
 
+
+
+        /// <summary>
+        /// powiadomienie dla widoku że update został dodany
+        /// </summary>
+        string TextMessage { get; set; }
     }
 }

@@ -38,15 +38,41 @@ namespace BlipFace.Presenter
             view = _view;
 
             blpCom.StatusesLoaded += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesLoaded);
+
+            blpCom.StatusesAdded += new EventHandler<EventArgs>(blpCom_StatusesAdded);
+
+            blpCom.StatusesUpdated += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesUpdated);
         }
+
+        void blpCom_StatusesUpdated(object sender, StatusesLoadingEventArgs e)
+        {
+
+            IList<StatusViewModel> statuses = MapToViewStatus(e.Statuses);
+            view.Statuses= statuses.Concat(view.Statuses).ToList();
+           // view.Statuses.Insert(0, statuses[0]);
+        }
+
+        void blpCom_StatusesAdded(object sender, EventArgs e)
+        {
+            //tylko powiadomienie że dodał 
+            view.TextMessage = string.Empty;
+
+            //int lastIndex = lstbStatusList.Items.Count;
+            StatusViewModel since = view.Statuses[0] as StatusViewModel;
+
+
+            UpdateUserDashboard("blipface", since.StatusId);
+        }
+
+       
 
         void blpCom_StatusesLoaded(object sender, StatusesLoadingEventArgs e)
         {
             view.Statuses = MapToViewStatus(e.Statuses);
         }
 
-        //tymczasowe rozwianie
-        private IEnumerable<StatusViewModel> MapToViewStatus(IList<BlipFace.Service.Entities.BlipStatus> iList)
+        
+        private IList<StatusViewModel> MapToViewStatus(IList<BlipFace.Service.Entities.BlipStatus> iList)
         {
             IList<StatusViewModel> sts = new List<StatusViewModel>(20);
             foreach (BlipStatus status in iList)
@@ -70,7 +96,7 @@ namespace BlipFace.Presenter
         /// </summary>
         public void AddStatus(string content)
         {
-            blpCom.AddStatusAsync(content);
+            blpCom.AddUpdateAsync(content);
         }
 
 
@@ -88,10 +114,25 @@ namespace BlipFace.Presenter
         }
 
 
+        /// <summary>
+        /// ładuje cały Dashboard użytkownika
+        /// </summary>
+        /// <param name="user">nazwa użytkownika którego dashboard ma załadować</param>
        public void LoadUserDashboard(string user)
         {
             blpCom.GetUserDashboard(user, 30); 
            
         }
+
+        /// <summary>
+        /// Aktualizacja, pobranie części updateów z dashborda użytkownika
+        /// </summary>
+        /// <param name="user">nazwa użytkownika</param>
+        /// <param name="since">od jakiego id mamy pobrać</param>
+       public void UpdateUserDashboard(string user, int since)
+       {
+           blpCom.GetUserDashboardSince(user, since);
+           
+       }
     }
 }
