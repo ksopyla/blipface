@@ -42,6 +42,13 @@ namespace BlipFace.Presenter
             blpCom.StatusesAdded += new EventHandler<EventArgs>(blpCom_StatusesAdded);
 
             blpCom.StatusesUpdated += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesUpdated);
+
+            blpCom.ExceptionOccure += new EventHandler<ExceptionEventArgs>(blpCom_ExceptionOccure);
+        }
+
+        void blpCom_ExceptionOccure(object sender, ExceptionEventArgs e)
+        {
+            view.Error = e.Error;
         }
 
         void blpCom_StatusesUpdated(object sender, StatusesLoadingEventArgs e)

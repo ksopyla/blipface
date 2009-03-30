@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ namespace BlipFace.Service.Entities
 {
 
     /// <summary>
-    /// Klasa reprezentuje pojedynczy status z blipa, któy zwracany jes w postaci json
+    /// Klasa reprezentuje pojedynczy status z blipa, kt�y zwracany jes w postaci json
     /// {"type":"Status",
     ///"user_path":"\/users\/ksirg",
     ///"created_at":"2009-03-22 14:10:13",
@@ -17,7 +17,7 @@ namespace BlipFace.Service.Entities
     ///"transport":{"name":"gg","id":5}}
     /// </summary>
     [DataContract()]
-    public class BlipStatus
+	public class BlipStatus
     {
         /// <summary>
         /// status id 

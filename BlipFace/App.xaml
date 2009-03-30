@@ -4,7 +4,17 @@
     StartupUri="View/MainView.xaml">
     <Application.Resources>
          
-    	<SolidColorBrush x:Key="ListBorder" Color="#828790"/>
+    	<ResourceDictionary>
+    		<ResourceDictionary.MergedDictionaries>
+    			
+    			<ResourceDictionary Source="Resource\StatusListDataTemplate.xaml"/>
+    		</ResourceDictionary.MergedDictionaries>
+    		
+         
+    		<SolidColorBrush x:Key="ListBorder" Color="#828790"/>
+    	
+         
+    	</ResourceDictionary>
     	
          
     </Application.Resources>

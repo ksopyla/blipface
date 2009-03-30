@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +19,10 @@ namespace BlipFace.Service.Entities
      */ 
 
     /// <summary>
-    /// Klasa reprezentująca Avatar na blipie
+    /// Klasa reprezentuj�ca Avatar na blipie
     /// </summary>
     [DataContract(Name="avatar")]
-    public class BlipAvatar
+	public class BlipAvatar
     {
         [DataMember(Name = "id")]
         public string Id { get ; set; }

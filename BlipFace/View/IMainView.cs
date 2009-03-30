@@ -33,5 +33,11 @@ namespace BlipFace.View
         /// powiadomienie dla widoku że update został dodany
         /// </summary>
         string TextMessage { get; set; }
+
+
+        /// <summary>
+        /// Powiadomienie że nastąpił błąd aplikacji
+        /// </summary>
+        Exception Error { get; set; }
     }
 }

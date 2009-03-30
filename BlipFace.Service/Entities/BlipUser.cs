@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,33 +16,33 @@ namespace BlipFace.Service.Entities
 "location":"Olsztyn, Polska","id":26658}
      */
     /// <summary>
-    /// Klasa reprezentuje u≈ºytkownika blipa
+    /// Klasa reprezentuje uøytkownika blipa
     /// </summary>
     [DataContract]
-    public class BlipUser
+	public class BlipUser
     {
 
         /// <summary>
-        /// Id u≈ºytkownika
+        /// Id uøytkownika
         /// </summary>
         [DataMember(Name="id")]
         public string Id { get; set; }
 
         /// <summary>
-        /// Login u≈ºytkownika
+        /// Login uøytkownika
         /// </summary>
         [DataMember(Name="login")]
         public string Login { get; set; }
 
 
         /// <summary>
-        /// wzglƒôdny url do avatara u≈ºytkownika
+        /// wzglÍdny url do avatara uøytkownika
         /// </summary>
         [DataMember(Name="avatar_path")]
         public string AvatarPath { get; set; }
 
         /// <summary>
-        /// wzglƒôdny url do avatara u≈ºytkownika
+        /// wzglÍdny url do avatara uøytkownika
         /// </summary>
         [DataMember(Name = "avatar")]
         public BlipAvatar Avatar { get; set; }

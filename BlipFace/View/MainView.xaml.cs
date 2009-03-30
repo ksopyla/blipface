@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,7 @@ using BlipFace.Service.Entities;
 using BlipFace.View;
 using BlipFace.Presenter;
 using BlipFace.Model;
+using System.Windows.Threading;
 
 namespace BlipFace.View
 {
@@ -25,8 +26,8 @@ namespace BlipFace.View
     public partial class MainView : Window, IMainView
     {
 
-        const int BlipSize = 160;
-        int charLeft=BlipSize;
+        private const int BlipSize = 160;
+        int charLeft = BlipSize;
 
         private MainPresenter preseneter;
 
@@ -39,16 +40,16 @@ namespace BlipFace.View
 
 
         /// <summary>
-        /// S≈Çu≈ºy tylko do wyliczania ilo≈õci znak√≥w pozosta≈Çych do wpisania
+        /// S≥uøy tylko do wyliczania iloúci znakÛw pozosta≥ych do wpisania
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void tbMessage_TextChanged(object sender, TextChangedEventArgs e)
         {
             charLeft = BlipSize - tbMessage.Text.Length;
-            if(charLeft<0)
+            if (charLeft < 0)
             {
-                tblCharLeft.Foreground = new SolidColorBrush(Color.FromRgb(200,100,100));
+                tblCharLeft.Foreground = new SolidColorBrush(Color.FromRgb(200, 100, 100));
                 btnSendBlip.IsEnabled = false;
             }
             else if (charLeft == 0)
@@ -65,18 +66,18 @@ namespace BlipFace.View
             tblCharLeft.Text = charLeft.ToString();
         }
 
-       
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           
+
             // preseneter.LoadStatuses();
 
             preseneter.LoadUserDashboard("blipface");
-            
+
         }
 
-       
-private void btnSendBlip_Click(object sender, RoutedEventArgs e)
+
+        private void btnSendBlip_Click(object sender, RoutedEventArgs e)
         {
             preseneter.AddStatus(tbMessage.Text);
         }
@@ -93,8 +94,8 @@ private void btnSendBlip_Click(object sender, RoutedEventArgs e)
             set
             {
 
-                //statusy bƒôdƒÖ ustawiane asynchronicznie przez prezetnera
-                //wiƒôc potrzeba obiektu Dispatcher
+                //statusy bÍdπ ustawiane asynchronicznie przez prezetnera
+                //wiÍc potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(new Action<IList<StatusViewModel>>(delegate(IList<StatusViewModel> statusesCollection)
                 {
                     lstbStatusList.ItemsSource = statusesCollection;
@@ -103,7 +104,7 @@ private void btnSendBlip_Click(object sender, RoutedEventArgs e)
             }
         }
 
-        //todo: to mo≈ºe powinno byƒá jako StatusViewModel
+        //todo: to moøe powinno byÊ jako StatusViewModel
         public StatusViewModel MainStatus
         {
             get
@@ -124,8 +125,9 @@ private void btnSendBlip_Click(object sender, RoutedEventArgs e)
             }
             set
             {
-                //tekst wiadomo≈õci ustawiany asynchronicznie przez prezetnera
-                //wiƒôc potrzeba obiektu Dispatcher
+                
+                //tekst wiadomoúci ustawiany asynchronicznie przez prezetnera
+                //wiÍc potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(new Action<string>(delegate(string textMessage)
                 {
                     tbMessage.Text = textMessage;
@@ -133,8 +135,37 @@ private void btnSendBlip_Click(object sender, RoutedEventArgs e)
             }
         }
 
+
+
+
        
-       
+        public Exception Error
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                //Application.Current.Dispatcher.Invoke(DispatcherPriority.Send,
+                //    (DispatcherOperationCallback)delegate(object arg)
+                //    {
+
+                //        Exception ex = (Exception)arg;
+                //        //throw new Exception(ex.Message,ex);
+                //        MessageBox.Show(ex.Message);
+                //    }
+                //    , value);
+
+                Dispatcher.Invoke(
+                    new Action<Exception>(delegate(Exception _err)
+                {
+                    //throw new Exception(_err.Message, _err);
+                    MessageBox.Show(_err.Message);
+
+                }), System.Windows.Threading.DispatcherPriority.Normal, value);
+            }
+        }
 
         #endregion
     }

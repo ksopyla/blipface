@@ -38,6 +38,12 @@ namespace BlipFace.Service.Communication
         /// </summary>
         public event EventHandler<EventArgs> StatusesAdded;
 
+
+        /// <summary>
+        /// zdarzenie zgłaszane gdy wystąpi wyjątek
+        /// </summary>
+        public event EventHandler<ExceptionEventArgs> ExceptionOccure;
+
         /// <summary>
         /// Klasa z WCF Rest Starter Kit (http://msdn.microsoft.com/netframework/cc950529(en-us).aspx)
         /// </summary>
@@ -156,11 +162,21 @@ namespace BlipFace.Service.Communication
             //pobieramy odpowiedź
             var resp = client.EndSend(result);
 
-            //deserializujemy z json
-            var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+            try
+            {
 
-            //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-            StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
+                resp.EnsureStatusIsSuccessful();
+
+                //deserializujemy z json
+                var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+
+                //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+                StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
+            }
+            catch (Exception ex)
+            {
+                ExceptionOccure(this,new ExceptionEventArgs(ex));
+            }
         }
 
         /// <summary>
@@ -236,6 +252,8 @@ namespace BlipFace.Service.Communication
             //pobieramy odpowiedź
             var resp = client.EndSend(result);
 
+            resp.EnsureStatusIsSuccessful();
+
             //deserializujemy z json
             var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
 
@@ -258,6 +276,19 @@ namespace BlipFace.Service.Communication
             Statuses = statuses;
         }
     }
+
+
+    public class ExceptionEventArgs : EventArgs
+    {
+        public Exception Error { get; private set; }
+
+        public ExceptionEventArgs(Exception _error)
+        {
+            this.Error = _error;
+        }
+    }
+
+
 
 
 
