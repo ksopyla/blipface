@@ -5,6 +5,9 @@ using System.Text;
 
 namespace BlipFace.Model
 {
+    /// <summary>
+    /// Grupuje dane z modelu do wyświetlenia w widoku
+    /// </summary>
     public class StatusViewModel
     {
         /// <summary>
