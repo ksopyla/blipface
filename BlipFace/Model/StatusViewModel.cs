@@ -5,6 +5,9 @@ using System.Text;
 
 namespace BlipFace.Model
 {
+    /// <summary>
+    /// Klasa dla widoku - cinek
+    /// </summary>
     public class StatusViewModel
     {
         public int StatusId { get; set; }
