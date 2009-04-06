@@ -7,6 +7,9 @@ namespace BlipFace.Model
 {
     public class StatusViewModel
     {
+        /// <summary>
+        /// Identyfikator statusu
+        /// </summary>
         public int StatusId { get; set; }
 
         public string UserId { get; set; }
