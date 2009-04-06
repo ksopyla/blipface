@@ -6,7 +6,7 @@ using System.Text;
 namespace BlipFace.Model
 {
     /// <summary>
-    /// Klasa dla widoku - cinek
+    /// Klasa dla widoku - komentarz dodany przez cinek
     /// </summary>
     public class StatusViewModel
     {
