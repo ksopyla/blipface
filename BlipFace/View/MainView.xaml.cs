@@ -74,6 +74,8 @@ namespace BlipFace.View
 
             preseneter.LoadUserDashboard("blipface");
 
+            preseneter.StartListeningForUpdates(90);
+
         }
 
 

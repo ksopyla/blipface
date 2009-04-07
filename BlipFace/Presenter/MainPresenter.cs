@@ -47,12 +47,11 @@ namespace BlipFace.Presenter
 
             blpCom.ExceptionOccure += new EventHandler<ExceptionEventArgs>(blpCom_ExceptionOccure);
 
-            //aktualizacje co 5 sekund
-            updateStatusTimer = new Timer(5 * 1000);
+            //domyślnie aktualizacje co 30 sekund
+            updateStatusTimer = new Timer(30 * 1000);
             updateStatusTimer.Elapsed += new ElapsedEventHandler(updateStatusTimer_Elapsed);
             
-            //start timera
-            updateStatusTimer.Enabled = true;
+            
 
         }
 
@@ -142,6 +141,14 @@ namespace BlipFace.Presenter
             }
 
             return sts;
+        }
+
+
+        public void StartListeningForUpdates(int updateInterval)
+        {
+            //start timera
+            updateStatusTimer.Interval = updateInterval * 1000; //time in milisconds
+            updateStatusTimer.Enabled = true;
         }
 
         /// <summary>

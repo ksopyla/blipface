@@ -175,7 +175,7 @@ namespace BlipFace.Service.Communication
             }
             catch (Exception ex)
             {
-                ExceptionOccure(this,new ExceptionEventArgs(ex));
+                ExceptionOccure(this, new ExceptionEventArgs(ex));
             }
         }
 
@@ -204,7 +204,7 @@ namespace BlipFace.Service.Communication
 
         }
 
-       
+
         /// <summary>
         /// callback do <seealso cref="AddStatusAsync"/> wywoływany po dodaniu statusu
         /// </summary>
@@ -218,18 +218,32 @@ namespace BlipFace.Service.Communication
 
             //pobieramy odpowiedź
             var resp = client.EndSend(result);
-            
-            //sprawdź czy odpowiedź jest poprawna
-            resp.EnsureStatusIsSuccessful();
 
-            //to poniżej chyba nie potrzebne
-            //deserializujemy z json
-           // var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
+            try
+            {
+                //sprawdź czy odpowiedź jest poprawna
+                resp.EnsureStatusIsSuccessful();
 
-            //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-            StatusesAdded(this, EventArgs.Empty);
+                //to poniżej chyba nie potrzebne
+                //deserializujemy z json
+                // var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
+
+                //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+                StatusesAdded(this, EventArgs.Empty);
+
+            }
+            catch (Exception ex)
+            {
+                ExceptionOccure(this, new ExceptionEventArgs(ex));
+            }
         }
 
+        /// <summary>
+        /// Asynchronicznie pobiera pulpit użytkownika od zadanego updatu,
+        /// gdy są jakieś aktualizacje w nowym wątku zgłaszane jest zdarzenie <see cref="StatusesUpdated"/>
+        /// </summary>
+        /// <param name="user">login użytkownika</param>
+        /// <param name="since">id statusu od którego należy pobrać nowsze wpisy</param>
         public void GetUserDashboardSince(string user, int since)
         {
             string query = string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar]", user, since.ToString());
@@ -241,7 +255,10 @@ namespace BlipFace.Service.Communication
                 new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserDashboardSince), blipHttpClient);
 
         }
-
+        /// <summary>
+        /// Wywoływana jako callback po metodzie <see cref="GetUserDashboardSince"/>
+        /// </summary>
+        /// <param name="result"></param>
         private void AfterUserDashboardSince(IAsyncResult result)
         {
 
@@ -252,13 +269,24 @@ namespace BlipFace.Service.Communication
             //pobieramy odpowiedź
             var resp = client.EndSend(result);
 
-            resp.EnsureStatusIsSuccessful();
+            try
+            {
+                resp.EnsureStatusIsSuccessful();
 
-            //deserializujemy z json
-            var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
-
-            //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-            StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
+                //deserializujemy z json
+                var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+                
+                //gdy zostały zwrócone jakieś statusy
+                if (statuses.Count > 0)
+                {
+                    //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+                    StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionOccure(this, new ExceptionEventArgs(ex));
+            }
         }
     }
 
@@ -292,5 +320,5 @@ namespace BlipFace.Service.Communication
 
 
 
-  
+
 }
