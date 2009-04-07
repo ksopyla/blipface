@@ -6,6 +6,7 @@ using BlipFace.View;
 using BlipFace.Service.Communication;
 using BlipFace.Service.Entities;
 using BlipFace.Model;
+using System.Timers;
 
 namespace BlipFace.Presenter
 {
@@ -26,8 +27,9 @@ namespace BlipFace.Presenter
         /// Klasa do komunikacji z blipem, 
         /// todo: trzeba pomyśleć o innym przechowywaiu hasła
         /// </summary>
-        BlipCommunication blpCom = new BlipCommunication("blipface", @"12Faceewq");
+        private BlipCommunication blpCom = new BlipCommunication("blipface", @"12Faceewq");
 
+        private Timer updateStatusTimer;
 
         /// <summary>
         /// Konstruktor główny
@@ -44,13 +46,42 @@ namespace BlipFace.Presenter
             blpCom.StatusesUpdated += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesUpdated);
 
             blpCom.ExceptionOccure += new EventHandler<ExceptionEventArgs>(blpCom_ExceptionOccure);
+
+            //aktualizacje co 5 sekund
+            updateStatusTimer = new Timer(5 * 1000);
+            updateStatusTimer.Elapsed += new ElapsedEventHandler(updateStatusTimer_Elapsed);
+            
+            //start timera
+            updateStatusTimer.Enabled = true;
+
         }
 
+        #region Calbacks
+        void updateStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //int lastIndex = lstbStatusList.Items.Count;
+            StatusViewModel since = view.Statuses[0] as StatusViewModel;
+
+
+            UpdateUserDashboard("blipface", since.StatusId);
+        }
+
+
+        /// <summary>
+        /// Callback do zdarzenie gdzie podczas pobierania, dodawania itp wystąpi wyjątek
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void blpCom_ExceptionOccure(object sender, ExceptionEventArgs e)
         {
             view.Error = e.Error;
         }
 
+        /// <summary>
+        /// Callback do zdarzenia gdy statusy zostają zaktualizowane
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void blpCom_StatusesUpdated(object sender, StatusesLoadingEventArgs e)
         {
 
@@ -59,6 +90,11 @@ namespace BlipFace.Presenter
            // view.Statuses.Insert(0, statuses[0]);
         }
 
+        /// <summary>
+        /// callback do zdarzenia gdy status zostanie dodany
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void blpCom_StatusesAdded(object sender, EventArgs e)
         {
             //tylko powiadomienie że dodał 
@@ -72,13 +108,23 @@ namespace BlipFace.Presenter
         }
 
        
-
+        /// <summary>
+        /// calback do zdarzenia gdy statusy zostają załadowane od nowa
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void blpCom_StatusesLoaded(object sender, StatusesLoadingEventArgs e)
         {
             view.Statuses = MapToViewStatus(e.Statuses);
         }
 
-        
+
+        #endregion
+        /// <summary>
+        /// Pomocna metoda do mapowania Entities do ViewEntities
+        /// </summary>
+        /// <param name="iList"></param>
+        /// <returns></returns>
         private IList<StatusViewModel> MapToViewStatus(IList<BlipFace.Service.Entities.BlipStatus> iList)
         {
             IList<StatusViewModel> sts = new List<StatusViewModel>(20);

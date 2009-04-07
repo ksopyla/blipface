@@ -6,11 +6,12 @@
         
     xmlns:blpSrv="clr-namespace:BlipFace.Service.Entities;assembly=BlipFace.Service"
     x:Class="BlipFace.View.MainView"
-    Title="BlipFace" Height="450" Width="380" 
+    Title="BlipFace" Height="450" Width="420" 
     
     
     Loaded="Window_Loaded" 
-    WindowStyle="ToolWindow">
+    WindowStyle="ToolWindow" 
+    BorderBrush="#FF686868" BorderThickness="1,1,1,1">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,10 +22,10 @@
 
     </Window.Resources>
     <Window.Background>
-    	<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-    		<GradientStop Color="#FF3E3D3D" Offset="0"/>
-    		<GradientStop Color="#FFFFFFFF" Offset="1"/>
-    	</LinearGradientBrush>
+    	<RadialGradientBrush SpreadMethod="Pad">
+    		<GradientStop Color="#FF403D3D" Offset="0"/>
+    		<GradientStop Color="#FF110F0F" Offset="1"/>
+    	</RadialGradientBrush>
     </Window.Background>
 
     <Grid>
@@ -33,25 +34,31 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="70"/>
             <RowDefinition MinHeight="160" Height="*"/>
             <RowDefinition MinHeight="90" MaxHeight="160" Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListBox  Grid.Column="0" Grid.Row="1"  
+        <Border Grid.Column="0" Grid.Row="0" BorderThickness="0,0,0,2" Background="{x:Null}" Opacity="0.785" BorderBrush="#FFFBFBFB"/>
+        
+        <ItemsControl  Grid.Column="0" Grid.Row="1"  
 			x:Name="lstbStatusList" 
-			ScrollViewer.CanContentScroll="True" 
-			ScrollViewer.VerticalScrollBarVisibility="Auto"
-			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-			FontSize="14"
-			HorizontalContentAlignment="Stretch" Margin="0,0,0,0" 
-			Background="{x:Null}" BorderBrush="{x:Null}" 
-			ItemTemplate="{DynamicResource StatusListData}" BorderThickness="0,0,0,0" ScrollViewer.IsDeferredScrollingEnabled="False" 
-			
-                  >
-           
+			ItemTemplate="{DynamicResource BlackStatusItemView}" >
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <ScrollViewer>
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
 
-        </ListBox>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+        </ItemsControl>
 
         <Grid Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" RenderTransformOrigin="0.494,0.581" Background="{x:Null}">
             <Grid.RowDefinitions>
