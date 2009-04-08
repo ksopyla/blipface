@@ -59,6 +59,7 @@ namespace BlipFace.Presenter
         void updateStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             //int lastIndex = lstbStatusList.Items.Count;
+            //todo: uwaga gdyż może być wyrzucony wyjątek NullReference Exception, gdy za wczesnie tu wejdzie
             StatusViewModel since = view.Statuses[0] as StatusViewModel;
 
 
