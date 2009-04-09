@@ -171,11 +171,17 @@ namespace BlipFace.Service.Communication
                 var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
 
                 //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-                StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
+                if (StatusesLoaded != null)
+                {
+                    StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
+                }
             }
             catch (Exception ex)
             {
-                ExceptionOccure(this, new ExceptionEventArgs(ex));
+                if (ExceptionOccure != null)
+                {
+                    ExceptionOccure(this, new ExceptionEventArgs(ex));
+                }
             }
         }
 
@@ -229,12 +235,17 @@ namespace BlipFace.Service.Communication
                 // var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
 
                 //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-                StatusesAdded(this, EventArgs.Empty);
-
+                if (StatusesAdded != null)
+                {
+                    StatusesAdded(this, EventArgs.Empty);
+                }
             }
             catch (Exception ex)
             {
-                ExceptionOccure(this, new ExceptionEventArgs(ex));
+                if (ExceptionOccure != null)
+                {
+                    ExceptionOccure(this, new ExceptionEventArgs(ex));
+                }
             }
         }
 
@@ -275,9 +286,9 @@ namespace BlipFace.Service.Communication
 
                 //deserializujemy z json
                 var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
-                
+
                 //gdy zostały zwrócone jakieś statusy
-                if (statuses.Count > 0)
+                if ((statuses.Count > 0) && (StatusesUpdated != null))
                 {
                     //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
                     StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
@@ -285,7 +296,10 @@ namespace BlipFace.Service.Communication
             }
             catch (Exception ex)
             {
-                ExceptionOccure(this, new ExceptionEventArgs(ex));
+                if (ExceptionOccure != null)
+                {
+                    ExceptionOccure(this, new ExceptionEventArgs(ex));
+                }
             }
         }
     }

@@ -24,6 +24,16 @@ namespace BlipFace.Service.Entities
     [DataContract(Name="avatar")]
 	public class BlipAvatar
     {
+        /// <summary>
+        /// lista statycznych adresów do zasobów blipa
+        /// </summary>
+        private static List<string> blipStaticHostAddress = new List<string>(4){ 
+                @"http://static0.blip.pl",
+                @"http://static1.blip.pl",
+                @"http://static2.blip.pl",
+                @"http://static3.blip.pl"
+                                                 };
+
         [DataMember(Name = "id")]
         public string Id { get ; set; }
 
@@ -32,9 +42,24 @@ namespace BlipFace.Service.Entities
 
         [DataMember(Name = "url_30")]
         public string Url30 { get; set; }
-        
+
+
+        private string url50;
         [DataMember(Name = "url_50")]
-        public string Url50 { get; set; }
+        public string Url50 { 
+            get{
+                Random r = new Random(Environment.TickCount);
+                int index = r.Next(4);
+                StringBuilder _url = new StringBuilder(80);
+                _url.Append(BlipAvatar.blipStaticHostAddress[index]);
+                _url.Append(url50);
+
+                return _url.ToString();
+            } 
+            set{
+                url50 = value;
+            }
+        }
 
         [DataMember(Name = "url")]
         public string Url { get; set; }

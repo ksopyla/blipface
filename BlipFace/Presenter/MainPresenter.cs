@@ -50,8 +50,8 @@ namespace BlipFace.Presenter
             //domyślnie aktualizacje co 30 sekund
             updateStatusTimer = new Timer(30 * 1000);
             updateStatusTimer.Elapsed += new ElapsedEventHandler(updateStatusTimer_Elapsed);
-            
-            
+
+
 
         }
 
@@ -60,10 +60,16 @@ namespace BlipFace.Presenter
         {
             //int lastIndex = lstbStatusList.Items.Count;
             //todo: uwaga gdyż może być wyrzucony wyjątek NullReference Exception, gdy za wczesnie tu wejdzie
-            StatusViewModel since = view.Statuses[0] as StatusViewModel;
 
+            if (view.Statuses != null)
+            {
+                StatusViewModel lastStatus = view.Statuses[0] as StatusViewModel;
 
-            UpdateUserDashboard("blipface", since.StatusId);
+                if (lastStatus != null)
+                {
+                    UpdateUserDashboard("blipface", lastStatus.StatusId);
+                }
+            }
         }
 
 
@@ -86,8 +92,8 @@ namespace BlipFace.Presenter
         {
 
             IList<StatusViewModel> statuses = MapToViewStatus(e.Statuses);
-            view.Statuses= statuses.Concat(view.Statuses).ToList();
-           // view.Statuses.Insert(0, statuses[0]);
+            view.Statuses = statuses.Concat(view.Statuses).ToList();
+            // view.Statuses.Insert(0, statuses[0]);
         }
 
         /// <summary>
@@ -107,7 +113,7 @@ namespace BlipFace.Presenter
             UpdateUserDashboard("blipface", since.StatusId);
         }
 
-       
+
         /// <summary>
         /// calback do zdarzenia gdy statusy zostają załadowane od nowa
         /// </summary>
@@ -135,7 +141,8 @@ namespace BlipFace.Presenter
                     StatusId = status.Id,
                     UserId = status.User.Id,
                     Content = status.Content,
-                    UserAvatar50 = @"http://blip.pl" + status.User.Avatar.Url50,
+                    //UserAvatar50 = @"http://blip.pl" + status.User.Avatar.Url50,
+                    UserAvatar50 = status.User.Avatar.Url50,
                     CreationDate = status.StatusTime,
                     UserLogin = status.User.Login
                 });
@@ -179,10 +186,10 @@ namespace BlipFace.Presenter
         /// ładuje cały Dashboard użytkownika
         /// </summary>
         /// <param name="user">nazwa użytkownika którego dashboard ma załadować</param>
-       public void LoadUserDashboard(string user)
+        public void LoadUserDashboard(string user)
         {
-            blpCom.GetUserDashboard(user, 30); 
-           
+            blpCom.GetUserDashboard(user, 30);
+
         }
 
         /// <summary>
@@ -190,10 +197,10 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="user">nazwa użytkownika</param>
         /// <param name="since">od jakiego id mamy pobrać</param>
-       public void UpdateUserDashboard(string user, int since)
-       {
-           blpCom.GetUserDashboardSince(user, since);
-           
-       }
+        public void UpdateUserDashboard(string user, int since)
+        {
+            blpCom.GetUserDashboardSince(user, since);
+
+        }
     }
 }

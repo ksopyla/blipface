@@ -66,9 +66,27 @@ namespace BlipFace.View
             tblCharLeft.Text = charLeft.ToString();
         }
 
+        /// <summary>
+        /// Zdarzenie gdy naciœniêty zostanie w kontrolce tbMessage klawisz
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbMessage_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                //gdy naciœniêto enter to wysy³amy tekst
+
+                EnableContrlsForSendMessage(false);
+                
+                preseneter.AddStatus(tbMessage.Text);
+            }
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            
 
             // preseneter.LoadStatuses();
 
@@ -78,9 +96,15 @@ namespace BlipFace.View
 
         }
 
-
+        /// <summary>
+        /// Handler dla klikniêca przycisku wysy³ania tekstu dla blipa
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSendBlip_Click(object sender, RoutedEventArgs e)
         {
+            EnableContrlsForSendMessage(false);
+           
             preseneter.AddStatus(tbMessage.Text);
         }
 
@@ -133,6 +157,8 @@ namespace BlipFace.View
                 Dispatcher.Invoke(new Action<string>(delegate(string textMessage)
                 {
                     tbMessage.Text = textMessage;
+                    tbMessage.IsEnabled = true;
+                    lbShowSave.Visibility = Visibility.Hidden;
                 }), value);
             }
         }
@@ -165,10 +191,31 @@ namespace BlipFace.View
                     //throw new Exception(_err.Message, _err);
                     MessageBox.Show(_err.Message);
 
+                    EnableContrlsForSendMessage(true);
+
                 }), System.Windows.Threading.DispatcherPriority.Normal, value);
             }
         }
 
+
+        /// <summary>
+        /// Pomocnicza metoda zawieraj¹ca w sobie logikê widoku
+        /// przy dodawaniu, wiadomoœci
+        /// true - oznacza ¿e mo¿na pokazaæ i aktywowaæ poszczególene czêœci widoku
+        /// zaanga¿owane w wizualizacjê wysy³ania widomoœci
+        /// </summary>
+        /// <param name="show"></param>
+        private void EnableContrlsForSendMessage(bool enable)
+        {
+
+            lbShowSave.Visibility = enable ? Visibility.Hidden: Visibility.Visible;
+            tbMessage.IsEnabled = enable;
+            btnSendBlip.IsEnabled = enable;
+        }
+
         #endregion
+
+
+        
     }
 }

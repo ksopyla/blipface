@@ -10,8 +10,8 @@
     
     
     Loaded="Window_Loaded" 
-    WindowStyle="ToolWindow" 
-    BorderBrush="#FF686868" BorderThickness="1,1,1,1">
+    WindowStyle="SingleBorderWindow" 
+    BorderBrush="#FF686868" BorderThickness="1,1,1,1" >
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -71,10 +71,14 @@
 
             </Grid.ColumnDefinitions>
 
-            <TextBox Height="80" 
-                     Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
-                     x:Name="tbMessage" Background="AliceBlue"  BorderThickness="3"
-				ClipToBounds="False" TextWrapping="Wrap"  TextChanged="tbMessage_TextChanged" VerticalAlignment="Stretch" FontSize="14">
+            <TextBox x:Name="tbMessage" Height="80" 
+                Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+                Background="AliceBlue"  BorderThickness="3"
+				ClipToBounds="False" 
+                TextWrapping="Wrap"  
+                VerticalAlignment="Stretch" FontSize="14"
+                TextChanged="tbMessage_TextChanged" 
+                KeyDown="tbMessage_KeyDown" >
                 <TextBox.BorderBrush>
                     <LinearGradientBrush EndPoint="0,20" StartPoint="0,0" MappingMode="Absolute">
                         <GradientStop Color="#FFABADB3" Offset="0.05"/>
@@ -84,9 +88,18 @@
                 </TextBox.BorderBrush>
             </TextBox>
 
-            <TextBlock  Grid.Row="1" Grid.Column="0" x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#a0a0a0" 
-				Text="160" HorizontalAlignment="Stretch" Margin="15,0,8,0"/>
-            <Button Grid.Column="1" Grid.Row="1" Margin="4,0,2,0" x:Name="btnSendBlip" Content="Blip" Click="btnSendBlip_Click" />
+            <TextBlock  Grid.Row="1" x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#a0a0a0" 
+				Text="160" HorizontalAlignment="Left" Margin="15,0,0,0" Width="55" />
+            
+            <Label Name="lbShowSave" Grid.Row="1" Margin="87,6,10,6" 
+                    Visibility="Hidden" Foreground="Yellow"
+                   HorizontalAlignment="Left"
+                   >Zapisuję...</Label>
+            
+            <Button x:Name="btnSendBlip" Grid.Column="1" Grid.Row="1" 
+                    Margin="4,0,2,0"  Content="Blip" 
+                    Click="btnSendBlip_Click" />
+            
         </Grid>
 
     </Grid>
