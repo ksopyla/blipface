@@ -55,6 +55,8 @@ namespace BlipFace.Presenter
 
         }
 
+
+
         #region Calbacks
         void updateStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -92,6 +94,7 @@ namespace BlipFace.Presenter
         {
 
             IList<StatusViewModel> statuses = MapToViewStatus(e.Statuses);
+
             view.Statuses = statuses.Concat(view.Statuses).ToList();
             // view.Statuses.Insert(0, statuses[0]);
         }
@@ -107,10 +110,15 @@ namespace BlipFace.Presenter
             view.TextMessage = string.Empty;
 
             //int lastIndex = lstbStatusList.Items.Count;
-            StatusViewModel since = view.Statuses[0] as StatusViewModel;
+            if (view.Statuses != null)
+            {
+                StatusViewModel lastStatus = view.Statuses[0] as StatusViewModel;
 
-
-            UpdateUserDashboard("blipface", since.StatusId);
+                if (lastStatus != null)
+                {
+                    UpdateUserDashboard("blipface", lastStatus.StatusId);
+                }
+            }
         }
 
 

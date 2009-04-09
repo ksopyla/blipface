@@ -12,15 +12,7 @@
     Loaded="Window_Loaded" 
     WindowStyle="SingleBorderWindow" 
     BorderBrush="#FF686868" BorderThickness="1,1,1,1" >
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!-- ResourceDictionary Source="..\Resource\StatusListDataTemplate.xaml"/ -->
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-
-
-    </Window.Resources>
+    
     <Window.Background>
     	<RadialGradientBrush SpreadMethod="Pad">
     		<GradientStop Color="#FF403D3D" Offset="0"/>
