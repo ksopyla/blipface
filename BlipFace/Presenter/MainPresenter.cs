@@ -7,6 +7,7 @@ using BlipFace.Service.Communication;
 using BlipFace.Service.Entities;
 using BlipFace.Model;
 using System.Timers;
+using BlipFace.Helpers;
 
 namespace BlipFace.Presenter
 {
@@ -93,7 +94,7 @@ namespace BlipFace.Presenter
         void blpCom_StatusesUpdated(object sender, StatusesLoadingEventArgs e)
         {
 
-            IList<StatusViewModel> statuses = MapToViewStatus(e.Statuses);
+            IList<StatusViewModel> statuses = ViewModelHelper.MapToViewStatus(e.Statuses);
 
             view.Statuses = statuses.Concat(view.Statuses).ToList();
             // view.Statuses.Insert(0, statuses[0]);
@@ -129,35 +130,12 @@ namespace BlipFace.Presenter
         /// <param name="e"></param>
         void blpCom_StatusesLoaded(object sender, StatusesLoadingEventArgs e)
         {
-            view.Statuses = MapToViewStatus(e.Statuses);
+            view.Statuses = ViewModelHelper.MapToViewStatus(e.Statuses);
         }
 
 
         #endregion
-        /// <summary>
-        /// Pomocna metoda do mapowania Entities do ViewEntities
-        /// </summary>
-        /// <param name="iList"></param>
-        /// <returns></returns>
-        private IList<StatusViewModel> MapToViewStatus(IList<BlipFace.Service.Entities.BlipStatus> iList)
-        {
-            IList<StatusViewModel> sts = new List<StatusViewModel>(20);
-            foreach (BlipStatus status in iList)
-            {
-                sts.Add(new StatusViewModel()
-                {
-                    StatusId = status.Id,
-                    UserId = status.User.Id,
-                    Content = status.Content,
-                    //UserAvatar50 = @"http://blip.pl" + status.User.Avatar.Url50,
-                    UserAvatar50 = status.User.Avatar.Url50,
-                    CreationDate = status.StatusTime,
-                    UserLogin = status.User.Login
-                });
-            }
-
-            return sts;
-        }
+       
 
 
         public void StartListeningForUpdates(int updateInterval)

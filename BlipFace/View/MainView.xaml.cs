@@ -34,7 +34,7 @@ namespace BlipFace.View
         public MainView()
         {
             InitializeComponent();
-
+            this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width - 10;
             preseneter = new MainPresenter(this);
         }
 
@@ -86,8 +86,8 @@ namespace BlipFace.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
 
+            
             // preseneter.LoadStatuses();
 
             preseneter.LoadUserDashboard("blipface");
@@ -214,6 +214,16 @@ namespace BlipFace.View
         }
 
         #endregion
+
+        private void btnCloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void NonRectangularWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
 
 
         

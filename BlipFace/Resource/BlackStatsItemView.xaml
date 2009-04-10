@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:BlipFace.Helpers"                >
 
     <DataTemplate x:Key="BlackStatusItemView">
         <Border Height="Auto" 
@@ -20,34 +21,54 @@
             <Grid>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="64"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*" MinWidth="180"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*"  />
+                    <RowDefinition Height="64"  />
                     <RowDefinition Height="25" />
 
                 </Grid.RowDefinitions>
 
-
-
-
                 <!--Avatar-->
-                <Border Margin="5,5,5,5"
-				Grid.Column="0" Grid.Row="1" 
+                <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
+                    <StackPanel.Resources>
+
+                        <!--Taki trik aby móc konwertować z wartości boolowskich do wyliczenia Visiblity-->
+                        <converter:BooleanToVisibilityConverter x:Key="BoolToVisible" />
+                    </StackPanel.Resources>
+                    
+                    <!--Avatar użytkownika-->
+                    <Border Margin="5,5,5,5"
                         BorderBrush="#FFFDFDFD" 
                         BorderThickness="2,2,2,2" 
-                        HorizontalAlignment="Left" 
+                        
                         VerticalAlignment="Top" 
                         Width="52" Height="52" 
                         Background="{x:Null}" CornerRadius="2,2,2,2">
-                    <Image   					 
+                        <Image   					 
 					Source="{Binding Path=UserAvatar50}" Height="50" Width="50"
-					HorizontalAlignment="Center" VerticalAlignment="Center" 
+					 VerticalAlignment="Center" 
 					/>
-                </Border>
 
+                    </Border>
+<!--Avatar odbiorcy wiadomości, nie zawsze istnieje-->
+                    <Border 
+                        Visibility="{Binding Path=HasRecipient, Converter={StaticResource BoolToVisible}}"
+                        Margin="5,5,5,5"
+                        BorderBrush="#FFFDFDFD" 
+                        BorderThickness="2,2,2,2" 
+                        
+                        VerticalAlignment="Top" 
+                        CornerRadius="2,2,2,2">
+                        <Image   					 
+					Source="{Binding Path=RecipientAvatar50}" 
+					 VerticalAlignment="Center" 
+					/>
+                    </Border>
+                </StackPanel>
+                
                 <!--Treść statusu-->
                 <TextBlock 
 					TextWrapping="WrapWithOverflow" 
@@ -67,7 +88,7 @@
                        Margin="0,0,8,0" 
 					   Foreground="#FFFFFDFD"
                        FontSize="9"/>
-                    
+
                     <!--Data statusu-->
                     <Label Content="{Binding Path=CreationDate}" 
                        Margin="0,0,0,0" FontSize="9" 

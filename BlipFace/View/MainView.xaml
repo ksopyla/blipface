@@ -6,14 +6,24 @@
         
     xmlns:blpSrv="clr-namespace:BlipFace.Service.Entities;assembly=BlipFace.Service"
     x:Class="BlipFace.View.MainView"
-    Title="BlipFace" Height="450" Width="420" 
+    Title="BlipFace" Height="524" Width="364" 
     
     
     Loaded="Window_Loaded" 
-    WindowStyle="SingleBorderWindow" 
-    BorderBrush="#FF686868" BorderThickness="1,1,1,1" >
+    BorderBrush="#FF686868" BorderThickness="1,1,1,1" 
     
-    <Window.Background>
+    MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown"
+	WindowStyle="None" 
+	AllowsTransparency="True" 
+    Opacity="0.99" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
+    Top="20"
+    WindowStartupLocation="Manual"
+    >
+   
+
+        <Window.Background>
     	<RadialGradientBrush SpreadMethod="Pad">
     		<GradientStop Color="#FF403D3D" Offset="0"/>
     		<GradientStop Color="#FF110F0F" Offset="1"/>
@@ -26,14 +36,34 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
-            <RowDefinition MinHeight="160" Height="*"/>
-            <RowDefinition MinHeight="90" MaxHeight="160" Height="Auto"/>
+            <RowDefinition Height="35"/> <!--Tytuł aplikacji-->
+            <RowDefinition Height="50"/> <!--Główny status użytkownika-->
+            <RowDefinition MinHeight="160" Height="*"/> <!--Lista statusów-->
+            <RowDefinition MinHeight="90" MaxHeight="160" Height="Auto"/> <!--Panel do dodawania statusów-->
         </Grid.RowDefinitions>
-
-        <Border Grid.Column="0" Grid.Row="0" BorderThickness="0,0,0,2" Background="{x:Null}" Opacity="0.785" BorderBrush="#FFFBFBFB"/>
         
-        <ItemsControl  Grid.Column="0" Grid.Row="1"  
+        
+		<Canvas Grid.Column="0" Grid.Row="0">
+            <Label Canvas.Top="5" Canvas.Left="10" Foreground="White" FontFamily="Verdana" >BlipFace</Label>
+            <Button x:Name="btnCloseApp" Canvas.Right="25" Canvas.Top="5" Click="btnCloseApp_Click">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Canvas>
+                            <Rectangle Width="20" Height="20" Stroke="Black" RadiusX="3" RadiusY="3">
+                                <Rectangle.Fill>
+                                    <SolidColorBrush x:Name="myAnimatedBrush" Color="Red" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Line X1="5" Y1="5" X2="15" Y2="15" Stroke="White" StrokeThickness="2"/>
+                            <Line X1="15" Y1="5" X2="5" Y2="15" Stroke="White" StrokeThickness="2"/>
+                        </Canvas>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Canvas>
+        
+        
+        <ItemsControl  Grid.Column="0" Grid.Row="2"  
 			x:Name="lstbStatusList" 
 			ItemTemplate="{DynamicResource BlackStatusItemView}" >
             <ItemsControl.Template>
@@ -52,9 +82,9 @@
             
         </ItemsControl>
 
-        <Grid Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" RenderTransformOrigin="0.494,0.581" Background="{x:Null}">
+        <Grid Grid.Column="0" Grid.Row="3" Margin="3" >
             <Grid.RowDefinitions>
-                <RowDefinition />
+                <RowDefinition Height="80"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -63,34 +93,46 @@
 
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="tbMessage" Height="80" 
+            <TextBox x:Name="tbMessage"  
                 Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
-                Background="AliceBlue"  BorderThickness="3"
+                BorderThickness="0"
 				ClipToBounds="False" 
                 TextWrapping="Wrap"  
-                VerticalAlignment="Stretch" FontSize="14"
+                VerticalAlignment="Stretch" 
+                FontSize="14"
                 TextChanged="tbMessage_TextChanged" 
-                KeyDown="tbMessage_KeyDown" >
-                <TextBox.BorderBrush>
-                    <LinearGradientBrush EndPoint="0,20" StartPoint="0,0" MappingMode="Absolute">
-                        <GradientStop Color="#FFABADB3" Offset="0.05"/>
-                        <GradientStop Color="#FFE2E3EA" Offset="0.116"/>
-                        <GradientStop Color="#FF73AEE9" Offset="1"/>
-                    </LinearGradientBrush>
-                </TextBox.BorderBrush>
+                KeyDown="tbMessage_KeyDown" Foreground="#FFFFFFFF" FontFamily="Verdana" >
+            	<TextBox.Background>
+            		<RadialGradientBrush>
+            			<GradientStop Color="#FF423E3E" Offset="0"/>
+            			<GradientStop Color="#FF5C5555" Offset="1"/>
+            		</RadialGradientBrush>
+            	</TextBox.Background>
             </TextBox>
 
-            <TextBlock  Grid.Row="1" x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#a0a0a0" 
+            <TextBlock  Grid.Row="1" x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#b0b0b0" 
 				Text="160" HorizontalAlignment="Left" Margin="15,0,0,0" Width="55" />
             
-            <Label Name="lbShowSave" Grid.Row="1" Margin="87,6,10,6" 
+            <Label x:Name="lbShowSave" Grid.Row="1" Margin="87,6,10,6" 
                     Visibility="Hidden" Foreground="Yellow"
                    HorizontalAlignment="Left"
-                   >Zapisuję...</Label>
+                   Content="Zapisuję..."
+                   />
             
             <Button x:Name="btnSendBlip" Grid.Column="1" Grid.Row="1" 
                     Margin="4,0,2,0"  Content="Blip" 
-                    Click="btnSendBlip_Click" />
+                    Click="btnSendBlip_Click" BorderBrush="#FF171717" 
+					 >
+            	<Button.Background>
+            		<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+            			<GradientStop Color="#FF8C8C8C" Offset="0"/>
+            			<GradientStop Color="#FF787878" Offset="0.527"/>
+            			<GradientStop Color="#FF696969" Offset="1"/>
+            			<GradientStop Color="#FFBEBCBC" Offset="0.134"/>
+            		</LinearGradientBrush>
+            	</Button.Background>
+        
+            </Button>
             
         </Grid>
 

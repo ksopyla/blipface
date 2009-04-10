@@ -137,7 +137,8 @@ namespace BlipFace.Service.Communication
         /// <param name="limit"></param>
         public void GetUserDashboard(string user, int limit)
         {
-            string query = string.Format("/users/{0}/dashboard?include=user,user[avatar]&amp;limit={1}", user, limit.ToString());
+            //todo: Pobirać także typ odbiorcy recipient,recipient[avatar]
+            string query = string.Format("/users/{0}/dashboard?include=user,user[avatar],recipient,recipient[avatar]&amp;limit={1}", user, limit.ToString());
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
             //HttpQueryString query = new HttpQueryString();
 
@@ -257,7 +258,7 @@ namespace BlipFace.Service.Communication
         /// <param name="since">id statusu od którego należy pobrać nowsze wpisy</param>
         public void GetUserDashboardSince(string user, int since)
         {
-            string query = string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar]", user, since.ToString());
+            string query = string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar],recipient,recipient[avatar]", user, since.ToString());
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
             //HttpQueryString query = new HttpQueryString();
 

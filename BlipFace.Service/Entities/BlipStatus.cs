@@ -25,6 +25,8 @@ namespace BlipFace.Service.Entities
         [DataMember(Name = "id")]
         public int Id { get; set; }
 
+        [DataMember(Name = "type")]
+        public string Type { get; set; }
 
         [DataMember(Name = "body")]
         public string Content { get; set; }
