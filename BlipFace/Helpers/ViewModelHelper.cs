@@ -26,7 +26,7 @@ namespace BlipFace.Helpers
                 //todo: trzeba uważać bo gdy nie ma recipient to 
                 //rzuca wyjątekiem nullreference
                 string reciptientAvatar = string.Empty;
-                if (status.Type != "Status")
+                if (status.Type == "PrivateMessage" || status.Type == "DirectedMessage")
                 {
                     reciptientAvatar = status.Recipient.Avatar.Url50;
                 }
