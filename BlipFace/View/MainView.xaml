@@ -8,24 +8,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
     
-    Title="BlipFace" Height="524" Width="364" 
+    Title="BlipFace" Height="524" Width="350" 
     BorderBrush="#FF686868" BorderThickness="1,1,1,1" 
     WindowStyle="None" 
 	AllowsTransparency="True" 
     Opacity="0.99" 
     Top="20"
     WindowStartupLocation="Manual"
+    Style="{StaticResource BlackWindowStyle}" 
     
     MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown"
-	Loaded="Window_Loaded">
+	Loaded="Window_Loaded"
+   
+    >
 
 
-    <Window.Background>
-        <RadialGradientBrush SpreadMethod="Pad">
-            <GradientStop Color="#FF403D3D" Offset="0"/>
-            <GradientStop Color="#FF110F0F" Offset="1"/>
-        </RadialGradientBrush>
-    </Window.Background>
+
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -131,18 +129,9 @@
 
             <Button x:Name="btnSendBlip" Grid.Column="1" Grid.Row="1" 
                     Margin="4,0,2,0"  Content="Blip" 
-                    Click="btnSendBlip_Click" BorderBrush="#FF171717" 
-					 >
-                <Button.Background>
-                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                        <GradientStop Color="#FF8C8C8C" Offset="0"/>
-                        <GradientStop Color="#FF787878" Offset="0.527"/>
-                        <GradientStop Color="#FF696969" Offset="1"/>
-                        <GradientStop Color="#FFBEBCBC" Offset="0.134"/>
-                    </LinearGradientBrush>
-                </Button.Background>
-
-            </Button>
+                    Click="btnSendBlip_Click" Style="{DynamicResource BlackButton}"  
+			/>
+                
 
         </Grid>
 
