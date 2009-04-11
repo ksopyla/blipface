@@ -1,1 +1,11 @@
-README
+
+BlipFace - aplikacja pozwalająca na odbieranie i dodawanie statusów do http://blip.pl
+
+Technologie:
+- .net 3.5
+- WPF
+- Visual Studio 2008
+
+Zawiera dwa projekty:
+-BlipFace - widok w wpf'ie
+-BlipFace.Service - biblioteka do komunikacji z blipem
