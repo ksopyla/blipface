@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="clr-namespace:BlipFace.Helpers">
-
-    <DataTemplate x:Key="BlackStatusItemView">
+    xmlns:converter="clr-namespace:BlipFace.Helpers"
+    xmlns:br="clr-namespace:BlipFace.Helpers.BindableRun">
+    <DataTemplate x:Key="CinekTemplate">
         <Border Height="Auto" Margin="5,10,5,0">
             <Border.Style>
                 <Style>
@@ -38,8 +38,10 @@
                         BorderBrush="#FFFDFDFD" 
                         BorderThickness="2,2,2,2" 
                         VerticalAlignment="Top" 
-                        Width="52" Height="52" 
-                        Background="{x:Null}" CornerRadius="2,2,2,2">
+                        Width="52" 
+                        Height="52" 
+                        Background="{x:Null}" 
+                        CornerRadius="2,2,2,2">
                         <Image Source="{Binding Path=UserAvatar50}" Height="50" Width="50" VerticalAlignment="Center" />
                     </Border>
                     <!--Avatar odbiorcy wiadomości, nie zawsze istnieje-->
@@ -53,25 +55,29 @@
                         <Image Source="{Binding Path=RecipientAvatar50}" VerticalAlignment="Center" />
                     </Border>
                 </StackPanel>
-                <!--Treść statusu-->
-                <TextBlock 
-					TextWrapping="WrapWithOverflow" 
-					Text="{Binding Path=Content}"
-					Grid.Column="1" 
-					Grid.Row="1" Grid.ColumnSpan="1" Margin="2,0,2,2" 
-                    Grid.RowSpan="1" 
-					Foreground="#FFFFFFFF" />
-                <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal">
-                    <!--Login użytkownika-->
-                    <Label Content="{Binding Path=UserLogin}" 
-                       Margin="0,0,8,0" 
-					   Foreground="#FFFFFDFD"
-                       FontSize="9"
-                       Height="12" />
+                <RichTextBox 
+                    Grid.Column="1" 
+                    Grid.Row="1" 
+                    Margin="0,0,0,0" 
+                    BorderThickness="0"
+                    Foreground="#FFFFFDFD"
+                    Background="Transparent">
+                    <FlowDocument>
+                        <Paragraph>
+                            <!--Login użytkownika-->
+                            <br:BindableRun FontWeight="SemiBold" Foreground="Orange" BoundText="{Binding Path=UserLogin}" /><Run Foreground="Orange" Text=":" />
+                            <!--Treść statusu-->
+                            <br:BindableRun BoundText="{Binding Path=Content}" />
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+                <StackPanel 
+                        Grid.Column="0" 
+                        Grid.Row="2" 
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal" >
                     <!--Data statusu-->
-                    <Label Content="{Binding Path=CreationDate}" 
-                       Margin="0,0,0,0" FontSize="9" 
-                       Foreground="#FFFFFDFD" />
+                    <Label Content="{Binding Path=CreationDate}" Margin="0,0,0,0" FontSize="9" Foreground="#FFFFFDFD" />
                 </StackPanel>
             </Grid>
         </Border>

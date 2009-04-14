@@ -10,6 +10,7 @@
         <ResourceDictionary>
     		<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resource\StatusListDataTemplate.xaml"/>
+                <ResourceDictionary Source="Resource\CinekTemplate.xaml"/>
     			<ResourceDictionary Source="Resource\BlackStatsItemView.xaml"/>
     		</ResourceDictionary.MergedDictionaries>
 
