@@ -71,14 +71,42 @@
                         </Paragraph>
                     </FlowDocument>
                 </RichTextBox>
-                <StackPanel 
-                        Grid.Column="0" 
-                        Grid.Row="2" 
-                        Grid.ColumnSpan="2"
-                        Orientation="Horizontal" >
+                <Grid 
+                     Grid.Column="0" 
+                     Grid.Row="2"
+                     Grid.ColumnSpan="2" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
                     <!--Data statusu-->
-                    <Label Content="{Binding Path=CreationDate}" Margin="0,0,0,0" FontSize="9" Foreground="#FFFFFDFD" />
-                </StackPanel>
+                    <Label 
+                        Content="{Binding Path=CreationDate}"
+                        Grid.Column="0" 
+                        Grid.Row="0"
+                        FontSize="9" 
+                        Foreground="#FFFFFDFD" />
+                    <Menu
+                        Background="Transparent"
+                        Grid.Column="1" 
+                        Grid.Row="0" >
+                        <MenuItem 
+                            Header="Cytuj"
+                            FontSize="9"
+                            Foreground="#FFFFFDFD" />
+                        <MenuItem 
+                            Header="Odpowiedz"
+                            FontSize="9"
+                            Foreground="#FFFFFDFD" />
+                        <MenuItem 
+                            Header="Wiadomość prywatna"
+                            FontSize="9"
+                            Foreground="#FFFFFDFD" />
+                    </Menu>
+                </Grid>
             </Grid>
         </Border>
     </DataTemplate>
