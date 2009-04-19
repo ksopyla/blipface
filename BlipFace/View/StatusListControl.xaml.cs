@@ -1,46 +1,41 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-using BlipFace.Service.Communication;
-using BlipFace.Service.Entities;
-using BlipFace.View;
-using BlipFace.Presenter;
 using BlipFace.Model;
-using System.Windows.Threading;
+using BlipFace.Presenter;
 
 namespace BlipFace.View
 {
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
-    public partial class MainView : Window, IMainView
+    public partial class StatusListControl : IStatusesView
     {
-
         private const int BlipSize = 160;
         int charLeft = BlipSize;
 
-        private MainPresenter preseneter;
-
-        public MainView()
+        private StatusesPresenter presenter;
+        
+        public StatusListControl()
         {
-            InitializeComponent();
-            this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width - 10;
-            preseneter = new MainPresenter(this);
+            this.InitializeComponent();
         }
 
+        public StatusListControl(StatusesPresenter _presenter)
+        {
+            this.InitializeComponent();
 
-        /// <summary>
-        /// S³u¿y tylko do wyliczania iloœci znaków pozosta³ych do wpisania
+            // Insert code required on object creation below this point.
+
+            presenter = _presenter;
+        }
+/// <summary>
+        /// SÅ‚uÅ¼y tylko do wyliczania iloÅ›ci znakÃ³w pozostaÅ‚ych do wpisania
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -67,7 +62,7 @@ namespace BlipFace.View
         }
 
         /// <summary>
-        /// Zdarzenie gdy naciœniêty zostanie w kontrolce tbMessage klawisz
+        /// Zdarzenie gdy naciÅ›niÄ™ty zostanie w kontrolce tbMessage klawisz
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -75,42 +70,28 @@ namespace BlipFace.View
         {
             if (e.Key == Key.Return)
             {
-                //gdy naciœniêto enter to wysy³amy tekst
+                //gdy naciÅ›niÄ™to enter to wysyÅ‚amy tekst
 
                 EnableContrlsForSendMessage(false);
                 
-                preseneter.AddStatus(tbMessage.Text);
+                presenter.AddStatus(tbMessage.Text);
             }
         }
 
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-            
-            // preseneter.LoadStatuses();
-
-            preseneter.LoadUserDashboard("blipface");
-
-            preseneter.StartListeningForUpdates(90);
-
-        }
-
         /// <summary>
-        /// Handler dla klikniêca przycisku wysy³ania tekstu dla blipa
+        /// Handler dla klikniÄ™ca przycisku wysyÅ‚ania tekstu dla blipa
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnSendBlip_Click(object sender, RoutedEventArgs e)
         {
             EnableContrlsForSendMessage(false);
-           
-            preseneter.AddStatus(tbMessage.Text);
+
+            presenter.AddStatus(tbMessage.Text);
         }
 
 
-        #region IMainView Members
-
+       
         public IList<StatusViewModel> Statuses
         {
             get
@@ -120,8 +101,8 @@ namespace BlipFace.View
             set
             {
 
-                //statusy bêd¹ ustawiane asynchronicznie przez prezetnera
-                //wiêc potrzeba obiektu Dispatcher
+                //statusy bÄ™dÄ… ustawiane asynchronicznie przez prezetnera
+                //wiÄ™c potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(new Action<IList<StatusViewModel>>(delegate(IList<StatusViewModel> statusesCollection)
                 {
                     lstbStatusList.ItemsSource = statusesCollection;
@@ -130,7 +111,7 @@ namespace BlipFace.View
             }
         }
 
-        //todo: to mo¿e powinno byæ jako StatusViewModel
+        //todo: to moÅ¼e powinno byÄ‡ jako StatusViewModel
         public StatusViewModel MainStatus
         {
             get
@@ -151,9 +132,9 @@ namespace BlipFace.View
             }
             set
             {
-                
-                //tekst wiadomoœci ustawiany asynchronicznie przez prezetnera
-                //wiêc potrzeba obiektu Dispatcher
+
+                //tekst wiadomoÅ›ci ustawiany asynchronicznie przez prezetnera
+                //wiÄ™c potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(new Action<string>(delegate(string textMessage)
                 {
                     tbMessage.Text = textMessage;
@@ -166,7 +147,7 @@ namespace BlipFace.View
 
 
 
-       
+
         public Exception Error
         {
             get
@@ -187,44 +168,31 @@ namespace BlipFace.View
 
                 Dispatcher.Invoke(
                     new Action<Exception>(delegate(Exception _err)
-                {
-                    //throw new Exception(_err.Message, _err);
-                    MessageBox.Show(_err.Message);
+                    {
+                        //throw new Exception(_err.Message, _err);
+                        MessageBox.Show(_err.Message);
 
-                    EnableContrlsForSendMessage(true);
+                        EnableContrlsForSendMessage(true);
 
-                }), System.Windows.Threading.DispatcherPriority.Normal, value);
+                    }), System.Windows.Threading.DispatcherPriority.Normal, value);
             }
         }
 
 
         /// <summary>
-        /// Pomocnicza metoda zawieraj¹ca w sobie logikê widoku
-        /// przy dodawaniu, wiadomoœci
-        /// true - oznacza ¿e mo¿na pokazaæ i aktywowaæ poszczególene czêœci widoku
-        /// zaanga¿owane w wizualizacjê wysy³ania widomoœci
+        /// Pomocnicza metoda zawierajÄ…ca w sobie logikÄ™ widoku
+        /// przy dodawaniu, wiadomoÅ›ci
+        /// true - oznacza Å¼e moÅ¼na pokazaÄ‡ i aktywowaÄ‡ poszczegÃ³lene czÄ™Å›ci widoku
+        /// zaangaÅ¼owane w wizualizacjÄ™ wysyÅ‚ania widomoÅ›ci
         /// </summary>
         /// <param name="show"></param>
         private void EnableContrlsForSendMessage(bool enable)
         {
 
-            lbShowSave.Visibility = enable ? Visibility.Hidden: Visibility.Visible;
+            lbShowSave.Visibility = enable ? Visibility.Hidden : Visibility.Visible;
             tbMessage.IsEnabled = enable;
             btnSendBlip.IsEnabled = enable;
         }
-
-        #endregion
-
-        private void btnCloseApp_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void NonRectangularWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.DragMove();
-        }
-
 
         
     }

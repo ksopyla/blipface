@@ -19,6 +19,7 @@ namespace BlipFace.Service.Communication
     /// </summary>
     public class BlipCommunication
     {
+        
 
         /// <summary>
         /// Zgłaszane gdy statusy zostaną pobrane z serwisu i mają nadpisać 
@@ -57,13 +58,12 @@ namespace BlipFace.Service.Communication
         /// Konstruktor, ustawia dane do autentykacji, oraz niezbędne
         /// nagłówki do komunikacji z blipem
         /// </summary>
-        /// <param name="_userName">nazwa użytkownika</param>
-        /// <param name="_password">hasło</param>
-        public BlipCommunication(string _userName, string _password)
+        /// <param name="userName">nazwa użytkownika</param>
+        /// <param name="password">hasło</param>
+        public BlipCommunication(string userName, string password)
         {
-
-            userName = _userName;
-            password = _password;
+            this.userName = userName;
+            this.password = password;
 
             //potrzeba dodać obowiązkowy nagłówek gdy korzystamy z api blip'a
             blipHttpClient.DefaultHeaders.Add("X-Blip-API", "0.02");
@@ -74,7 +74,7 @@ namespace BlipFace.Service.Communication
 
             //trzeba zakodować w base64 login:hasło - tak każe blip
             byte[] credentialBuffer = new UTF8Encoding().GetBytes(
-                string.Format("{0}:{1}", userName, password));
+                string.Format("{0}:{1}", this.userName, this.password));
             string authHeader = "Basic " + Convert.ToBase64String(credentialBuffer);
 
             //nagłówek autoryzacja - zakodowane w base64
@@ -82,11 +82,51 @@ namespace BlipFace.Service.Communication
 
             //ustawienie nagłówka UserAgent - po tym blip rozpoznaje transport
             blipHttpClient.DefaultHeaders.UserAgent.Add(
-                new Microsoft.Http.Headers.ProductOrComment("BlipFace"));
+                new Microsoft.Http.Headers.ProductOrComment("BlipFace/0.1 (http://blipface.pl)"));
 
 
         }
 
+
+
+        /// <summary>
+        /// Metoda służy do walidacji danych użytkownika
+        /// </summary>
+        /// <returns></returns>
+        public bool Validate()
+        {
+
+            /// z racji że blip nie daje metody do autoryzacji trzeba posłuzyć się 
+            /// sztuczką i spróbować pobrać statusy, jak się nie uda to znaczy że nie udało się 
+            /// zalogować
+            string query = "updates?limit=1";
+
+            bool validate = false;
+
+            HttpResponseMessage resp = blipHttpClient.Get(query);
+            //sprawdzamy czy komunikacja się powiodła
+            try
+            {
+                if (resp.StatusCode != HttpStatusCode.Unauthorized)
+                {
+                    //gdy nie wyrzuci wyjątku znaczy że wszystko jest ok
+                    //lecz gdy wyrzuci wyjątek to znaczy że coś nawaliła komunikacja
+                    resp.EnsureStatusIsSuccessful();
+
+                    validate = true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                if (ExceptionOccure != null)
+                {
+                    ExceptionOccure(this, new ExceptionEventArgs(ex));
+                }
+            }
+
+            return validate;
+        }
 
         /// <summary>
         /// Pobiera listę statusów, w sposób synchroniczny
@@ -303,6 +343,10 @@ namespace BlipFace.Service.Communication
                 }
             }
         }
+
+
+
+       
     }
 
 

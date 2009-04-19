@@ -5,12 +5,11 @@ using System.Text;
 
 namespace BlipFace.View
 {
-    public interface ILoginView
+    public interface ILoginView : IView
     {
-        public string UserName { get; set; }
-
-        public string Password { get; set; }
-
-        public string ErrorMessage { get; set; }
+        string UserName { get; set; }
+        string Password { get; set; }
+        string Error { get; set; }
+        void ValidateCredential();
     }
 }

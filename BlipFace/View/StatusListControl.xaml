@@ -1,0 +1,102 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="BlipFace.View.StatusListControl"
+	x:Name="StatusList"
+    
+	>
+    <Grid VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <!--Główny status użytkownika-->
+            <RowDefinition Height="*" MinHeight="200"/>
+            <!--Lista statusów-->
+            <RowDefinition  Height="130"/>
+            <!--Panel do dodawania statusów-->
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0">
+            <!--tylko tymczasowo to jest wstawione aby był miejsce zajęte-->
+            <Label x:Name="lblMainStatus" Style="{DynamicResource LabelWhite}" Content="Mój status główny"/>
+        </StackPanel>
+
+        <ItemsControl Grid.Column="0" Grid.Row="1"
+			x:Name="lstbStatusList" 
+			
+            ItemTemplate="{DynamicResource BlackStatusItemView}">
+
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <ScrollViewer>
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+        </ItemsControl>
+
+        
+        <Grid Margin="3,0,3,5" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="tbMessage"  
+				Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+				BorderThickness="0"
+				ClipToBounds="False" 
+				TextWrapping="Wrap"  
+				VerticalAlignment="Stretch" 
+				FontSize="14"
+				TextChanged="tbMessage_TextChanged" 
+				KeyDown="tbMessage_KeyDown" Foreground="#FFFFFFFF" FontFamily="Verdana" >
+                <TextBox.Background>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#FF423E3E" Offset="0"/>
+                        <GradientStop Color="#FF5C5555" Offset="1"/>
+                    </RadialGradientBrush>
+                </TextBox.Background>
+            </TextBox>
+
+            <TextBlock  Grid.Row="1" Grid.Column="0" 
+			x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#b0b0b0" 
+				Text="160" HorizontalAlignment="Left" Margin="15,0,0,0" Width="55" />
+
+            <Label x:Name="lbShowSave" 
+			Grid.Row="1" 
+			Grid.Column="0"
+			Margin="87,6,10,6" 
+				Visibility="Hidden" Foreground="Yellow"
+				HorizontalAlignment="Left"
+				Content="Zapisuję..."
+                   />
+
+            <Button x:Name="btnSendBlip" Grid.Column="1" Grid.Row="1" 
+				Margin="3,3,3,3"  Content="Blip" 
+				Click="btnSendBlip_Click"  Width="90" Style="{DynamicResource BlackButton}"  
+			/>
+
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

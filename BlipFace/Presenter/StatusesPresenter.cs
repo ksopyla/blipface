@@ -15,20 +15,21 @@ namespace BlipFace.Presenter
     /// <summary>
     /// Klasa prezentera do naszego głównego widoku, zgodnie z wzorcem MVP
     /// </summary>
-    internal class MainPresenter
+    public class StatusesPresenter : IPresenter
     {
 
         /// <summary>
         /// widok 
         /// </summary>
-        private IMainView view;
+        private IStatusesView view;
 
+        private UserViewModel user;
 
         /// <summary>
         /// Klasa do komunikacji z blipem, 
         /// todo: trzeba pomyśleć o innym przechowywaiu hasła
         /// </summary>
-        private BlipCommunication blpCom = new BlipCommunication("blipface", @"12Faceewq");
+        private BlipCommunication blpCom; // = new BlipCommunication("blipface", @"12Faceewq");
 
         private Timer updateStatusTimer;
 
@@ -36,9 +37,10 @@ namespace BlipFace.Presenter
         /// Konstruktor główny
         /// </summary>
         /// <param name="_view">wikok</param>
-        public MainPresenter(IMainView _view)
+        public StatusesPresenter(UserViewModel _user)
         {
-            view = _view;
+            this.user = _user;
+            blpCom = new BlipCommunication(user.UserName,user.Password);
 
             blpCom.StatusesLoaded += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesLoaded);
 
@@ -70,7 +72,7 @@ namespace BlipFace.Presenter
 
                 if (lastStatus != null)
                 {
-                    UpdateUserDashboard("blipface", lastStatus.StatusId);
+                    UpdateUserDashboard(user.UserName, lastStatus.StatusId);
                 }
             }
         }
@@ -117,7 +119,7 @@ namespace BlipFace.Presenter
 
                 if (lastStatus != null)
                 {
-                    UpdateUserDashboard("blipface", lastStatus.StatusId);
+                    UpdateUserDashboard(user.UserName, lastStatus.StatusId);
                 }
             }
         }
@@ -188,5 +190,35 @@ namespace BlipFace.Presenter
             blpCom.GetUserDashboardSince(user, since);
 
         }
+
+        #region IPresenter Members
+
+        public void SetView(IView view)
+        {
+            if (view is IStatusesView)
+            {
+
+
+                this.view = (IStatusesView)view;
+            }
+            else
+            {
+                string message =
+                    string.Format(@"Przekazano nieodpowiedni widok, oczekiwano widoku typu {0} a podano {1} ", typeof(ILoginView), view.GetType().ToString());
+                throw new ArgumentException(message);
+            }
+        }
+
+        public void Init()
+        {
+            //todo: pobrać listę statusów
+            LoadUserDashboard(user.UserName);
+
+            StartListeningForUpdates(90);
+        }
+
+        public event EventHandler<ActionsEventArgs> WorkDone;
+
+        #endregion
     }
 }

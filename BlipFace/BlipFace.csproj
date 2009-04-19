@@ -62,12 +62,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\LoginViewControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\StatusListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="View\LoginViewControl.xaml.cs">
+      <DependentUpon>LoginViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StatusListControl.xaml.cs">
+      <DependentUpon>StatusListControl.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="HostWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resource\BlackStatsItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -80,27 +98,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\LoginView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\MainView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
+      <SubType>Code</SubType>
       <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="View\MainView.xaml.cs">
-      <DependentUpon>MainView.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
     <Compile Include="Helpers\ViewModelHelper.cs" />
-    <Compile Include="Presenter\MainPresenter.cs" />
+    <Compile Include="HostWindow.xaml.cs">
+      <DependentUpon>HostWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IHostView.cs" />
+    <Compile Include="Model\UserViewModel.cs" />
+    <Compile Include="Presenter\IPresenter.cs" />
+    <Compile Include="Presenter\LoginPresenter.cs" />
+    <Compile Include="Presenter\StatusesPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -111,14 +124,14 @@
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Model\StatusViewModel.cs" />
-    <Compile Include="View\IMainView.cs" />
-    <Compile Include="View\LoginView.xaml.cs">
-      <DependentUpon>LoginView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewsManager.cs" />
+    <Compile Include="View\IStatusesView.cs" />
+    <Compile Include="View\ILoginView.cs" />
+    <Compile Include="View\IView.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -14,7 +14,7 @@ namespace BlipFace.View
     /// przechowywać, oraz jakie operacje powinien wystawiać
     /// 
     /// </summary>
-    public interface IMainView
+    public interface IStatusesView: IView
     {
         /// <summary>
         /// Lista wszystkich statusów użytkowników w onie
