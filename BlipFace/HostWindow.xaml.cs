@@ -73,7 +73,7 @@ namespace BlipFace
                 }
             }
 
-            view.Height = PlaceHolder.ActualHeight;
+        //    view.Height = PlaceHolder.ActualHeight;
 
             PlaceHolder.Children.Add(view);
         }

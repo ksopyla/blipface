@@ -54,9 +54,12 @@
         </Canvas>
 
 
-        <StackPanel Grid.Column="0" Height="Auto" Grid.Row="1" Name="PlaceHolder">
+        <Grid Grid.Column="0" Grid.Row="1"
+                    VerticalAlignment="Stretch"
+HorizontalAlignment="Stretch"
+                    Name="PlaceHolder">
 
-        </StackPanel>
+        </Grid>
 
     </Grid>
 </Window>

@@ -6,9 +6,9 @@
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.StatusListControl"
 	x:Name="StatusList"
-    
+   Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto"
 	>
-    <Grid VerticalAlignment="Stretch">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
