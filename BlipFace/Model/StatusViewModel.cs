@@ -49,6 +49,8 @@ namespace BlipFace.Model
 
         public bool HasRecipient { get; set; }
 
+        public string RecipientLogin { get; set; }
+
         public string Content { get; set; }
 
 

@@ -26,9 +26,11 @@ namespace BlipFace.Helpers
                 //todo: trzeba uważać bo gdy nie ma recipient to 
                 //rzuca wyjątekiem nullreference
                 string reciptientAvatar = string.Empty;
+                string reciptientLogin = string.Empty;
                 if (status.Type == "PrivateMessage" || status.Type == "DirectedMessage")
                 {
                     reciptientAvatar = status.Recipient.Avatar.Url50;
+                    reciptientLogin = status.Recipient.Login;
                 }
 
                 sts.Add(new StatusViewModel()
@@ -38,6 +40,7 @@ namespace BlipFace.Helpers
                     Content = status.Content,
                     UserAvatar50 = status.User.Avatar.Url50,
                     RecipientAvatar50 = reciptientAvatar,
+                    RecipientLogin =reciptientLogin,
                     CreationDate = status.StatusTime,
                     UserLogin = status.User.Login
                 });

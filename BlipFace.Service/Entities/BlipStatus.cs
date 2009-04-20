@@ -8,7 +8,7 @@ namespace BlipFace.Service.Entities
 {
 
     /// <summary>
-    /// Klasa reprezentuje pojedynczy status z blipa, któy zwracany jes w postaci json
+    /// Klasa reprezentuje pojedynczy status z blipa, który zwracany jest w postaci json
     /// {"type":"Status",
     ///"user_path":"\/users\/ksirg",
     ///"created_at":"2009-03-22 14:10:13",

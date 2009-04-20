@@ -18,6 +18,10 @@
                 </Style>
             </Border.Style>
             <Grid>
+                <Grid.Resources>
+                    <!--Taki trik aby móc konwertować z wartości boolowskich do wyliczenia Visiblity-->
+                    <converter:BooleanToVisibilityConverter x:Key="BoolToVisible" />
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*" MinWidth="180"/>
@@ -29,12 +33,8 @@
                 </Grid.RowDefinitions>
                 <!--Avatar-->
                 <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
-                    <StackPanel.Resources>
-                        <!--Taki trik aby móc konwertować z wartości boolowskich do wyliczenia Visiblity-->
-                        <converter:BooleanToVisibilityConverter x:Key="BoolToVisible" />
-                    </StackPanel.Resources>
                     <!--Avatar użytkownika-->
-                    <Border Margin="5,5,5,5"
+                    <Border Margin="5,5,0,5"
                         BorderBrush="#FFFDFDFD" 
                         BorderThickness="2,2,2,2" 
                         VerticalAlignment="Top" 
@@ -44,10 +44,18 @@
                         CornerRadius="2,2,2,2">
                         <Image Source="{Binding Path=UserAvatar50}" Height="50" Width="50" VerticalAlignment="Center" />
                     </Border>
+                    <!--Obrazek ze strzałką, nie zawsze będzie widoczny-->
+                    <Border Margin="0,0,0,0"
+                        Visibility="{Binding Path=HasRecipient, Converter={StaticResource BoolToVisible}}"
+                        BorderThickness="0" 
+                        VerticalAlignment="Center" 
+                        Background="{x:Null}" >
+                        <Image Source="d.gif" Height="50" Width="6" VerticalAlignment="Center" />
+                    </Border>
                     <!--Avatar odbiorcy wiadomości, nie zawsze istnieje-->
                     <Border 
                         Visibility="{Binding Path=HasRecipient, Converter={StaticResource BoolToVisible}}"
-                        Margin="5,5,5,5"
+                        Margin="0,5,0,5"
                         BorderBrush="#FFFDFDFD" 
                         BorderThickness="2,2,2,2" 
                         VerticalAlignment="Top" 
@@ -57,15 +65,27 @@
                 </StackPanel>
                 <RichTextBox 
                     Grid.Column="1" 
-                    Grid.Row="1" 
-                    Margin="0,0,0,0" 
+                    Grid.Row="1"
                     BorderThickness="0"
                     Foreground="#FFFFFDFD"
                     Background="Transparent">
                     <FlowDocument>
                         <Paragraph>
-                            <!--Login użytkownika-->
-                            <br:BindableRun FontWeight="SemiBold" Foreground="Orange" BoundText="{Binding Path=UserLogin}" /><Run Foreground="Orange" Text=":" />
+                            <!--Login użytkownika i odbiorcy wiadomości, ten drugi nie zawsze istnieje-->
+                            <br:BindableRun FontWeight="SemiBold" Foreground="Orange" BoundText="{Binding Path=UserLogin}" 
+                                /><Label 
+                                    FontSize="9" 
+                                    Background="Transparent"
+                                    Margin="0,0,0,0"
+                                    Padding="2,0,2,0" 
+                                    Foreground="Orange" 
+                                    Content=">" 
+                                    Visibility="{Binding Path=HasRecipient, Converter={StaticResource BoolToVisible}}" 
+                                /><br:BindableRun 
+                                    FontWeight="SemiBold" 
+                                    Foreground="Orange" 
+                                    BoundText="{Binding Path=RecipientLogin}" 
+                                /><Run Foreground="Orange" Text=":" />
                             <!--Treść statusu-->
                             <br:BindableRun BoundText="{Binding Path=Content}" />
                         </Paragraph>
@@ -89,6 +109,7 @@
                         Grid.Row="0"
                         FontSize="9" 
                         Foreground="#FFFFFDFD" />
+                    <!--Menu z funkcjami: Cytuj, Odpowiedz, Wiadomość prywatna-->
                     <Menu
                         Background="Transparent"
                         Grid.Column="1" 
