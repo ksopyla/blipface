@@ -26,7 +26,13 @@ namespace BlipFace
             message.Append("Nieoczekiwany błąd aplikacji\n ");
             message.Append(e.Exception.Message);
             message.Append("\n");
-            message.Append(e.Exception.Source);
+            if (e.Exception.InnerException != null)
+            {
+                message.Append(e.Exception.InnerException.Message);
+                message.Append("\n");
+
+            }
+
             MessageBox.Show(message.ToString());
             e.Handled = true;
         }
