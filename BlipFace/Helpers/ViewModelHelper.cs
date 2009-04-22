@@ -30,7 +30,9 @@ namespace BlipFace.Helpers
                     string reciptientLogin = string.Empty;
                     if (status.Type == "PrivateMessage" || status.Type == "DirectedMessage")
                     {
-                        reciptientAvatar = status.Recipient.Avatar.Url50;
+                        reciptientAvatar = status.Recipient.Avatar== null
+                                           ? "http://static1.blip.pl/images/nn_nano.png?1240395130"
+                                           : status.Recipient.Avatar.Url50;
                         reciptientLogin = status.Recipient.Login;
                     }
 
