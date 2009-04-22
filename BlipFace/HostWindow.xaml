@@ -10,9 +10,8 @@
     Top="20"
     WindowStartupLocation="Manual"
     Style="{StaticResource BlackWindowStyle}" 
-    
-        ResizeMode="CanResizeWithGrip"
-        
+    ResizeMode="CanResizeWithGrip"
+    Icon="\Resource\Img\blipFace_logo_round.png"    
     MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown"
 	Loaded="Window_Loaded">
     <!--	AllowsTransparency="True" -->
