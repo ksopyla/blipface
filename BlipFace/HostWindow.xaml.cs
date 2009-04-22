@@ -52,7 +52,7 @@ namespace BlipFace
 
         public void AttachView(UserControl _control)
         {
-            _control.Height = PlaceHolder.ActualHeight;
+            //_control.Height = PlaceHolder.ActualHeight;
             PlaceHolder.Children.Add(_control);
 
         }

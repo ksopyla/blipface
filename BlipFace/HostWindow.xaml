@@ -58,9 +58,9 @@
 
 
         <Grid Grid.Column="0" Grid.Row="1"
-                    VerticalAlignment="Stretch"
-HorizontalAlignment="Stretch"
-                    Name="PlaceHolder">
+             VerticalAlignment="Stretch"
+             HorizontalAlignment="Stretch"
+             Name="PlaceHolder">
 
         </Grid>
 
