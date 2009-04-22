@@ -6,12 +6,12 @@
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.LoginViewControl"
 	x:Name="UserControl"
-	d:DesignWidth="284" d:DesignHeight="264" KeyDown="UserControl_KeyDown">
+	d:DesignWidth="284" d:DesignHeight="264" KeyDown="UserControl_KeyDown" Loaded="UserControl_Loaded">
 
     <StackPanel x:Name="LayoutRoot" Orientation="Vertical" VerticalAlignment="Stretch" Margin="0,20,0,0">
 <Canvas Width="220" Height="300">
         <Label VerticalAlignment="Center" Style="{DynamicResource LabelWhite}" Content="Login" HorizontalAlignment="Stretch" Width="210" Height="35" Canvas.Top="18" Canvas.Left="2"/>
-        <TextBox Height="35"  x:Name="tbUserName" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" Width="210" HorizontalAlignment="Center" Canvas.Top="57" Canvas.Left="2" />
+        <TextBox Height="35"  x:Name="tbUserName"  VerticalAlignment="Center" FontSize="16" FontWeight="Bold" Width="210" HorizontalAlignment="Center" Canvas.Top="57" Canvas.Left="2" />
 
         <Label  x:Name="label2" Style="{DynamicResource LabelWhite}" Content="Hasło" VerticalAlignment="Center" HorizontalAlignment="Center" Width="210" Height="35" Canvas.Top="96" Canvas.Left="2"/>
         <PasswordBox  x:Name="pswPassword" 

@@ -17,7 +17,7 @@ namespace BlipFace.View
     public interface IStatusesView: IView
     {
         /// <summary>
-        /// Lista wszystkich statusów użytkowników w onie
+        /// Lista wszystkich statusów użytkowników w oknie
         /// </summary>
         IList<StatusViewModel> Statuses { get; set; }
 

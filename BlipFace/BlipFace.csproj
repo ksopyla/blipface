@@ -91,8 +91,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resource\MainBlackStyle.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resource\CinekTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Resource\ScrollBarsStyle.xaml">
       <SubType>Designer</SubType>
@@ -104,6 +108,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\BindableRun.cs" />
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
     <Compile Include="Helpers\ViewModelHelper.cs" />
     <Compile Include="HostWindow.xaml.cs">
@@ -147,6 +152,9 @@
       <Project>{5F4344B8-C62C-41DF-AFED-195B091E6D28}</Project>
       <Name>BlipFace.Service</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\d.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

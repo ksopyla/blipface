@@ -13,23 +13,68 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
             <!--Główny status użytkownika-->
+            <RowDefinition Height="65"/>
+           <!--Lista statusów-->
             <RowDefinition Height="*" MinHeight="200"/>
-            <!--Lista statusów-->
-            <RowDefinition  Height="130"/>
             <!--Panel do dodawania statusów-->
+            <RowDefinition  Height="130"/>
+            
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0" Grid.Row="0">
-            <!--tylko tymczasowo to jest wstawione aby był miejsce zajęte-->
-            <Label x:Name="lblMainStatus" Style="{DynamicResource LabelWhite}" Content="Mój status główny"/>
-        </StackPanel>
+        <!--Główny status użytkownika-->
+        <Grid Grid.Column="0" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="65"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Avatar użytkownika-->
+            <Border Margin="10,5,0,5"
+                BorderBrush="Orange" 
+                BorderThickness="2,2,2,2" 
+                Grid.Column="0"
+                Grid.Row="0"
+                VerticalAlignment="Top" 
+                Width="52" 
+                Height="52" 
+                Background="Transparent" 
+                CornerRadius="2,2,2,2">
+                <Image Source="http://static0.blip.pl/user_generated/avatars/240661_pico.jpg?1238026642" Height="50" Width="50" VerticalAlignment="Center" />
+            </Border>
+            <!--Główny status-->
+            <RichTextBox
+                Grid.Column="1" 
+                Grid.Row="0"
+                BorderThickness="0"
+                Foreground="#FFFFFDFD"
+                Background="Transparent">
+                <FlowDocument>
+                    <Paragraph>
+                        <Run FontWeight="SemiBold" Foreground="Orange" Text="cnk" />
+                        <Run Foreground="#FFFFFDFD" Text="pracy nad #blipface'm ciąg dalszy :)" />
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+            <!--Menu z funkcjami: Kokpit-->
+            <Menu
+                Background="Transparent"
+                Grid.Column="1" 
+                Grid.Row="1" >
+                <MenuItem 
+                    Header="Kokpit"
+                    Foreground="#FFFFFDFD" />
+            </Menu>
+        </Grid>
 
         <ItemsControl Grid.Column="0" Grid.Row="1"
 			x:Name="lstbStatusList" 
 			
-            ItemTemplate="{DynamicResource BlackStatusItemView}">
+            ItemTemplate="{DynamicResource CinekTemplate}">
 
             <ItemsControl.Template>
                 <ControlTemplate>

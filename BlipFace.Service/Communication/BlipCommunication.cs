@@ -177,7 +177,7 @@ namespace BlipFace.Service.Communication
         /// <param name="limit"></param>
         public void GetUserDashboard(string user, int limit)
         {
-            //todo: Pobirać także typ odbiorcy recipient,recipient[avatar]
+            //todo: Pobierać także typ odbiorcy recipient,recipient[avatar]
             string query = string.Format("/users/{0}/dashboard?include=user,user[avatar],recipient,recipient[avatar]&amp;limit={1}", user, limit.ToString());
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
             //HttpQueryString query = new HttpQueryString();
@@ -211,7 +211,7 @@ namespace BlipFace.Service.Communication
                 //deserializujemy z json
                 var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
 
-                //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+                //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłoszenia wraz z statusami
                 if (StatusesLoaded != null)
                 {
                     StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
