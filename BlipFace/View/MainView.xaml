@@ -4,6 +4,7 @@
     xmlns:blp="clr-namespace:BlipFace"
     xmlns:blpSrv="clr-namespace:BlipFace.Service.Entities;assembly=BlipFace.Service"
     x:Class="BlipFace.View.MainView"
+    xmlns:br="clr-namespace:BlipFace.Helpers.BindableRun"
     
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
@@ -31,17 +32,17 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
             <!--Tytuł aplikacji-->
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="35"/>
             <!--Główny status użytkownika-->
-            <RowDefinition MinHeight="160" Height="*"/>
+            <RowDefinition Height="Auto"/>
             <!--Lista statusów-->
-            <RowDefinition MinHeight="90" MaxHeight="160" Height="Auto"/>
+            <RowDefinition MinHeight="160" Height="*"/>
             <!--Panel do dodawania statusów-->
+            <RowDefinition MinHeight="90" MaxHeight="160" Height="Auto"/>
         </Grid.RowDefinitions>
 
-
+        <!--Tytuł aplikacji-->
         <Canvas Grid.Column="0" Grid.Row="0">
             <Label Canvas.Top="5" Canvas.Left="10" 
 			Foreground="White" FontFamily="Verdana" 
@@ -50,7 +51,6 @@
                 <Label.BitmapEffect>
                     <OuterGlowBitmapEffect GlowSize="7" Opacity="0.7" GlowColor="White" />
                 </Label.BitmapEffect>
-
             </Label>
             <Button x:Name="btnCloseApp" Canvas.Right="25" Canvas.Top="5" Click="btnCloseApp_Click">
                 <Button.Template>
@@ -65,15 +65,63 @@
                             <Line X1="15" Y1="5" X2="5" Y2="15" Stroke="White" StrokeThickness="2"/>
                         </Canvas>
                     </ControlTemplate>
-
                 </Button.Template>
             </Button>
         </Canvas>
+        
+        <!--Główny status użytkownika-->
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="65"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!--Avatar użytkownika-->
+            <Border Margin="10,5,0,5"
+                BorderBrush="Orange" 
+                BorderThickness="2,2,2,2" 
+                Grid.Column="0"
+                Grid.Row="0"
+                VerticalAlignment="Top" 
+                Width="52" 
+                Height="52" 
+                Background="Transparent" 
+                CornerRadius="2,2,2,2">
+                <Image Source="\Resource\a.jpg" Height="50" Width="50" VerticalAlignment="Center" />
+            </Border>
+            <!--Główny status-->
+            <RichTextBox
+                Grid.Column="1" 
+                Grid.Row="0"
+                BorderThickness="0"
+                Foreground="#FFFFFDFD"
+                Background="Transparent">
+                <FlowDocument>
+                    <Paragraph>
+                        <Run FontWeight="SemiBold" Foreground="Orange" Text="cnk" />
+                        <Run Foreground="#FFFFFDFD" Text="pracy nad #blipface'm ciąg dalszy :)" />
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+            <!--Menu z funkcjami: Kokpit-->
+            <Menu
+                Background="Transparent"
+                Grid.Column="1" 
+                Grid.Row="1" >
+                <MenuItem 
+                    Header="Kokpit"
+                    Foreground="#FFFFFDFD" />
+            </Menu>
+        </Grid>
 
-
+        <!--Lista statusów-->
         <ItemsControl  Grid.Column="0" Grid.Row="2"  
 			x:Name="lstbStatusList" 
-			ItemTemplate="{DynamicResource BlackStatusItemView}" >
+			ItemTemplate="{DynamicResource CinekTemplate}" >
             <ItemsControl.Template>
                 <ControlTemplate>
                     <ScrollViewer>
@@ -81,15 +129,14 @@
                     </ScrollViewer>
                 </ControlTemplate>
             </ItemsControl.Template>
-
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-
         </ItemsControl>
-
+        
+        <!--Panel do dodawania statusów-->
         <Grid Grid.Column="0" Grid.Row="3" Margin="3" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="80"/>
@@ -98,9 +145,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-
             </Grid.ColumnDefinitions>
-
+            
             <TextBox x:Name="tbMessage"  
                 Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                 BorderThickness="0"
@@ -117,23 +163,17 @@
                     </RadialGradientBrush>
                 </TextBox.Background>
             </TextBox>
-
             <TextBlock  Grid.Row="1" x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#b0b0b0" 
 				Text="160" HorizontalAlignment="Left" Margin="15,0,0,0" Width="55" />
-
             <Label x:Name="lbShowSave" Grid.Row="1" Margin="87,6,10,6" 
                     Visibility="Hidden" Foreground="Yellow"
                    HorizontalAlignment="Left"
-                   Content="Zapisuję..."
-                   />
-
+                   Content="Zapisuję..." />
             <Button x:Name="btnSendBlip" Grid.Column="1" Grid.Row="1" 
                     Margin="4,0,2,0"  Content="Blip" 
                     Click="btnSendBlip_Click" Style="{DynamicResource BlackButton}"  
 			/>
                 
-
         </Grid>
-
     </Grid>
 </Window>
