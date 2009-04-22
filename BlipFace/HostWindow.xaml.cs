@@ -35,6 +35,8 @@ namespace BlipFace
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Uri iconUri = new Uri("pack://application:,,,/Resource/Img/blipFace_logo_round.png", UriKind.RelativeOrAbsolute);
+            this.Icon = BitmapFrame.Create(iconUri);
             mgr.Run();
         }
 

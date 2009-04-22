@@ -55,8 +55,8 @@
                 Background="Transparent">
                 <FlowDocument>
                     <Paragraph>
-                        <Run FontWeight="SemiBold" Foreground="Orange" Text="cnk" />
-                        <Run Foreground="#FFFFFDFD" Text="pracy nad #blipface'm ciąg dalszy :)" />
+                        <Run FontWeight="SemiBold" Foreground="Orange" Text="blipface" />
+                        <Run Foreground="#FFFFFDFD" Text="Niedługo zaimplementujemy obsługę głównego statusu, tym czasem obserwuj tag #blipface" />
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
