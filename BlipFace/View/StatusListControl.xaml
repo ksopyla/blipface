@@ -6,8 +6,7 @@
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.StatusListControl"
 	x:Name="StatusList"
-   Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto"
-	>
+    Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -21,12 +20,15 @@
             <RowDefinition  Height="130"/>
             
         </Grid.RowDefinitions>
-
-        <!--Główny status użytkownika-->
-        <Grid Grid.Column="0" Grid.Row="0">
+        
+        <!--Blok z głównym statusem użytkownika-->
+        <Grid
+            Grid.Column="0" 
+            Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <!--Wiersz z menu-->
+                <!--<RowDefinition Height="*"/>-->
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="65"/>
@@ -44,7 +46,7 @@
                 Height="52" 
                 Background="Transparent" 
                 CornerRadius="2,2,2,2">
-                <Image Source="http://static0.blip.pl/user_generated/avatars/240661_pico.jpg?1238026642" Height="50" Width="50" VerticalAlignment="Center" />
+                <Image x:Name="imgUserAvatar" Height="50" Width="50" VerticalAlignment="Center" />
             </Border>
             <!--Główny status-->
             <RichTextBox
@@ -55,27 +57,27 @@
                 Background="Transparent">
                 <FlowDocument>
                     <Paragraph>
-                        <Run FontWeight="SemiBold" Foreground="Orange" Text="cnk" />
-                        <Run Foreground="#FFFFFDFD" Text="pracy nad #blipface'm ciąg dalszy :)" />
+                        <Run x:Name="lbUserLogin" FontWeight="SemiBold" Foreground="Orange" />
+                        <Run x:Name="lbContent" Foreground="#FFFFFDFD" />
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
             <!--Menu z funkcjami: Kokpit-->
-            <Menu
+            <!--<Menu
                 Background="Transparent"
                 Grid.Column="1" 
                 Grid.Row="1" >
                 <MenuItem 
                     Header="Kokpit"
                     Foreground="#FFFFFDFD" />
-            </Menu>
+            </Menu>-->
         </Grid>
 
-        <ItemsControl Grid.Column="0" Grid.Row="1"
+        <ItemsControl 
+            Grid.Column="0" 
+            Grid.Row="1"
 			x:Name="lstbStatusList" 
-			
-            ItemTemplate="{DynamicResource CinekTemplate}">
-
+			ItemTemplate="{DynamicResource CinekTemplate}">
             <ItemsControl.Template>
                 <ControlTemplate>
                     <ScrollViewer>
@@ -83,13 +85,11 @@
                     </ScrollViewer>
                 </ControlTemplate>
             </ItemsControl.Template>
-
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-
         </ItemsControl>
 
         

@@ -29,6 +29,13 @@ namespace BlipFace.Service.Communication
 
 
         /// <summary>
+        /// Zgłaszane gdy główny status zostanie pobrany z serwisu i ma nadpisać 
+        /// obecną zawartość np. przy starcie aplikacji
+        /// </summary>
+        public event EventHandler<MainStatusLoadingEventArgs> MainStatusLoaded;
+
+
+        /// <summary>
         /// Zdarzenie zgłaszane gdy statusy zostaną pobrane z serwisu i mają zostać
         /// dołączone do obecnej zawartości np. po dodaniu statusu, lub co jakiś czas
         /// </summary>
@@ -227,6 +234,63 @@ namespace BlipFace.Service.Communication
         }
 
         /// <summary>
+        /// Metoda asynchronicznie pobiera główny status użytkownika, gdy 
+        /// zostanie pobrane zgłaszane jest zdarzenie 
+        /// </summary>
+        /// <param name="user"></param>
+        public void GetUserMainStatus(string user)
+        {
+            //users/{0}/dashboard?include=user,user[avatar],recipient,recipient[avatar]&amp;limit={1}
+            string query = string.Format("users/{0}/statuses?include=user,user[avatar]&amp;limit=1", user);
+            //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
+            //HttpQueryString query = new HttpQueryString();
+
+            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+            blipHttpClient.BeginSend(
+                new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserMainStatus), blipHttpClient);
+
+        }
+
+        /// <summary>
+        /// Metoda wywoływana jako callback przy pobieraniu głównego statusu, korzysta z niej
+        /// metoda <see cref="GetUserMainStatus"/>
+        /// </summary>
+        /// <param name="result"></param>
+        private void AfterUserMainStatus(IAsyncResult result)
+        {
+
+            //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
+            //przekazaliśmy ten obiekt jako state
+            var client = result.AsyncState as HttpClient;
+
+            //pobieramy odpowiedź
+            var resp = client.EndSend(result);
+
+            try
+            {
+
+                resp.EnsureStatusIsSuccessful();
+
+                //@todo: sprawdzić czy istnieje chociaż jeden status
+                //deserializujemy z json
+                var status = resp.Content.ReadAsJsonDataContract<StatusesList>()[0];
+                
+                //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłoszenia wraz ze statusem
+                if (MainStatusLoaded != null)
+                {
+                   MainStatusLoaded(this, new MainStatusLoadingEventArgs(status));
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ExceptionOccure != null)
+                {
+                    ExceptionOccure(this, new ExceptionEventArgs(ex));
+                }
+            }
+        }
+
+        /// <summary>
         /// Asynchronicznie dodaje status do blipa
         /// </summary>
         /// <param name="content">treść</param>
@@ -361,6 +425,19 @@ namespace BlipFace.Service.Communication
         public StatusesLoadingEventArgs(IList<BlipStatus> statuses)
         {
             Statuses = statuses;
+        }
+    }
+
+    /// <summary>
+    /// klasa reprezentująca główny status przekazany jako argumenty wywołania zdarzenia
+    /// </summary>
+    public class MainStatusLoadingEventArgs : EventArgs
+    {
+        public BlipStatus MainStatus { get; private set; }
+
+        public MainStatusLoadingEventArgs(BlipStatus status)
+        {
+            MainStatus = status;
         }
     }
 
