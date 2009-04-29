@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using BlipFace.Model;
 using BlipFace.Presenter;
@@ -116,11 +117,26 @@ namespace BlipFace.View
         {
             get
             {
-                throw new NotImplementedException();
+                StatusViewModel status = new StatusViewModel();
+                status.UserLogin = lbUserLogin.Text;
+                status.Content = lbContent.Text;
+                status.UserAvatar50 = imgUserAvatar.Source.ToString();
+                return status;
             }
             set
             {
-                throw new NotImplementedException();
+                //status będzie ustawiany asynchronicznie przez prezetnera
+                //więc potrzeba obiektu Dispatcher
+                Dispatcher.Invoke(new Action<StatusViewModel>(delegate(StatusViewModel status)
+                {
+                    lbUserLogin.Text = status.UserLogin;
+                    lbContent.Text = status.Content;
+                    BitmapImage imgAvatar = new BitmapImage();
+                    imgAvatar.BeginInit();
+                    imgAvatar.UriSource = new Uri(status.UserAvatar50);
+                    imgAvatar.EndInit();
+                    imgUserAvatar.Source = imgAvatar;
+                }), value);
             }
         }
 

@@ -44,6 +44,8 @@ namespace BlipFace.Presenter
 
             blpCom.StatusesLoaded += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesLoaded);
 
+            blpCom.MainStatusLoaded += new EventHandler<MainStatusLoadingEventArgs>(blpCom_MainStatusLoaded);
+
             blpCom.StatusesAdded += new EventHandler<EventArgs>(blpCom_StatusesAdded);
 
             blpCom.StatusesUpdated += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesUpdated);
@@ -72,6 +74,8 @@ namespace BlipFace.Presenter
 
                 if (lastStatus != null)
                 {
+                    //todo: zamiast pobierać za każdym razem ostatni status można by najpierw sprawdzić czy się zmienił
+                    LoadUserMainStatus(user.UserName);
                     UpdateUserDashboard(user.UserName, lastStatus.StatusId);
                 }
             }
@@ -119,6 +123,7 @@ namespace BlipFace.Presenter
 
                 if (lastStatus != null)
                 {
+                    LoadUserMainStatus(user.UserName);
                     UpdateUserDashboard(user.UserName, lastStatus.StatusId);
                 }
             }
@@ -133,6 +138,16 @@ namespace BlipFace.Presenter
         void blpCom_StatusesLoaded(object sender, StatusesLoadingEventArgs e)
         {
             view.Statuses = ViewModelHelper.MapToViewStatus(e.Statuses);
+        }
+
+        /// <summary>
+        /// calback do zdarzenia gdy główny status zostanie załadowany od nowa
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void blpCom_MainStatusLoaded(object sender, MainStatusLoadingEventArgs e)
+        {
+            view.MainStatus = ViewModelHelper.MapToViewStatus(e.MainStatus);
         }
 
 
@@ -167,6 +182,18 @@ namespace BlipFace.Presenter
             //ładuje asynchronicznie listę statusów,
             //po załadowaniu zgłaszane jest zdarzenie StatusesLoaded
             blpCom.GetUpdatesAsync(30);
+        }
+
+
+        /// <summary>
+        /// Pobiera główny status asynchronicznie, po wysłaniu
+        /// status będzie zwrócony jako zgłosznie zdarzenia MainStatusLoaded
+        /// </summary>
+        public void LoadUserMainStatus(string user)
+        {
+            //ładuje asynchronicznie główny status,
+            //po załadowaniu zgłaszane jest zdarzenie MainStatusLoaded
+            blpCom.GetUserMainStatus(user);
         }
 
 
@@ -211,6 +238,8 @@ namespace BlipFace.Presenter
 
         public void Init()
         {
+            LoadUserMainStatus(user.UserName);
+
             //todo: pobrać listę statusów
             LoadUserDashboard(user.UserName);
 
