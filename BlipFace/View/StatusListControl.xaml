@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <!--Główny status użytkownika-->
-            <RowDefinition Height="65"/>
+            <RowDefinition Height="75"/>
            <!--Lista statusów-->
             <RowDefinition Height="*" MinHeight="200"/>
             <!--Panel do dodawania statusów-->
@@ -56,7 +56,7 @@
                 Foreground="#FFFFFDFD"
                 Background="Transparent">
                 <FlowDocument>
-                    <Paragraph>
+                    <Paragraph FontSize="16">
                         <Run x:Name="lbUserLogin" FontWeight="SemiBold" Foreground="Orange" />
                         <Run x:Name="lbContent" Foreground="#FFFFFDFD" />
                     </Paragraph>

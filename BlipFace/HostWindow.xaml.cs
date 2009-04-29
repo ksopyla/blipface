@@ -24,7 +24,7 @@ namespace BlipFace
         public HostWindow()
         {
             InitializeComponent();
-            this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width - 10;
+            this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width - 20;
             mgr = new ViewsManager(this);
         }
 
