@@ -35,16 +35,20 @@ namespace BlipFace
         {
             //pokazuje domyślny widok
             //tworzymy nowego prezentera
-            var loginPresenter = new LoginPresenter(this);
+            var loginPresenter = new LoginPresenter();
             //dołączamy do niego widok, jednocześnie przkazując mu referencję 
             var loginView = new LoginViewControl(loginPresenter);
             loginPresenter.SetView(loginView);
+            
             loginPresenter.WorkDone += new EventHandler<ActionsEventArgs>(PresenterWorkDone);
+
+            loginPresenter.Init();
             _hostWindow.AttachView(loginView);
         }
 
         void PresenterWorkDone(object sender, ActionsEventArgs e)
         {
+
             switch (e.NextAction)
             {
                 case Actions.Login:
@@ -86,11 +90,13 @@ namespace BlipFace
 
         private void CreateLoginPresenter()
         {
-            var loginPresenter = new LoginPresenter(this);
+            var loginPresenter = new LoginPresenter();
             //dołączamy do niego widok, jednocześnie przkazując mu referencję 
             var loginView = new LoginViewControl(loginPresenter);
             loginPresenter.SetView(loginView);
             loginPresenter.WorkDone += new EventHandler<ActionsEventArgs>(PresenterWorkDone);
+
+            loginPresenter.Init();
             _hostWindow.SwitchView(loginView);
         }
     }

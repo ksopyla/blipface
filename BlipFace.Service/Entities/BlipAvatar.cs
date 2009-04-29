@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 
 namespace BlipFace.Service.Entities
 {
-
     /*
      "avatar":{
      *      "url_15":"\/user_generated\/avatars\/238118_femto.jpg",
@@ -16,28 +15,34 @@ namespace BlipFace.Service.Entities
      *      "url_90":"\/user_generated\/avatars\/238118_standard.jpg",
      *      "url_120":"\/user_generated\/avatars\/238118_large.jpg",
      *      "id":238118}
-     */ 
+     */
 
     /// <summary>
     /// Klasa reprezentuj¹ca Avatar na blipie
     /// </summary>
-    [DataContract(Name="avatar")]
-	public class BlipAvatar
+    [DataContract(Name = "avatar")]
+    public class BlipAvatar
     {
+        private const int StaticAddreses = 3;
+
         /// <summary>
         /// lista statycznych adresów do zasobów blipa
         /// </summary>
-        private static List<string> blipStaticHostAddress = new List<string>(4){ 
-                @"http://static0.blip.pl",
-                @"http://static1.blip.pl",
-                @"http://static2.blip.pl",
-                @"http://static3.blip.pl"
-                                                 };
+        private static readonly List<string> BlipStaticHostAddress =
+            new List<string>(StaticAddreses)
+                {
+                    @"http://static0.blip.pl",
+                    @"http://static1.blip.pl",
+                    @"http://static2.blip.pl"
+                };
+
+        //@"http://static3.blip.pl"
+
 
         [DataMember(Name = "id")]
-        public string Id { get ; set; }
+        public string Id { get; set; }
 
-        [DataMember(Name="url_15")]
+        [DataMember(Name = "url_15")]
         public string Url15 { get; set; }
 
         [DataMember(Name = "url_30")]
@@ -45,20 +50,22 @@ namespace BlipFace.Service.Entities
 
 
         private string url50;
+
         [DataMember(Name = "url_50")]
-        public string Url50 { 
-            get{
+        public string Url50
+        {
+            get
+            {
                 Random r = new Random(Environment.TickCount);
-                int index = r.Next(4);
+                int index = r.Next(StaticAddreses);
+
                 StringBuilder _url = new StringBuilder(80);
-                _url.Append(BlipAvatar.blipStaticHostAddress[index]);
+                _url.Append(BlipStaticHostAddress[index]);
                 _url.Append(url50);
 
                 return _url.ToString();
-            } 
-            set{
-                url50 = value;
             }
+            set { url50 = value; }
         }
 
         [DataMember(Name = "url")]

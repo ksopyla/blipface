@@ -16,6 +16,7 @@ namespace BlipFace.View
     {
 
         readonly LoginPresenter _presenter;
+        
 
         #region ILoginView propoerties
         public string UserName
@@ -29,6 +30,36 @@ namespace BlipFace.View
             get { return pswPassword.Password; }
             set { pswPassword.Password = value; }
         }
+
+        private bool authorize;
+        public  bool Authorize
+        {
+            get
+            {
+                return authorize;
+            }
+            set
+            {
+                Dispatcher.Invoke(
+                    new Action<bool>(delegate(bool auth)
+                    {
+                        lblLoginAnimation.Visibility = System.Windows.Visibility.Collapsed;
+                        Storyboard sbdHideLoading = (Storyboard)FindResource("AnimatedDotLabel");
+                        sbdHideLoading.Stop();
+                        authorize = auth;
+
+                        if(auth)
+                        {
+                            bool remember = chbRememberPassword.IsChecked.HasValue
+                                                ? chbRememberPassword.IsChecked.Value
+                                                : false;
+                            _presenter.AuthorizationOK(remember);
+                        }
+                        
+                    }), System.Windows.Threading.DispatcherPriority.Normal,value);
+            }
+        }
+
         public string Error
         {
             get
@@ -37,7 +68,14 @@ namespace BlipFace.View
             }
             set
             {
-                lblError.Content = value;
+                
+
+                Dispatcher.Invoke(
+                    new Action<string>(delegate(string _err)
+                    {
+                       lblError.Visibility = System.Windows.Visibility.Visible;
+                        lblError.Content = _err;
+                    }), System.Windows.Threading.DispatcherPriority.Normal,value);
             }
         }
         #endregion
@@ -63,7 +101,25 @@ namespace BlipFace.View
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
+            ShowLoading();
             ValidateCredential();
+        }
+
+        private void ShowLoading()
+        {
+
+            Dispatcher.Invoke(
+                    new Action(delegate
+                                   {
+
+                                       lblLoginAnimation.Visibility = Visibility.Visible;
+                                       Storyboard sbdHideLoading = (Storyboard) FindResource("AnimatedDotLabel");
+                                       sbdHideLoading.Begin();
+
+                                       //lblLoginAnimation.
+                                       //lblError.Content = _err;
+                                   }), System.Windows.Threading.DispatcherPriority.Normal);
+
         }
 
         private void UserControl_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

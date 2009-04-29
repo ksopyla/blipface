@@ -8,9 +8,7 @@ namespace BlipFace
 {
    public interface IHostView
     {
-        UserControl CurrentView { get; }
-
-        void AttachView(UserControl _control);
+       void AttachView(UserControl view);
         void SwitchView(UserControl view);
     }
 }

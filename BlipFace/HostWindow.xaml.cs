@@ -16,10 +16,10 @@ namespace BlipFace
     /// <summary>
     /// Interaction logic for HostWindow.xaml
     /// </summary>
-    public partial class HostWindow : Window,IHostView
+    public partial class HostWindow : Window, IHostView
     {
-        ViewsManager mgr;
-       
+        private ViewsManager mgr;
+
 
         public HostWindow()
         {
@@ -29,13 +29,10 @@ namespace BlipFace
         }
 
 
-       
-
-       
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Uri iconUri = new Uri("pack://application:,,,/Resource/Img/blipFace_logo_round.png", UriKind.RelativeOrAbsolute);
+            Uri iconUri = new Uri("pack://application:,,,/Resource/Img/blipFace_logo_round.png",
+                                  UriKind.RelativeOrAbsolute);
             this.Icon = BitmapFrame.Create(iconUri);
             mgr.Run();
         }
@@ -52,46 +49,40 @@ namespace BlipFace
 
         #region IHost Members
 
-        public void AttachView(UserControl _control)
+        public void AttachView(UserControl view)
         {
-            //_control.Height = PlaceHolder.ActualHeight;
-            PlaceHolder.Children.Add(_control);
-
+            //view.Height = PlaceHolder.ActualHeight;
+            Dispatcher.Invoke(
+                new Action<UserControl>(delegate(UserControl control) { PlaceHolder.Children.Add(control); })
+                , System.Windows.Threading.DispatcherPriority.Normal, view);
         }
 
         public void SwitchView(UserControl view)
         {
-            if (PlaceHolder.Children.Count > 0)
-            {
-                UIElement element = PlaceHolder.Children[0];
+            Dispatcher.Invoke(
+                new Action<UserControl>(delegate(UserControl control)
+                                            {
+                                                if (PlaceHolder.Children.Count > 0)
+                                                {
+                                                    UIElement element = PlaceHolder.Children[0];
 
-                if (element != null)
-                {
-                    element.Visibility = Visibility.Collapsed;
-                    PlaceHolder.Children.RemoveAt(0);
+                                                    if (element != null)
+                                                    {
+                                                        element.Visibility = Visibility.Collapsed;
+                                                        PlaceHolder.Children.RemoveAt(0);
+                                                    }
+                                                }
 
+                                                //    view.Height = PlaceHolder.ActualHeight;
 
-                    
-                }
-            }
-
-        //    view.Height = PlaceHolder.ActualHeight;
-
-            PlaceHolder.Children.Add(view);
+                                                PlaceHolder.Children.Add(view);
+                                            })
+                , System.Windows.Threading.DispatcherPriority.Normal, view);
         }
 
         #endregion
 
         #region IHost Members
-
-        public UserControl CurrentView
-        {
-            get
-            {
-                return (UserControl)PlaceHolder.Children[0];
-            }
-        }
-
 
         #endregion
     }

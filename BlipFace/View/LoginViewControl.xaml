@@ -5,25 +5,62 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.LoginViewControl"
-	x:Name="UserControl"
-	d:DesignWidth="284" d:DesignHeight="264" KeyDown="UserControl_KeyDown" Loaded="UserControl_Loaded">
-
+	x:Name="LoginView"
+	KeyDown="UserControl_KeyDown" Loaded="UserControl_Loaded">
+	<UserControl.Resources>
+		<Storyboard x:Key="AnimatedDotLabel">
+			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" 
+                                           Storyboard.TargetName="lblLoginAnimation" 
+                                           Storyboard.TargetProperty="(ContentControl.Content)" 
+                                           RepeatBehavior="Forever">
+				<DiscreteObjectKeyFrame KeyTime="00:00:00.5000000" Value="Trwa logowanie ."/>
+				<DiscreteObjectKeyFrame KeyTime="00:00:01" Value="Trwa logowanie . ."/>
+				<DiscreteObjectKeyFrame KeyTime="00:00:01.5000000" Value="Trwa logowanie . . ."/>
+				<DiscreteObjectKeyFrame KeyTime="00:00:02" Value="Trwa logowanie . ."/>
+				<DiscreteObjectKeyFrame KeyTime="00:00:02.5000000" Value="Trwa logowanie ."/>
+				<DiscreteObjectKeyFrame KeyTime="00:00:03" Value="Trwa logowanie"/>
+			</ObjectAnimationUsingKeyFrames>
+		</Storyboard>
+	</UserControl.Resources>
+    <!--
+	<UserControl.Triggers>
+		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
+			<BeginStoryboard Storyboard="{StaticResource AnimatedDotLabel}"/>
+		</EventTrigger>
+	</UserControl.Triggers>
+-->
     <StackPanel x:Name="LayoutRoot" Orientation="Vertical" VerticalAlignment="Stretch" Margin="0,20,0,0">
-<Canvas Width="220" Height="300">
-        <Label VerticalAlignment="Center" Style="{DynamicResource LabelWhite}" Content="Login" HorizontalAlignment="Stretch" Width="210" Height="35" Canvas.Top="18" Canvas.Left="2"/>
-        <TextBox Height="35"  x:Name="tbUserName"  VerticalAlignment="Center" FontSize="16" FontWeight="Bold" Width="210" HorizontalAlignment="Center" Canvas.Top="57" Canvas.Left="2" />
+        <StackPanel Width="220">
+            <Label VerticalAlignment="Center" 
+               Style="{DynamicResource LabelWhite}" 
+               Content="Login" 
+               HorizontalAlignment="Stretch" />
+            <TextBox Height="35"  
+                 x:Name="tbUserName"  
+                 FontSize="16" 
+                 FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,10" />
 
-        <Label  x:Name="label2" Style="{DynamicResource LabelWhite}" Content="Hasło" VerticalAlignment="Center" HorizontalAlignment="Center" Width="210" Height="35" Canvas.Top="96" Canvas.Left="2"/>
-        <PasswordBox  x:Name="pswPassword" 
-                Height="35" 
-                FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Width="210" HorizontalAlignment="Center" Canvas.Top="144" Canvas.Left="2" />
+            <Label  x:Name="label2" Style="{DynamicResource LabelWhite}" 
+                Content="Hasło" 
+                HorizontalAlignment="Stretch" />
+            <PasswordBox  x:Name="pswPassword" 
+                Height="35" FontSize="16" 
+                FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,10" />
+            <CheckBox x:Name="chbRememberPassword" Width="220" Height="25" 
+                      Content="Zapamiętaj hasło" Foreground="#FFFFFFFF" FontSize="14"/>
 
-        <Button Height="35"  x:Name="btnLogin"  Click="btnLogin_Click"
+            <Button Height="35"  x:Name="btnLogin"  Click="btnLogin_Click"
                      Style="{DynamicResource BlackButton}" 
-					 Content="Zaloguj" Width="158" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Top="197" Canvas.Left="54"/>
-
-        <Label Name="lblError" Foreground="Red" Height="45" Width="176" Canvas.Top="247" Canvas.Left="8">
-        </Label>
-		</Canvas>
+					 Content="Zaloguj" Width="160" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,10" />
+            <Label x:Name="lblError" Foreground="Red" Height="30" FontSize="14" FontWeight="Normal" 
+                   Content="a" Visibility="Hidden"/>
+            
+             <Label Foreground="#FFFFFF00" 
+			   VerticalAlignment="Top" Content="Trwa logowanie" 
+			   x:Name="lblLoginAnimation" Height="30" FontSize="14" Visibility="Hidden"/>
+				
+            
+        </StackPanel>
     </StackPanel>
 </UserControl>
