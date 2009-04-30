@@ -15,32 +15,20 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
+        "MsmKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
         "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
+        "MsmKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
         "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_17B12B5B38218E5F3A5584C1F6BF5601"
-        "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_17B12B5B38218E5F3A5584C1F6BF5601"
-        "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_17B12B5B38218E5F3A5584C1F6BF5601"
-        "OwnerKey" = "8:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
+        "MsmKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
+        "OwnerKey" = "8:_C8F0154B1086F0161A0914029427429B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -63,6 +51,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_C8F0154B1086F0161A0914029427429B"
+        "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C8F0154B1086F0161A0914029427429B"
+        "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
         "MsmSig" = "8:_UNDEFINED"
@@ -76,13 +76,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
+        "OwnerKey" = "8:_C8F0154B1086F0161A0914029427429B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_17B12B5B38218E5F3A5584C1F6BF5601"
+        "OwnerKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -190,45 +190,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Http.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_0BE6DCBA3A99D673D9FDCE5C891A4D17"
-                    {
-                    "Name" = "8:Microsoft.Http.Extensions.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Http.Extensions.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_632709672C43453394F973D6EEF8C87B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_17B12B5B38218E5F3A5584C1F6BF5601"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Http, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_17B12B5B38218E5F3A5584C1F6BF5601"
+                    "_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
                     {
                     "Name" = "8:Microsoft.Http.dll"
                     "Attributes" = "3:512"
@@ -303,6 +272,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C8F0154B1086F0161A0914029427429B"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Http.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_C8F0154B1086F0161A0914029427429B"
+                    {
+                    "Name" = "8:Microsoft.Http.Extensions.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.Http.Extensions.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_632709672C43453394F973D6EEF8C87B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -320,6 +320,28 @@
                 {
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_593364E2BB1F4EE8B4D7A2829EB1C1E2"
+            {
+            "Name" = "8:#1928"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:StartupFolder"
+                "Folders"
+                {
+                }
+            }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_5E802E1DAB6740AF97441F924CA00910"
+            {
+            "Name" = "8:#1921"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:StartMenuFolder"
+                "Folders"
+                {
+                }
+            }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_632709672C43453394F973D6EEF8C87B"
             {
             "DefaultLocation" = "8:[ProgramFilesFolder]\\[ProductName]"
@@ -328,17 +350,6 @@
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:TARGETDIR"
-                "Folders"
-                {
-                }
-            }
-            "{1525181F-901A-416C-8A58-119130FE478E}:_6DAB3A96203E40A398EBC1883C86CA9A"
-            {
-            "Name" = "8:#1919"
-            "AlwaysCreate" = "11:TRUE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
                 }
@@ -359,17 +370,17 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BlipFace"
-        "ProductCode" = "8:{3630B22B-168C-450C-8549-61826DFA4411}"
-        "PackageCode" = "8:{18241807-387C-4CEC-8F1C-4518B0A0DFC3}"
+        "ProductCode" = "8:{C40AC5AC-F96A-4A39-88F0-CBA4591B7747}"
+        "PackageCode" = "8:{41CEE29C-3ECB-4EEE-8E71-61C38B685526}"
         "UpgradeCode" = "8:{71E3BDC3-6EB1-459A-86E5-22CDC069A369}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.0"
+        "ProductVersion" = "8:0.1.1"
         "Manufacturer" = "8:BlipFace.pl"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:"
+        "ARPHELPLINK" = "8:http://blipface.pl"
         "Title" = "8:BlipFace"
         "Subject" = "8:"
         "ARPCONTACT" = "8:BlipFace.pl"
@@ -479,7 +490,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_1800D94E48B94A95AF8D47A90F4ABC32"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_18584328A8FD4BCD85082F10AFC8A7C9"
             {
             "Name" = "8:BlipFace"
             "Arguments" = "8:"
@@ -487,13 +498,27 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_272EDF564CFB48A896D4669EB7541D42"
-            "Folder" = "8:_272EDF564CFB48A896D4669EB7541D42"
-            "WorkingFolder" = "8:_272EDF564CFB48A896D4669EB7541D42"
+            "Target" = "8:_42C769E6363F4ED3A3393099E93DB46F"
+            "Folder" = "8:_5E802E1DAB6740AF97441F924CA00910"
+            "WorkingFolder" = "8:_632709672C43453394F973D6EEF8C87B"
             "Icon" = "8:_475DA829CAD94E85BD72BEC61CB25C23"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_22848DF931C04FFDB4B40F34E8545985"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_717ED7CFEEDF4B459E3FB075798E9965"
+            {
+            "Name" = "8:BlipFace"
+            "Arguments" = "8:"
+            "Description" = "8:Klient do blipa"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_42C769E6363F4ED3A3393099E93DB46F"
+            "Folder" = "8:_593364E2BB1F4EE8B4D7A2829EB1C1E2"
+            "WorkingFolder" = "8:_632709672C43453394F973D6EEF8C87B"
+            "Icon" = "8:_475DA829CAD94E85BD72BEC61CB25C23"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_AA0AD0A1F774488AAB158F5725C6B51C"
             {
             "Name" = "8:BlipFace"
             "Arguments" = "8:"
@@ -501,9 +526,9 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_6DAB3A96203E40A398EBC1883C86CA9A"
-            "Folder" = "8:_6DAB3A96203E40A398EBC1883C86CA9A"
-            "WorkingFolder" = "8:_6DAB3A96203E40A398EBC1883C86CA9A"
+            "Target" = "8:_42C769E6363F4ED3A3393099E93DB46F"
+            "Folder" = "8:_272EDF564CFB48A896D4669EB7541D42"
+            "WorkingFolder" = "8:_632709672C43453394F973D6EEF8C87B"
             "Icon" = "8:_475DA829CAD94E85BD72BEC61CB25C23"
             "Feature" = "8:"
             }
