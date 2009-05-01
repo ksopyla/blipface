@@ -249,5 +249,23 @@ namespace BlipFace.Presenter
         public event EventHandler<ActionsEventArgs> WorkDone;
 
         #endregion
+
+        public void CiteUser(StatusViewModel status, string text, int position)
+        {
+            
+            StringBuilder blipLink = new StringBuilder("http://blip.pl",26);
+
+            if(status.Type == "DirectedMessage")
+            {
+                blipLink.Append("/dm/");
+            }
+            else
+            {
+                blipLink.Append("/s/");
+            }
+            blipLink.Append(status.StatusId);
+
+            view.TextMessage = text.Insert(position, blipLink.ToString());
+        }
     }
 }

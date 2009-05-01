@@ -51,7 +51,8 @@ namespace BlipFace.Helpers
                                     RecipientAvatar50 = reciptientAvatar,
                                     RecipientLogin = reciptientLogin,
                                     CreationDate = creationDate,
-                                    UserLogin = status.User.Login
+                                    UserLogin = status.User.Login,
+                                    Type = status.Type
                                 });
                 }
             }

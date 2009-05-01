@@ -210,6 +210,15 @@ namespace BlipFace.View
             btnSendBlip.IsEnabled = enable;
         }
 
+        private void CiteUser_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            StatusViewModel status = (StatusViewModel) e.Parameter;
+            int position = tbMessage.SelectionStart;
+
+            presenter.CiteUser(status, tbMessage.Text, position);
+
+        }
+
         
     }
 }

@@ -3,10 +3,18 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:helper="clr-namespace:BlipFace.Helpers"
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.StatusListControl"
+    
 	x:Name="StatusList"
     Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+    
+    <UserControl.CommandBindings>
+        <CommandBinding Command="helper:StatusesCommands.CiteUser" 
+                        Executed="CiteUser_Executed" />
+        
+    </UserControl.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

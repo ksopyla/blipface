@@ -18,9 +18,10 @@
     <ApplicationIcon>Resource\Img\blipFace.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>A9C4927AD240DF844F20F5A6670043248EDA08D2</ManifestCertificateThumbprint>
     <ManifestKeyFile>BlipFace_TemporaryKey.pfx</ManifestKeyFile>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
     <TargetZone>LocalIntranet</TargetZone>
     <SignManifests>false</SignManifests>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -139,6 +140,7 @@
   <ItemGroup>
     <Compile Include="Helpers\BindableRun.cs" />
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Helpers\StatusesCommands.cs" />
     <Compile Include="Helpers\ViewModelHelper.cs" />
     <Compile Include="HostWindow.xaml.cs">
       <DependentUpon>HostWindow.xaml</DependentUpon>
@@ -209,6 +211,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\d2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\app.manifest" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
