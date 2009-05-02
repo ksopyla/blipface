@@ -96,7 +96,7 @@
                      Grid.Row="2"
                      Grid.ColumnSpan="2" >
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -114,24 +114,50 @@
                     <StackPanel Orientation="Horizontal" Background="Transparent"
                         Grid.Column="1" 
                         Grid.Row="0">
-                        <TextBlock Margin="2,2,2,2">
-                            <Hyperlink FontSize="9"
-                            Foreground="#FFFFFDFD"
+                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
+                           <Hyperlink FontSize="9" FontFamily="Verdana"  
+                                       Foreground="#FFE2E2E2" 
+                                       TextDecorations="None"
                                        Command="helpers:StatusesCommands.CiteUser" 
                                        CommandParameter="{Binding}">
-                                <TextBlock Text="Cytuj"/>
+                                 <TextBlock Text="Cytuj">
+                                     <TextBlock.ToolTip>
+                                        <ToolTip 
+                                            Content="{Binding Path=UserLogin}"
+                                            ContentStringFormat="{}Cytuj: {0}"
+                                        />
+                                     </TextBlock.ToolTip>
+                                 
+                                 </TextBlock>
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Margin="2,2,2,2">
-                            <Hyperlink FontSize="9"
-                            Foreground="#FFFFFDFD">
-                                <TextBlock Text="Odpowiedz"/>
+                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
+                            <Hyperlink FontSize="9" FontFamily="Verdana"  
+                                       Foreground="#FFE2E2E2" 
+                                       TextDecorations="None">
+                                <TextBlock Text="Odpowiedz">
+                                <TextBlock.ToolTip>
+                                        <ToolTip 
+                                            Content="{Binding Path=UserLogin}"
+                                            ContentStringFormat="Odpowiedz dla {0}"
+                                        />
+                                     </TextBlock.ToolTip>    
+                                
+                                </TextBlock>
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Margin="2,2,2,2">
-                            <Hyperlink FontSize="9"
-                            Foreground="#FFFFFDFD">
-                                <TextBlock Text="Prywatna"/>
+                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
+                            <Hyperlink FontSize="9" FontFamily="Verdana"  
+                                       Foreground="#FFE2E2E2" 
+                                       TextDecorations="None">
+                                <TextBlock Text="Prywatna">
+                                <TextBlock.ToolTip>
+                                        <ToolTip 
+                                            Content="{Binding Path=UserLogin}"
+                                            ContentStringFormat="Wiadomość prywatna do {0}"
+                                        />
+                                     </TextBlock.ToolTip>    
+                                </TextBlock>
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>

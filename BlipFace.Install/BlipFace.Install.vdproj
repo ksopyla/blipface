@@ -16,7 +16,7 @@
         "Entry"
         {
         "MsmKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
-        "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "OwnerKey" = "8:_322B3BF02F736C105DAA5443F3D598B9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -33,7 +33,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "MsmKey" = "8:_322B3BF02F736C105DAA5443F3D598B9"
         "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -52,7 +52,7 @@
         "Entry"
         {
         "MsmKey" = "8:_C8F0154B1086F0161A0914029427429B"
-        "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "OwnerKey" = "8:_322B3BF02F736C105DAA5443F3D598B9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -70,7 +70,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "OwnerKey" = "8:_322B3BF02F736C105DAA5443F3D598B9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -221,14 +221,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2C02FC4939DD3E391D325D44C2133BBD"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_322B3BF02F736C105DAA5443F3D598B9"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:BlipFace.Service, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2C02FC4939DD3E391D325D44C2133BBD"
+                    "_322B3BF02F736C105DAA5443F3D598B9"
                     {
                     "Name" = "8:BlipFace.Service.dll"
                     "Attributes" = "3:512"
@@ -370,24 +370,24 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BlipFace"
-        "ProductCode" = "8:{C40AC5AC-F96A-4A39-88F0-CBA4591B7747}"
-        "PackageCode" = "8:{41CEE29C-3ECB-4EEE-8E71-61C38B685526}"
+        "ProductCode" = "8:{18DD1F0D-B133-401F-A1C0-EAE5C7C842F8}"
+        "PackageCode" = "8:{C16C1285-ADC0-4053-8BC4-690181DE3539}"
         "UpgradeCode" = "8:{71E3BDC3-6EB1-459A-86E5-22CDC069A369}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.1"
+        "ProductVersion" = "8:0.1.2"
         "Manufacturer" = "8:BlipFace.pl"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://blipface.pl"
         "Title" = "8:BlipFace"
         "Subject" = "8:"
         "ARPCONTACT" = "8:BlipFace.pl"
-        "Keywords" = "8:"
+        "Keywords" = "8:blipface"
         "ARPCOMMENTS" = "8:Instalator pozwala zainstalować aplikację BlipFace, która pomoże tobie w komunikacji z znajomymi poprzez serwis Blip.pl"
         "ARPURLINFOABOUT" = "8:blipface.pl"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_475DA829CAD94E85BD72BEC61CB25C23"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -933,7 +933,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_42C769E6363F4ED3A3393099E93DB46F"
             {
-            "SourcePath" = "8:..\\BlipFace\\obj\\Release\\BlipFace.exe"
+            "SourcePath" = "8:..\\BlipFace\\obj\\Debug\\BlipFace.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_632709672C43453394F973D6EEF8C87B"
