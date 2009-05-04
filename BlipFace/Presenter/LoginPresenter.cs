@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 using System.Linq;
+using System.Security;
 using System.Text;
 using BlipFace.Model;
 using BlipFace.View;
 using BlipFace.Service.Communication;
 using System.IO;
+using BlipFace.Helpers;
 
 namespace BlipFace.Presenter
 {
@@ -13,7 +16,7 @@ namespace BlipFace.Presenter
     {
         private ILoginView _view;
 
-        private string fileWithUserPassword= "BlipPass.bup";
+        private const string FileWithUserPassword = "BlipPass.bup";
 
         public void ValidateCredential(string user, string password)
         {
@@ -42,7 +45,10 @@ namespace BlipFace.Presenter
             //}
         }
 
-
+        /// <summary>
+        /// Callback po wykonaniu autoryzacji
+        /// </summary>
+        /// <param name="value"></param>
         private void com_AuthorizationComplete(bool value)
         {
             if (value)
@@ -75,55 +81,93 @@ namespace BlipFace.Presenter
 
         public void Init()
         {
+            
 
-            string line;
-            if (File.Exists(fileWithUserPassword))
+            IsolatedStorageFile isoStore =
+                    IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+
+            //pobieramy nazwy plików do tablicy, powinien być maksymalnie 1
+            string[] fileNames = isoStore.GetFileNames(FileWithUserPassword);
+            foreach (string file in fileNames)
             {
-                using(StreamReader sr = new StreamReader(fileWithUserPassword))
+                //metoda GetFileNames zwraca listę plików pasującą do wzorca, 
+                //powinien być tylko 1, lecz na wszelki wypadek stosujemy zabezpieczenie aby
+                //nic nam niepotrzbnym wyjątkiem nie rzuciło
+                if (file == FileWithUserPassword)
                 {
-                    line = sr.ReadLine();
+                    using (
+                        StreamReader sr =
+                            new StreamReader(new IsolatedStorageFileStream(FileWithUserPassword, FileMode.Open, isoStore))
+                        )
+                    {
+                        //odczytujemy w pierwszej lini login
+                        var user = sr.ReadLine().Decrypt().ToInsecureString();
+                        //odczytujemy w durgiej lini hasło
+                        var pass = sr.ReadLine().Decrypt().ToInsecureString();
+
+                        _view.UserName = user;
+                        _view.Password = pass;
+                    }
                 }
-                string[] usrAndPass=line.Split(new[]{':'});
+               
+            }//end foreach
 
-
-                _view.UserName = usrAndPass[0];
-                _view.Password = usrAndPass[1];
-            }
+            //jeżeli nie ma pliku to nic nie zostanie ustawione :)
         }
 
         public event EventHandler<ActionsEventArgs> WorkDone;
 
         #endregion
 
-        public void AuthorizationOK(bool remember)
+
+        /// <summary>
+        /// Metoda wywoływana gdy autorycajca zakończy się sukcesem
+        /// </summary>
+        /// <param name="remember"></param>
+        public void AuthorizationDone(bool remember)
         {
-            string usr = _view.UserName;
-            string pas = _view.Password;
+            SecureString usr = _view.UserName.ToSecureString();
+            SecureString pas = _view.Password.ToSecureString();
 
 
             if (remember)
             {
+                //gdzie są przychowywane foldery można przeczytać
+                //http://msdn.microsoft.com/en-us/library/3ak841sy(VS.80).aspx
+                IsolatedStorageFile isoStore =
+                    IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+
+                //towrzymy główny folder do przechowywania
+                //isoStore.CreateDirectory("blipFace");
+
+                //tworzymy plik w którym bedzie przechowywane  zaszyfrowane hasło i login
+                IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(FileWithUserPassword,
+                                                                                    FileMode.Create, isoStore);
 
                 //zawsze tworzymy i nadpisujemy plik
-                using (FileStream fs = new FileStream(fileWithUserPassword, FileMode.Create))
+                //w pierwszej lini login a w drugiej hasło
+                using (StreamWriter sw = new StreamWriter(isoStream))
                 {
-                    using (StreamWriter sw = new StreamWriter(fs))
-                    {
-                        sw.Write(usr);
-                        sw.Write(":");
-                        sw.Write(pas);
-                        
-                        
-                        sw.Close();
-                    }
-                }
+                    //zapisujem login
+                    sw.Write(usr.Encrypt());
+                    
+                    //nowa linia
+                    sw.Write(Environment.NewLine);
+                    
+                    //zapisujemy hasło
+                    sw.Write(pas.Encrypt());
 
+                    sw.Close();
+                }
             }
 
 
             WorkDone(this, new ActionsEventArgs(Actions.Statuses,
                                                 new UserViewModel()
-                                                    {UserName = usr, Password = pas}));
+                                                    {
+                                                        UserName = usr.ToInsecureString(),
+                                                        Password = pas.ToInsecureString()
+                                                    }));
         }
     }
 }

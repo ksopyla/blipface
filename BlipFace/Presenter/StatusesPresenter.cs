@@ -55,12 +55,7 @@ namespace BlipFace.Presenter
             //domyślnie aktualizacje co 30 sekund
             updateStatusTimer = new Timer(30 * 1000);
             updateStatusTimer.Elapsed += new ElapsedEventHandler(updateStatusTimer_Elapsed);
-
-
-
         }
-
-
 
         #region Calbacks
         void updateStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -152,10 +147,8 @@ namespace BlipFace.Presenter
 
 
         #endregion
-       
 
-
-        public void StartListeningForUpdates(int updateInterval)
+        private void StartListeningForUpdates(int updateInterval)
         {
             //start timera
             updateStatusTimer.Interval = updateInterval * 1000; //time in milisconds

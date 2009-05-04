@@ -53,7 +53,7 @@ namespace BlipFace.View
                             bool remember = chbRememberPassword.IsChecked.HasValue
                                                 ? chbRememberPassword.IsChecked.Value
                                                 : false;
-                            _presenter.AuthorizationOK(remember);
+                            _presenter.AuthorizationDone(remember);
                         }
                         
                     }), System.Windows.Threading.DispatcherPriority.Normal,value);

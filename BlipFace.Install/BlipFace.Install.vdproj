@@ -320,17 +320,6 @@
                 {
                 }
             }
-            "{1525181F-901A-416C-8A58-119130FE478E}:_593364E2BB1F4EE8B4D7A2829EB1C1E2"
-            {
-            "Name" = "8:#1928"
-            "AlwaysCreate" = "11:FALSE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Property" = "8:StartupFolder"
-                "Folders"
-                {
-                }
-            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_5E802E1DAB6740AF97441F924CA00910"
             {
             "Name" = "8:#1921"
@@ -500,20 +489,6 @@
             "Transitive" = "11:FALSE"
             "Target" = "8:_42C769E6363F4ED3A3393099E93DB46F"
             "Folder" = "8:_5E802E1DAB6740AF97441F924CA00910"
-            "WorkingFolder" = "8:_632709672C43453394F973D6EEF8C87B"
-            "Icon" = "8:_475DA829CAD94E85BD72BEC61CB25C23"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_717ED7CFEEDF4B459E3FB075798E9965"
-            {
-            "Name" = "8:BlipFace"
-            "Arguments" = "8:"
-            "Description" = "8:Klient do blipa"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_42C769E6363F4ED3A3393099E93DB46F"
-            "Folder" = "8:_593364E2BB1F4EE8B4D7A2829EB1C1E2"
             "WorkingFolder" = "8:_632709672C43453394F973D6EEF8C87B"
             "Icon" = "8:_475DA829CAD94E85BD72BEC61CB25C23"
             "Feature" = "8:"
