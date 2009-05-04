@@ -124,7 +124,7 @@
                                      <TextBlock.ToolTip>
                                         <ToolTip 
                                             Content="{Binding Path=UserLogin}"
-                                            ContentStringFormat="{}Cytuj: {0}"
+                                            ContentStringFormat="Cytuj: {0}"
                                         />
                                      </TextBlock.ToolTip>
                                  
@@ -134,7 +134,10 @@
                         <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
                             <Hyperlink FontSize="9" FontFamily="Verdana"  
                                        Foreground="#FFE2E2E2" 
-                                       TextDecorations="None">
+                                       TextDecorations="None"
+                                       Command="helpers:StatusesCommands.DirectMessage" 
+                                       CommandParameter="{Binding Path=UserLogin}"
+                                       >
                                 <TextBlock Text="Odpowiedz">
                                 <TextBlock.ToolTip>
                                         <ToolTip 
@@ -149,7 +152,10 @@
                         <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
                             <Hyperlink FontSize="9" FontFamily="Verdana"  
                                        Foreground="#FFE2E2E2" 
-                                       TextDecorations="None">
+                                       TextDecorations="None"
+                                       Command="helpers:StatusesCommands.PrivateMessage" 
+                                       CommandParameter="{Binding Path=UserLogin}"
+                                       >
                                 <TextBlock Text="Prywatna">
                                 <TextBlock.ToolTip>
                                         <ToolTip 

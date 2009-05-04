@@ -13,6 +13,10 @@
     <UserControl.CommandBindings>
         <CommandBinding Command="helper:StatusesCommands.CiteUser" 
                         Executed="CiteUser_Executed" />
+        <CommandBinding Command="helper:StatusesCommands.DirectMessage" 
+                        Executed="DirectMessage_Executed" />
+        <CommandBinding Command="helper:StatusesCommands.PrivateMessage" 
+                        Executed="PrivateMessage_Executed" />
         
     </UserControl.CommandBindings>
     <Grid>

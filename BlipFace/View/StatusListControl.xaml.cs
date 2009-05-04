@@ -219,6 +219,18 @@ namespace BlipFace.View
 
         }
 
-        
+
+        private void DirectMessage_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string user = ">" + (string) e.Parameter + ": ";
+            tbMessage.Text = tbMessage.Text.Insert(0, user);
+        }
+
+        private void PrivateMessage_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+             string user = ">>" + (string) e.Parameter + ": ";
+            tbMessage.Text = tbMessage.Text.Insert(0, user);
+        }
     }
 }

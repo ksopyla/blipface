@@ -134,6 +134,9 @@ namespace BlipFace.Presenter
             {
                 //gdzie są przychowywane foldery można przeczytać
                 //http://msdn.microsoft.com/en-us/library/3ak841sy(VS.80).aspx
+                //u mnie na viście jest to folder
+                //C:\Users\ksirg\AppData\Local\VirtualStore\Program Files\BlipFace
+                //oraz C:\Users\ksirg\AppData\Local\IsolatedStorage\ plus dziwne nazwy folderów
                 IsolatedStorageFile isoStore =
                     IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
 
