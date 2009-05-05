@@ -139,12 +139,14 @@
                                  </TextBlock>
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
+                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center"
+                                   Visibility="{Binding Path=IsNotStatusOwner, Converter={StaticResource BoolToVisible}}" >
                             <Hyperlink FontSize="9" FontFamily="Verdana"  
                                        Foreground="#FFE2E2E2" 
                                        TextDecorations="None"
                                        Command="helpers:StatusesCommands.DirectMessage" 
                                        CommandParameter="{Binding}"
+                                       
                                        >
                                 <TextBlock Text="Odpowiedz">
                                 <TextBlock.ToolTip>
@@ -157,7 +159,10 @@
                                 </TextBlock>
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center">
+                        
+                        <TextBlock Margin="0,0,10,0" VerticalAlignment="Center"
+                                   Visibility="{Binding Path=IsNotStatusOwner, Converter={StaticResource BoolToVisible}}" 
+                                   >
                             <Hyperlink FontSize="9" FontFamily="Verdana"  
                                        Foreground="#FFE2E2E2" 
                                        TextDecorations="None"

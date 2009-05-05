@@ -15,14 +15,14 @@ namespace BlipFace.Helpers
         /// <summary>
         /// Pomocna metoda do mapowania Entities do ViewEntities
         /// </summary>
-        /// <param name="iList"></param>
+        /// <param name="statusesList"></param>
         /// <returns></returns>
-        public static IList<StatusViewModel> MapToViewStatus(IList<BlipFace.Service.Entities.BlipStatus> iList)
+        public static IList<StatusViewModel> MapToViewStatus(IList<BlipStatus> statusesList,string ownerLogin)
         {
-            IList<StatusViewModel> sts = new List<StatusViewModel>(iList.Count);
+            IList<StatusViewModel> sts = new List<StatusViewModel>(statusesList.Count);
             try
             {
-                foreach (BlipStatus status in iList)
+                foreach (BlipStatus status in statusesList)
                 {
                     //todo: trzeba uważać bo gdy nie ma recipient to 
                     //rzuca wyjątekiem nullreference
@@ -52,7 +52,8 @@ namespace BlipFace.Helpers
                                     RecipientLogin = reciptientLogin,
                                     CreationDate = creationDate,
                                     UserLogin = status.User.Login,
-                                    Type = status.Type
+                                    Type = status.Type,
+                                    BlipFaceUser = ownerLogin
                                 });
                 }
             }

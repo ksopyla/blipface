@@ -64,7 +64,7 @@ namespace BlipFace.Service.Communication
         private HttpClient blipHttpClient = new HttpClient("http://api.blip.pl/");
 
 
-        private string userName;
+        private string ownerLogin;
         private string password;
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace BlipFace.Service.Communication
         /// <param name="password">hasło</param>
         public BlipCommunication(string userName, string password)
         {
-            this.userName = userName;
+            this.ownerLogin = userName;
             this.password = password;
 
             //potrzeba dodać obowiązkowy nagłówek gdy korzystamy z api blip'a
@@ -87,7 +87,7 @@ namespace BlipFace.Service.Communication
 
             //trzeba zakodować w base64 login:hasło - tak każe blip
             byte[] credentialBuffer = new UTF8Encoding().GetBytes(
-                string.Format("{0}:{1}", this.userName, this.password));
+                string.Format("{0}:{1}", this.ownerLogin, this.password));
             string authHeader = "Basic " + Convert.ToBase64String(credentialBuffer);
 
             //nagłówek autoryzacja - zakodowane w base64
@@ -498,10 +498,11 @@ namespace BlipFace.Service.Communication
     {
         public IList<BlipStatus> Statuses { get; private set; }
 
-        public StatusesLoadingEventArgs(IList<BlipStatus> statuses)
+       public StatusesLoadingEventArgs(IList<BlipStatus> statuses)
         {
             Statuses = statuses;
         }
+       
     }
 
     /// <summary>

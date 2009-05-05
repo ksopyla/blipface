@@ -24,7 +24,7 @@ namespace BlipFace.Presenter
         /// </summary>
         private IStatusesView view;
 
-        private UserViewModel user;
+        private readonly UserViewModel blipfaceUser;
 
         /// <summary>
         /// Klasa do komunikacji z blipem, 
@@ -40,26 +40,26 @@ namespace BlipFace.Presenter
         /// <param name="_view">wikok</param>
         public StatusesPresenter(UserViewModel _user)
         {
-            this.user = _user;
-            blpCom = new BlipCommunication(user.UserName,user.Password);
+            this.blipfaceUser = _user;
+            blpCom = new BlipCommunication(blipfaceUser.UserName,blipfaceUser.Password);
 
-            blpCom.StatusesLoaded += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesLoaded);
+            blpCom.StatusesLoaded += new EventHandler<StatusesLoadingEventArgs>(BlpComStatusesLoaded);
 
-            blpCom.MainStatusLoaded += new EventHandler<MainStatusLoadingEventArgs>(blpCom_MainStatusLoaded);
+            blpCom.MainStatusLoaded += new EventHandler<MainStatusLoadingEventArgs>(BlpComMainStatusLoaded);
 
             blpCom.StatusesAdded += new EventHandler<EventArgs>(blpCom_StatusesAdded);
 
-            blpCom.StatusesUpdated += new EventHandler<StatusesLoadingEventArgs>(blpCom_StatusesUpdated);
+            blpCom.StatusesUpdated += new EventHandler<StatusesLoadingEventArgs>(BlpComStatusesUpdated);
 
-            blpCom.ExceptionOccure += new EventHandler<ExceptionEventArgs>(blpCom_ExceptionOccure);
+            blpCom.ExceptionOccure += new EventHandler<ExceptionEventArgs>(BlpComExceptionOccure);
 
             //domyślnie aktualizacje co 30 sekund
             updateStatusTimer = new Timer(30 * 1000);
-            updateStatusTimer.Elapsed += new ElapsedEventHandler(updateStatusTimer_Elapsed);
+            updateStatusTimer.Elapsed += new ElapsedEventHandler(UpdateStatusTimerElapsed);
         }
 
         #region Calbacks
-        void updateStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+        void UpdateStatusTimerElapsed(object sender, ElapsedEventArgs e)
         {
             //int lastIndex = lstbStatusList.Items.Count;
             //todo: uwaga gdyż może być wyrzucony wyjątek NullReference Exception, gdy za wczesnie tu wejdzie
@@ -71,8 +71,8 @@ namespace BlipFace.Presenter
                 if (lastStatus != null)
                 {
                     //todo: zamiast pobierać za każdym razem ostatni status można by najpierw sprawdzić czy się zmienił
-                    LoadUserMainStatus(user.UserName);
-                    UpdateUserDashboard(user.UserName, lastStatus.StatusId);
+                    LoadUserMainStatus(blipfaceUser.UserName);
+                    UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void blpCom_ExceptionOccure(object sender, ExceptionEventArgs e)
+        void BlpComExceptionOccure(object sender, ExceptionEventArgs e)
         {
             view.Error = e.Error;
         }
@@ -93,10 +93,10 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void blpCom_StatusesUpdated(object sender, StatusesLoadingEventArgs e)
+        void BlpComStatusesUpdated(object sender, StatusesLoadingEventArgs e)
         {
 
-            IList<StatusViewModel> statuses = ViewModelHelper.MapToViewStatus(e.Statuses);
+            IList<StatusViewModel> statuses = ViewModelHelper.MapToViewStatus(e.Statuses,blipfaceUser.UserName);
 
             view.Statuses = statuses.Concat(view.Statuses).ToList();
             // view.Statuses.Insert(0, statuses[0]);
@@ -119,8 +119,8 @@ namespace BlipFace.Presenter
 
                 if (lastStatus != null)
                 {
-                    LoadUserMainStatus(user.UserName);
-                    UpdateUserDashboard(user.UserName, lastStatus.StatusId);
+                    LoadUserMainStatus(blipfaceUser.UserName);
+                    UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
                 }
             }
         }
@@ -131,9 +131,10 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void blpCom_StatusesLoaded(object sender, StatusesLoadingEventArgs e)
+        void BlpComStatusesLoaded(object sender, StatusesLoadingEventArgs e)
         {
-            view.Statuses = ViewModelHelper.MapToViewStatus(e.Statuses);
+            
+            view.Statuses = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
         }
 
         /// <summary>
@@ -141,7 +142,7 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void blpCom_MainStatusLoaded(object sender, MainStatusLoadingEventArgs e)
+        void BlpComMainStatusLoaded(object sender, MainStatusLoadingEventArgs e)
         {
             view.MainStatus = ViewModelHelper.MapToViewStatus(e.MainStatus);
         }
@@ -232,10 +233,10 @@ namespace BlipFace.Presenter
 
         public void Init()
         {
-            LoadUserMainStatus(user.UserName);
+            LoadUserMainStatus(blipfaceUser.UserName);
 
             //todo: pobrać listę statusów
-            LoadUserDashboard(user.UserName);
+            LoadUserDashboard(blipfaceUser.UserName);
 
             StartListeningForUpdates(90);
         }
@@ -276,10 +277,10 @@ namespace BlipFace.Presenter
 
 
             //regex wyszukujące czy wiadomość nie rozpoczyna się jak prywatana
-            Regex regexPrivateMessage = new Regex(@"^>>.*:");
+            Regex regexPrivateMessage = new Regex(@"^>>.*?:");
 
             //regex wyszukujące czy wiadomośc nie rozpoczyna się jak skierowana
-            Regex regexDirectMessage = new Regex(@"^>.*:");
+            Regex regexDirectMessage = new Regex(@"^>.*:?");
 
             string blipMessage;
             if (regexPrivateMessage.IsMatch(messageText))
@@ -324,7 +325,7 @@ namespace BlipFace.Presenter
             //oraz z dwoma znakami >>
             //dlatego dobrze działa i zamienia gdy drugi raz klikniemy wiadomość prywatna
             //a dotychczasowa wiadomość jest już prywatna
-            Regex regex = new Regex(@"^>.*:");
+            Regex regex = new Regex(@"^>.*?:");
 
             string blipMessage;
             if(regex.IsMatch(messageText))

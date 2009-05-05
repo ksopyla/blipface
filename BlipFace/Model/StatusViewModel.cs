@@ -22,6 +22,24 @@ namespace BlipFace.Model
         public string UserAvatar50 { get; set; }
 
 
+
+        public string BlipFaceUser { get; set; }
+        
+        
+        /// <summary>
+        /// Czy osoba zalogowana do blipface nie jest właścicielem tego statusu
+        /// potrzebne przy chowaniu opcji takich jak Odpowiedz czy Wiadomość prywatna
+        /// tak aby nie można było odpowiadać na swoje wiadomości
+        /// </summary>
+        public bool IsNotStatusOwner
+        {
+            get
+            {
+                return !(UserLogin == BlipFaceUser);
+            }
+        }
+        
+
         private string recipientAvatar50;
         public string RecipientAvatar50 { 
             get
