@@ -50,11 +50,18 @@
                     </Border>
                     <!--Obrazek ze strzałką, nie zawsze będzie widoczny-->
                     <Border Margin="0,0,0,0"
-                        Visibility="{Binding Path=HasRecipient, Converter={StaticResource BoolToVisible}}"
+                        Visibility="{Binding Path=DirectedMessage, Converter={StaticResource BoolToVisible}}"
                         BorderThickness="0" 
                         VerticalAlignment="Center" 
                         Background="{x:Null}" >
-                        <Image Source="d.gif" Height="50" Width="6" VerticalAlignment="Center" />
+                        <Image Source="Img\directedMessage.gif" Height="50" Width="6" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Margin="0,0,0,0"
+                        Visibility="{Binding Path=PrivateMessage, Converter={StaticResource BoolToVisible}}"
+                        BorderThickness="0" 
+                        VerticalAlignment="Center" 
+                        Background="{x:Null}" >
+                        <Image Source="Img\privateMessage.gif" Height="50" Width="6" VerticalAlignment="Center" />
                     </Border>
                     <!--Avatar odbiorcy wiadomości, nie zawsze istnieje-->
                     <Border 
@@ -87,6 +94,14 @@
                                     Foreground="Orange" 
                                     Content=">" 
                                     Visibility="{Binding Path=HasRecipient, Converter={StaticResource BoolToVisible}}" 
+                                /><Label 
+                                    FontSize="9" 
+                                    Background="Transparent"
+                                    Margin="-4,0,0,0"
+                                    Padding="0,0,2,0" 
+                                    Foreground="Orange" 
+                                    Content=">" 
+                                    Visibility="{Binding Path=PrivateMessage, Converter={StaticResource BoolToVisible}}" 
                                 /><br:BindableRun 
                                     FontWeight="SemiBold" 
                                     Foreground="Orange" 

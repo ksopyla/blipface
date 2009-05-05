@@ -17,7 +17,7 @@ namespace BlipFace.Helpers
         /// </summary>
         /// <param name="statusesList"></param>
         /// <returns></returns>
-        public static IList<StatusViewModel> MapToViewStatus(IList<BlipStatus> statusesList,string ownerLogin)
+        public static IList<StatusViewModel> MapToViewStatus(IList<BlipStatus> statusesList, string ownerLogin)
         {
             IList<StatusViewModel> sts = new List<StatusViewModel>(statusesList.Count);
             try
@@ -28,15 +28,30 @@ namespace BlipFace.Helpers
                     //rzuca wyjątekiem nullreference
                     string reciptientAvatar = string.Empty;
                     string reciptientLogin = string.Empty;
-                    if (status.Type == "PrivateMessage" || status.Type == "DirectedMessage")
+                    bool hasRecipient = false;
+                    bool directedMessage = false;
+                    bool privateMessage = false;
+
+                    if (status.Type == "DirectedMessage")
                     {
-                        reciptientAvatar = status.Recipient.Avatar== null
+                        reciptientAvatar = status.Recipient.Avatar == null
                                            ? "http://static1.blip.pl/images/nn_nano.png?1240395130"
                                            : status.Recipient.Avatar.Url50;
                         reciptientLogin = status.Recipient.Login;
+                        hasRecipient = true;
+                        directedMessage = true;
+                    }
+                    else if (status.Type == "PrivateMessage")
+                    {
+                        reciptientAvatar = status.Recipient.Avatar == null
+                                           ? "http://static1.blip.pl/images/nn_nano.png?1240395130"
+                                           : status.Recipient.Avatar.Url50;
+                        reciptientLogin = status.Recipient.Login;
+                        hasRecipient = true;
+                        privateMessage = true;
                     }
 
-                    ///czasami data nie jest ustawiana przez Blipa - dziwne
+                    //czasami data nie jest ustawiana przez Blipa - dziwne
                     string creationDate = status.StatusTime == null ? string.Empty : status.StatusTime;
                     string avatarUrl = status.User.Avatar == null
                                            ? "http://static1.blip.pl/images/nn_nano.png?1240395130"
@@ -50,6 +65,9 @@ namespace BlipFace.Helpers
                                     UserAvatar50 = avatarUrl,
                                     RecipientAvatar50 = reciptientAvatar,
                                     RecipientLogin = reciptientLogin,
+                                    HasRecipient = hasRecipient,
+                                    DirectedMessage = directedMessage,
+                                    PrivateMessage = privateMessage,
                                     CreationDate = creationDate,
                                     UserLogin = status.User.Login,
                                     Type = status.Type,
@@ -80,7 +98,7 @@ namespace BlipFace.Helpers
                 //rzuca wyjątekiem nullreference
                 string reciptientAvatar = string.Empty;
                 string reciptientLogin = string.Empty;
-                
+
                 //czasami data nie jest ustawiana przez Blipa - dziwne
                 string creationDate = string.Empty;
                 string avatarUrl = status.User.Avatar == null

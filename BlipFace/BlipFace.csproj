@@ -169,7 +169,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resource\d.gif" />
+    <Resource Include="Resource\Img\directedMessage.gif" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\Img\blipFace_logo_round.png" />
@@ -212,7 +212,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resource\d2.gif" />
+    <Resource Include="Resource\Img\privateMessage.gif" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\app.manifest" />

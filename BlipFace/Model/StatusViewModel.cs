@@ -40,6 +40,7 @@ namespace BlipFace.Model
         }
         
 
+        /*
         private string recipientAvatar50;
         public string RecipientAvatar50 { 
             get
@@ -63,9 +64,15 @@ namespace BlipFace.Model
                 }
                 recipientAvatar50 = value;
             }
-        }
+        }*/
+
+        public string RecipientAvatar50 { get; set; }
 
         public bool HasRecipient { get; set; }
+
+        public bool DirectedMessage { get; set; }
+
+        public bool PrivateMessage { get; set; }
 
         public string RecipientLogin { get; set; }
 
