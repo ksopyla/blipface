@@ -144,7 +144,7 @@
                                        Foreground="#FFE2E2E2" 
                                        TextDecorations="None"
                                        Command="helpers:StatusesCommands.DirectMessage" 
-                                       CommandParameter="{Binding Path=UserLogin}"
+                                       CommandParameter="{Binding}"
                                        >
                                 <TextBlock Text="Odpowiedz">
                                 <TextBlock.ToolTip>
@@ -162,7 +162,7 @@
                                        Foreground="#FFE2E2E2" 
                                        TextDecorations="None"
                                        Command="helpers:StatusesCommands.PrivateMessage" 
-                                       CommandParameter="{Binding Path=UserLogin}"
+                                       CommandParameter="{Binding}"
                                        >
                                 <TextBlock Text="Prywatna">
                                 <TextBlock.ToolTip>

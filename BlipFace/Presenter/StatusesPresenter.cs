@@ -8,6 +8,7 @@ using BlipFace.Service.Entities;
 using BlipFace.Model;
 using System.Timers;
 using BlipFace.Helpers;
+using System.Text.RegularExpressions;
 
 namespace BlipFace.Presenter
 {
@@ -259,6 +260,86 @@ namespace BlipFace.Presenter
             blipLink.Append(status.StatusId);
 
             view.TextMessage = text.Insert(position, blipLink.ToString());
+        }
+
+
+        /// <summary>
+        /// Konstruje format wiadomości skierowanej
+        /// </summary>
+        /// <param name="status">cały satus na którego użytkownik chce odpowiedzieć</param>
+        /// <param name="messageText">dotychczasowa treść wiadomości</param>
+        public void MakeDirectMessage(StatusViewModel status, string messageText)
+        {
+
+            //format wiadomości dla zwykłej odpowiedzia
+            string userFormat = string.Format(">{0}:", status.UserLogin);
+
+
+            //regex wyszukujące czy wiadomość nie rozpoczyna się jak prywatana
+            Regex regexPrivateMessage = new Regex(@"^>>.*:");
+
+            //regex wyszukujące czy wiadomośc nie rozpoczyna się jak skierowana
+            Regex regexDirectMessage = new Regex(@"^>.*:");
+
+            string blipMessage;
+            if (regexPrivateMessage.IsMatch(messageText))
+            {
+                //jesli rozpoczyna się jak prywatna to zamień na kierowaną
+                blipMessage = regexPrivateMessage.Replace(messageText, userFormat);
+            }
+            else if (regexDirectMessage.IsMatch(messageText))
+            {
+                //jeśli ropoczyna się jak kierowana to zamień z powrotem na kierowaną
+                //może się wydawać bez sensu, lecz przydaje się gdy bedziemy chcieli 
+                //wysłać do innej osoby niż jest już ustawione
+                blipMessage = regexDirectMessage.Replace(messageText, userFormat);
+            }
+            else
+            {
+                //jeżeli nie jest do nikogo to wstaw na początek
+                blipMessage = messageText.Insert(0, userFormat);
+            }
+
+            //string blipMessage = Regex.Replace(messageText, @"^>.*:", userFormat, RegexOptions.IgnoreCase);
+
+            view.TextMessage = blipMessage;
+            //string userFormat = string.Format(">{0}: ", status.UserLogin);
+            //string blipMessage = Regex.Replace(messageText, @"^>>.*:", userFormat, RegexOptions.IgnoreCase);
+
+            //view.TextMessage = blipMessage;
+            
+        }
+
+        /// <summary>
+        /// Konstruje format wiadomość prywatnej
+        /// </summary>
+        /// <param name="status">status na któego użytkownik chce odpowiedzieć prywatnie</param>
+        /// <param name="messageText">dotychczasowa treść wiadomości</param>
+        public void MakePrivateMessage(StatusViewModel status, string messageText)
+        {
+            string userFormat = string.Format(">>{0}:", status.UserLogin);
+
+            //uwaga to wyrażenie łapie dwa typy tekstu
+            // z jednym znakiem >
+            //oraz z dwoma znakami >>
+            //dlatego dobrze działa i zamienia gdy drugi raz klikniemy wiadomość prywatna
+            //a dotychczasowa wiadomość jest już prywatna
+            Regex regex = new Regex(@"^>.*:");
+
+            string blipMessage;
+            if(regex.IsMatch(messageText))
+            {
+               blipMessage= regex.Replace(messageText, userFormat);
+            }
+            else
+            {
+                blipMessage = messageText.Insert(0, userFormat);
+            }
+
+            //string blipMessage = Regex.Replace(messageText, @"^>.*:", userFormat, RegexOptions.IgnoreCase);
+
+            view.TextMessage = blipMessage;
+
         }
     }
 }

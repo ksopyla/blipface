@@ -220,20 +220,49 @@ namespace BlipFace.View
         }
 
 
+        /// <summary>
+        /// Komenda wywoływana gdy naciśniemy przycisk Odpowiedz przy statusie
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DirectMessage_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            string user = ">" + (string) e.Parameter + ": ";
-            tbMessage.Text = tbMessage.Text.Insert(0, user);
+            StatusViewModel status = (StatusViewModel)e.Parameter;
+
             
-            tbMessage.Select(tbMessage.Text.Length-1,0);
+
+            presenter.MakeDirectMessage(status, tbMessage.Text);
+
+            if (tbMessage.Text.Length > 0)
+            {
+                tbMessage.Select(tbMessage.Text.Length, 0);
+            }
             tbMessage.Focus();
         }
 
+        /// <summary>
+        /// Komenda wywoływana gdy naciśniemy przycisk Prywatna przy statusie,
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PrivateMessage_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+
+            StatusViewModel status = (StatusViewModel)e.Parameter;
+
+
+
+            presenter.MakePrivateMessage(status, tbMessage.Text);
+
+            if(tbMessage.Text.Length>0)
+            {
+                tbMessage.Select(tbMessage.Text.Length, 0);    
+            }
             
-             string user = ">>" + (string) e.Parameter + ": ";
-            tbMessage.Text = tbMessage.Text.Insert(0, user);
+            tbMessage.Focus();
+            
         }
     }
 }
