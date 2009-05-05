@@ -21,11 +21,11 @@
     </UserControl.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" MinWidth="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <!--Główny status użytkownika-->
-            <RowDefinition Height="75"/>
+            <RowDefinition Height="Auto" MinHeight="80"/>
            <!--Lista statusów-->
             <RowDefinition Height="*" MinHeight="200"/>
             <!--Panel do dodawania statusów-->

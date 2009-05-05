@@ -24,15 +24,19 @@
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*" MinWidth="180"/>
+                    <ColumnDefinition Width="*" MinWidth="100"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="64"  />
+                    
+                    
+                    <!-- główna część statusu -->
+                    <RowDefinition Height="Auto" MinHeight="65" />
+                    
+                    <!-- opcje na dole -->
                     <RowDefinition Height="25" />
                 </Grid.RowDefinitions>
-                <!--Avatar-->
-                <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
+                <!--Avatary-->
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
                     <!--Avatar użytkownika-->
                     <Border Margin="5,5,0,5"
                         BorderBrush="#FFFDFDFD" 
@@ -60,19 +64,21 @@
                         BorderThickness="2,2,2,2" 
                         VerticalAlignment="Top" 
                         CornerRadius="2,2,2,2">
-                        <Image Source="{Binding Path=RecipientAvatar50}" VerticalAlignment="Center" />
+                        <Image Source="{Binding Path=RecipientAvatar50}" Height="50" Width="50" VerticalAlignment="Center" />
                     </Border>
                 </StackPanel>
+                <!--Treść wiadomości-->
                 <RichTextBox 
                     Grid.Column="1" 
-                    Grid.Row="1"
+                    Grid.Row="0"
                     BorderThickness="0"
                     Foreground="#FFFFFDFD"
                     Background="Transparent">
                     <FlowDocument>
                         <Paragraph>
                             <!--Login użytkownika i odbiorcy wiadomości, ten drugi nie zawsze istnieje-->
-                            <br:BindableRun FontWeight="SemiBold" Foreground="Orange" BoundText="{Binding Path=UserLogin}" 
+                            <br:BindableRun FontWeight="SemiBold" 
+                                            Foreground="Orange" BoundText="{Binding Path=UserLogin}" 
                                 /><Label 
                                     FontSize="9" 
                                     Background="Transparent"
@@ -91,9 +97,11 @@
                         </Paragraph>
                     </FlowDocument>
                 </RichTextBox>
+                
+                <!-- Data i opcje na dole statusu-->
                 <Grid 
                      Grid.Column="0" 
-                     Grid.Row="2"
+                     Grid.Row="1"
                      Grid.ColumnSpan="2" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -167,22 +175,7 @@
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>
-                    <!--
-                    <Menu
-                        >
-                        <MenuItem 
-                            Header="Cytuj"
-                            FontSize="9"
-                            Foreground="#FFFFFDFD" />
-                        <MenuItem 
-                            Header="Odpowiedz"
-                             />
-                        <MenuItem 
-                            Header="Wiadomość prywatna"
-                            FontSize="9"
-                            Foreground="#FFFFFDFD" />
-                    </Menu>
-                    -->
+                    
                 </Grid>
             </Grid>
         </Border>

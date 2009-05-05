@@ -224,6 +224,9 @@ namespace BlipFace.View
         {
             string user = ">" + (string) e.Parameter + ": ";
             tbMessage.Text = tbMessage.Text.Insert(0, user);
+            
+            tbMessage.Select(tbMessage.Text.Length-1,0);
+            tbMessage.Focus();
         }
 
         private void PrivateMessage_Executed(object sender, ExecutedRoutedEventArgs e)
