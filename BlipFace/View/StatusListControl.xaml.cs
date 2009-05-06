@@ -34,6 +34,8 @@ namespace BlipFace.View
             // Insert code required on object creation below this point.
 
             presenter = _presenter;
+
+            SetTextBoxFocus();
         }
 /// <summary>
         /// Służy tylko do wyliczania ilości znaków pozostałych do wpisania
@@ -216,7 +218,7 @@ namespace BlipFace.View
             int position = tbMessage.SelectionStart;
 
             presenter.CiteUser(status, tbMessage.Text, position);
-
+            SetTextBoxFocus();
         }
 
 
@@ -234,6 +236,11 @@ namespace BlipFace.View
 
             presenter.MakeDirectMessage(status, tbMessage.Text);
 
+            SetTextBoxFocus();
+        }
+
+        private void SetTextBoxFocus()
+        {
             if (tbMessage.Text.Length > 0)
             {
                 tbMessage.Select(tbMessage.Text.Length, 0);
@@ -256,12 +263,7 @@ namespace BlipFace.View
 
             presenter.MakePrivateMessage(status, tbMessage.Text);
 
-            if(tbMessage.Text.Length>0)
-            {
-                tbMessage.Select(tbMessage.Text.Length, 0);    
-            }
-            
-            tbMessage.Focus();
+            SetTextBoxFocus();
             
         }
     }

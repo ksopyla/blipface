@@ -116,21 +116,17 @@
 
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="tbMessage"  
+            
+            <TextBox x:Name="tbMessage" 
 				Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
-				BorderThickness="0"
 				ClipToBounds="False" 
 				TextWrapping="Wrap"  
 				VerticalAlignment="Stretch" 
-				FontSize="14"
+                Style="{DynamicResource RoundedTextInput}"     
+                FontSize="14" FontFamily="Verdana"
 				TextChanged="tbMessage_TextChanged" 
-				KeyDown="tbMessage_KeyDown" Foreground="#FFFFFFFF" FontFamily="Verdana" >
-                <TextBox.Background>
-                    <RadialGradientBrush>
-                        <GradientStop Color="#FF423E3E" Offset="0"/>
-                        <GradientStop Color="#FF5C5555" Offset="1"/>
-                    </RadialGradientBrush>
-                </TextBox.Background>
+				KeyDown="tbMessage_KeyDown"  >
+                               
             </TextBox>
 
             <TextBlock  Grid.Row="1" Grid.Column="0" 

@@ -40,10 +40,13 @@ namespace BlipFace
 
 
             //ikona w sys tray'u po zminimalizowaniu
-            notifyIcon = new System.Windows.Forms.NotifyIcon();
-            notifyIcon.BalloonTipText = "BlipFace się narazie howa, jeżeli chcesz go zobaczyć jeszcze raz kliknij na ikonę.";
-            notifyIcon.BalloonTipTitle = "BlipFace";
-            notifyIcon.Text = "Kliknij aby pokazał się BlipFace";
+            notifyIcon = new System.Windows.Forms.NotifyIcon
+                             {
+                                 BalloonTipText =
+                                     "BlipFace został zminimzlizowany, jeżeli chcesz go zobaczyć jeszcze raz kliknij na ikonę.",
+                                 BalloonTipTitle = "BlipFace",
+                                 Text = "Kliknij aby pokazał się BlipFace"
+                             };
 
             Stream iconStream = Application.GetResourceStream(iconUri).Stream;
             notifyIcon.Icon = new System.Drawing.Icon(iconStream);

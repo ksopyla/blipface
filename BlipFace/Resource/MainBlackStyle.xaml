@@ -7,18 +7,46 @@
         <GradientStop Color="#FF110F0F" Offset="1"/>
     </RadialGradientBrush>
 
+    <RadialGradientBrush x:Key="grayRadialGradient">
+        <GradientStop Color="#FF423E3E" Offset="0"/>
+        <GradientStop Color="#FF5C5555" Offset="1"/>
+    </RadialGradientBrush>
+
+    <!--tło całego głównego okna-->
     <Style x:Key="BlackWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Background" Value="{StaticResource blackRadialGradient}" />
         <Setter Property="Foreground" Value="white"/>
     </Style>
+    
+    
 
+    <!--Białe etykiety szczególnie do logowania-->
     <Style x:Key="LabelWhite" TargetType="{x:Type Label}" >
         <Setter Property="Foreground" Value="white"/>
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Margin" Value="0,15,0,10"/>
     </Style>
 
-	<Style x:Key="ButtonFocusVisual">
+    <!--Style dla texboxa z wpisywaną wiadomością aby był zaokrąglony-->
+    <Style TargetType="{x:Type TextBox}" x:Key="RoundedTextInput">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <!-- Setter Property="FocusVisualStyle" Value="{x:Null}"/ -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <!--note this border with associated corner radius-->
+                    <Border Name="Border" CornerRadius="5" Padding="2" 
+                            BorderThickness="1" Background="{StaticResource grayRadialGradient}">
+                        <ScrollViewer SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                      x:Name="PART_ContentHost"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ButtonFocusVisual">
 		<Setter Property="Control.Template">
 			<Setter.Value>
 				<ControlTemplate>
