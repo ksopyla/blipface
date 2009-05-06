@@ -16,8 +16,12 @@
     ResizeMode="CanResizeWithGrip"
     
     MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown"
-	Loaded="Window_Loaded">
-    <!--	AllowsTransparency="True" -->
+	Loaded="Window_Loaded"
+     Closing="HostWindow_OnClosing"
+    StateChanged="HostWindow_OnStateChanged"
+    IsVisibleChanged="HostWindow_OnIsVisibleChanged"
+        >
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -40,15 +44,66 @@
                 </Label.BitmapEffect>
 
             </Label>
-            <Button x:Name="btnCloseApp" Canvas.Right="25" Canvas.Top="5" Click="btnCloseApp_Click">
+
+            <Button x:Name="btnMinimalizeApp" ToolTip="Minimalizuj"
+                    Canvas.Right="53" Canvas.Top="5" Click="btnMinimalizeApp_Click">
                 <Button.Template>
                     <ControlTemplate>
                         <Canvas>
-                            <Rectangle Width="20" Height="20" Stroke="Black" RadiusX="3" RadiusY="3">
-                                <Rectangle.Fill>
-                                    <SolidColorBrush x:Name="myAnimatedBrush" Color="Red" />
-                                </Rectangle.Fill>
+                            <Rectangle Width="25" Height="20" Stroke="Black" RadiusX="3" RadiusY="3">
+                                <Rectangle.Style>
+                                    <Style>
+                                        <Style.Setters>
+                                            <Setter Property="Rectangle.Fill" Value="#4444ff" />
+                                        </Style.Setters>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsMouseOver}">
+                                                <Setter Property="Rectangle.Fill" Value="blue" />
+                                            </DataTrigger>
+
+                                        </Style.Triggers>
+
+                                    </Style>
+                                </Rectangle.Style>
                             </Rectangle>
+                            <Line X1="7" Y1="14" X2="20" Y2="14" Stroke="White" StrokeThickness="3"/>
+
+                        </Canvas>
+                    </ControlTemplate>
+
+                </Button.Template>
+            </Button>
+
+
+            <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
+                    Canvas.Right="25" Canvas.Top="5"
+                    Click="btnCloseApp_Click">
+                
+                <Button.Template>
+                    <ControlTemplate>
+                        <Canvas>
+                            <Rectangle x:Name="recBackground"
+                                           Width="20" Height="20" 
+                                           Stroke="Black" RadiusX="3" RadiusY="3">
+                                <Rectangle.Style>
+                                    <Style>
+                                        <Style.Setters>
+                                            <Setter Property="Rectangle.Fill" Value="#ff4444" />
+                                        </Style.Setters>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsMouseOver}">
+                                                <Setter Property="Rectangle.Fill" Value="red" />
+                                            </DataTrigger>
+                                           
+                                        </Style.Triggers>
+
+                                    </Style>
+                                </Rectangle.Style>
+
+                            </Rectangle>
+
                             <Line X1="5" Y1="5" X2="15" Y2="15" Stroke="White" StrokeThickness="2"/>
                             <Line X1="15" Y1="5" X2="5" Y2="15" Stroke="White" StrokeThickness="2"/>
                         </Canvas>
