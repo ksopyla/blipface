@@ -32,6 +32,10 @@ namespace BlipFace.View
         }
 
         private bool authorize;
+        
+        /// <summary>
+        /// Czy poprwanie się zautoryzowano
+        /// </summary>
         public  bool Authorize
         {
             get
@@ -48,11 +52,17 @@ namespace BlipFace.View
                         sbdHideLoading.Stop();
                         authorize = auth;
 
+                        //jeśli poprawnie się zautoryzowno w blipie
                         if(auth)
                         {
+                            //czy należy zapamiętać 
                             bool remember = chbRememberPassword.IsChecked.HasValue
                                                 ? chbRememberPassword.IsChecked.Value
                                                 : false;
+                            //powiadamiamy prezentera że nastąpiła poprawna autoryzacja
+                            //widok wyświetlił wszystko co miał
+                            //i więc teraz należy zachować albo nie dane do logowania
+                            //w zależności co użytkownik zaznaczył w checkBoxie
                             _presenter.AuthorizationDone(remember);
                         }
                         
