@@ -10,7 +10,6 @@ using System.Runtime.Serialization;
 
 namespace BlipFace.Service.Communication
 {
-
     /// <summary>
     /// Główna klasa służąca do komunikacji z api blip.pl
     /// 
@@ -19,7 +18,6 @@ namespace BlipFace.Service.Communication
     /// </summary>
     public class BlipCommunication
     {
-
         #region Events
 
         /// <summary>
@@ -57,7 +55,15 @@ namespace BlipFace.Service.Communication
         /// </summary>
         public event EventHandler<ExceptionEventArgs> ExceptionOccure;
 
+        /// <summary>
+        /// zdarzenie zgłaszane gdy nie można się skomunikować z blipem
+        /// </summary>
+        public event EventHandler<ExceptionEventArgs> CantCommunicate;
+
+
+
         #endregion
+
         /// <summary>
         /// Klasa z WCF Rest Starter Kit (http://msdn.microsoft.com/netframework/cc950529(en-us).aspx)
         /// </summary>
@@ -96,10 +102,7 @@ namespace BlipFace.Service.Communication
             //ustawienie nagłówka UserAgent - po tym blip rozpoznaje transport
             blipHttpClient.DefaultHeaders.UserAgent.Add(
                 new Microsoft.Http.Headers.ProductOrComment("BlipFace/0.1 (http://blipface.pl)"));
-
-
         }
-
 
 
         /// <summary>
@@ -108,7 +111,6 @@ namespace BlipFace.Service.Communication
         /// <returns></returns>
         public bool Validate()
         {
-
             /// z racji że blip nie daje metody do autoryzacji trzeba posłuzyć się 
             /// sztuczką i spróbować pobrać statusy, jak się nie uda to znaczy że nie udało się 
             /// zalogować
@@ -131,7 +133,6 @@ namespace BlipFace.Service.Communication
             }
             catch (Exception ex)
             {
-
                 if (ExceptionOccure != null)
                 {
                     ExceptionOccure(this, new ExceptionEventArgs(ex));
@@ -153,6 +154,7 @@ namespace BlipFace.Service.Communication
             blipHttpClient.BeginSend(
                 new HttpRequestMessage("GET", query), new AsyncCallback(AfterValidate), blipHttpClient);
         }
+
         /// <summary>
         /// Metoda wywoływana jako callback przy pobieraniu Update'ów, korzysta z niej
         /// metoda <see cref="GetUpdatesAsync"/>
@@ -160,7 +162,6 @@ namespace BlipFace.Service.Communication
         /// <param name="result"></param>
         private void AfterValidate(IAsyncResult result)
         {
-
             //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
@@ -170,7 +171,7 @@ namespace BlipFace.Service.Communication
 
             bool validate = false;
 
-            
+
             //sprawdzamy czy komunikacja się powiodła
             try
             {
@@ -181,8 +182,6 @@ namespace BlipFace.Service.Communication
                     resp.EnsureStatusIsSuccessful();
 
                     validate = true;
-                    
-
                 }
 
                 //zgłaszamy zdarzenie że walidacja zakńczona
@@ -191,17 +190,22 @@ namespace BlipFace.Service.Communication
                     AuthorizationComplete(validate);
                 }
             }
+            catch (ArgumentOutOfRangeException aorEx)
+            {
+                if (CantCommunicate != null)
+                {
+
+                    CantCommunicate(this, new ExceptionEventArgs(aorEx));
+                }
+            }
             catch (Exception ex)
             {
-
                 if (ExceptionOccure != null)
                 {
                     ExceptionOccure(this, new ExceptionEventArgs(ex));
                 }
             }
         }
-
-
 
 
         /// <summary>
@@ -211,7 +215,6 @@ namespace BlipFace.Service.Communication
         /// <returns></returns>
         public IList<BlipStatus> GetUpdates(int limit)
         {
-
             string query = string.Format("updates?include=user,user[avatar]&amp;limit={0}", limit.ToString());
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
 
@@ -253,15 +256,16 @@ namespace BlipFace.Service.Communication
         /// <param name="limit"></param>
         public void GetUserDashboard(string user, int limit)
         {
-            //todo: Pobierać także typ odbiorcy recipient,recipient[avatar]
-            string query = string.Format("/users/{0}/dashboard?include=user,user[avatar],recipient,recipient[avatar]&amp;limit={1}", user, limit.ToString());
+            string query =
+                string.Format(
+                    "/users/{0}/dashboard?include=user,user[avatar],recipient,recipient[avatar]&amp;limit={1}", user,
+                    limit.ToString());
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
             //HttpQueryString query = new HttpQueryString();
 
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
                 new HttpRequestMessage("GET", query), new AsyncCallback(AfterGetUpdates), blipHttpClient);
-
         }
 
         /// <summary>
@@ -271,7 +275,6 @@ namespace BlipFace.Service.Communication
         /// <param name="result"></param>
         private void AfterGetUpdates(IAsyncResult result)
         {
-
             //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
@@ -281,10 +284,9 @@ namespace BlipFace.Service.Communication
 
             try
             {
-
                 resp.EnsureStatusIsSuccessful();
 
-                if (resp.Content.GetLength()>2)
+                if (resp.Content.GetLength() > 2)
                 {
                     //deserializujemy z json
                     var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
@@ -320,7 +322,6 @@ namespace BlipFace.Service.Communication
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
                 new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserMainStatus), blipHttpClient);
-
         }
 
         /// <summary>
@@ -330,7 +331,6 @@ namespace BlipFace.Service.Communication
         /// <param name="result"></param>
         private void AfterUserMainStatus(IAsyncResult result)
         {
-
             //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
@@ -340,17 +340,16 @@ namespace BlipFace.Service.Communication
 
             try
             {
-
                 resp.EnsureStatusIsSuccessful();
 
                 //@todo: sprawdzić czy istnieje chociaż jeden status
                 //deserializujemy z json
                 var status = resp.Content.ReadAsJsonDataContract<StatusesList>()[0];
-                
+
                 //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłoszenia wraz ze statusem
                 if (MainStatusLoaded != null)
                 {
-                   MainStatusLoaded(this, new MainStatusLoadingEventArgs(status));
+                    MainStatusLoaded(this, new MainStatusLoadingEventArgs(status));
                 }
             }
             catch (Exception ex)
@@ -382,9 +381,8 @@ namespace BlipFace.Service.Communication
 
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
-                 new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
-                 new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
-
+                new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
+                new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
         }
 
 
@@ -394,7 +392,6 @@ namespace BlipFace.Service.Communication
         /// <param name="result"></param>
         private void AfterAddStatusAsync(IAsyncResult result)
         {
-
             //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
@@ -434,22 +431,23 @@ namespace BlipFace.Service.Communication
         /// <param name="since">id statusu od którego należy pobrać nowsze wpisy</param>
         public void GetUserDashboardSince(string user, int since)
         {
-            string query = string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar],recipient,recipient[avatar]", user, since.ToString());
+            string query =
+                string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar],recipient,recipient[avatar]",
+                              user, since.ToString());
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
             //HttpQueryString query = new HttpQueryString();
 
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
                 new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserDashboardSince), blipHttpClient);
-
         }
+
         /// <summary>
         /// Wywoływana jako callback po metodzie <see cref="GetUserDashboardSince"/>
         /// </summary>
         /// <param name="result"></param>
         private void AfterUserDashboardSince(IAsyncResult result)
         {
-
             //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
@@ -483,12 +481,7 @@ namespace BlipFace.Service.Communication
                 }
             }
         }
-
-
-
-       
     }
-
 
 
     /// <summary>
@@ -498,11 +491,10 @@ namespace BlipFace.Service.Communication
     {
         public IList<BlipStatus> Statuses { get; private set; }
 
-       public StatusesLoadingEventArgs(IList<BlipStatus> statuses)
+        public StatusesLoadingEventArgs(IList<BlipStatus> statuses)
         {
             Statuses = statuses;
         }
-       
     }
 
     /// <summary>
@@ -528,10 +520,4 @@ namespace BlipFace.Service.Communication
             this.Error = _error;
         }
     }
-
-
-
-
-
-
 }
