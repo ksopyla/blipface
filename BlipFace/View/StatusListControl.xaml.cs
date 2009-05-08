@@ -217,7 +217,7 @@ namespace BlipFace.View
             StatusViewModel status = (StatusViewModel) e.Parameter;
             int position = tbMessage.SelectionStart;
 
-            presenter.CiteUser(status, tbMessage.Text, position);
+            presenter.MakeCitation(status, tbMessage.Text, position);
             SetTextBoxFocus();
         }
 

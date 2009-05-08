@@ -19,6 +19,9 @@ namespace BlipFace.Presenter
     public class StatusesPresenter : IPresenter
     {
 
+        //zmienna wskazuje czy jesetśmy online
+        private bool isOnLine = false;
+
         /// <summary>
         /// widok 
         /// </summary>
@@ -30,35 +33,84 @@ namespace BlipFace.Presenter
         /// Klasa do komunikacji z blipem, 
         /// todo: trzeba pomyśleć o innym przechowywaiu hasła
         /// </summary>
-        private BlipCommunication blpCom; // = new BlipCommunication("blipface", @"12Faceewq");
+        private readonly BlipCommunication blpCom; // = new BlipCommunication("blipface", @"12Faceewq");
 
-        private Timer updateStatusTimer;
+        private readonly Timer updateStatusTimer;
+        
+        
+        /// <summary>
+        /// co ile czasu mamy aktualizować 
+        /// </summary>
+        private const int UpdateTime=30;
+
+        /// <summary>
+        /// Limity pobierania statusów
+        /// </summary>
+        private const int Limit = 30;
 
         /// <summary>
         /// Konstruktor główny
         /// </summary>
-        /// <param name="_view">wikok</param>
-        public StatusesPresenter(UserViewModel _user)
+        /// <param name="user">zalogowany użytkownik</param>
+        public StatusesPresenter(UserViewModel user)
         {
-            this.blipfaceUser = _user;
+            this.blipfaceUser = user;
             blpCom = new BlipCommunication(blipfaceUser.UserName,blipfaceUser.Password);
 
             blpCom.StatusesLoaded += new EventHandler<StatusesLoadingEventArgs>(BlpComStatusesLoaded);
 
             blpCom.MainStatusLoaded += new EventHandler<MainStatusLoadingEventArgs>(BlpComMainStatusLoaded);
 
-            blpCom.StatusesAdded += new EventHandler<EventArgs>(blpCom_StatusesAdded);
+            blpCom.StatusesAdded += new EventHandler<EventArgs>(BlpComStatusesAdded);
 
             blpCom.StatusesUpdated += new EventHandler<StatusesLoadingEventArgs>(BlpComStatusesUpdated);
 
             blpCom.ExceptionOccure += new EventHandler<ExceptionEventArgs>(BlpComExceptionOccure);
 
             //domyślnie aktualizacje co 30 sekund
-            updateStatusTimer = new Timer(30 * 1000);
+            updateStatusTimer = new Timer(UpdateTime * 1000);
             updateStatusTimer.Elapsed += new ElapsedEventHandler(UpdateStatusTimerElapsed);
         }
+    
+        #region IPresenter Members
+
+        public void SetView(IView view)
+        {
+            if (view is IStatusesView)
+            {
+
+
+                this.view = (IStatusesView)view;
+            }
+            else
+            {
+                string message =
+                    string.Format(@"Przekazano nieodpowiedni widok, oczekiwano widoku typu {0} a podano {1} ", typeof(ILoginView), view.GetType().ToString());
+                throw new ArgumentException(message);
+            }
+        }
+
+        public void Init()
+        {
+            LoadUserMainStatus(blipfaceUser.UserName);
+
+            //todo: pobrać listę statusów
+            LoadUserDashboard(blipfaceUser.UserName);
+
+            StartListeningForUpdates(UpdateTime);
+        }
+
+        public event EventHandler<ActionsEventArgs> WorkDone;
+
+        #endregion
 
         #region Calbacks
+
+        /// <summary>
+        /// Calback do akutalizacji, metoda wywoływana co UpdateTime
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void UpdateStatusTimerElapsed(object sender, ElapsedEventArgs e)
         {
             //int lastIndex = lstbStatusList.Items.Count;
@@ -66,7 +118,7 @@ namespace BlipFace.Presenter
 
             if (view.Statuses != null)
             {
-                StatusViewModel lastStatus = view.Statuses[0] as StatusViewModel;
+                StatusViewModel lastStatus = view.Statuses[0];
 
                 if (lastStatus != null)
                 {
@@ -85,6 +137,8 @@ namespace BlipFace.Presenter
         /// <param name="e"></param>
         void BlpComExceptionOccure(object sender, ExceptionEventArgs e)
         {
+            
+
             view.Error = e.Error;
         }
 
@@ -107,7 +161,7 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void blpCom_StatusesAdded(object sender, EventArgs e)
+        void BlpComStatusesAdded(object sender, EventArgs e)
         {
             //tylko powiadomienie że dodał 
             view.TextMessage = string.Empty;
@@ -150,6 +204,11 @@ namespace BlipFace.Presenter
 
         #endregion
 
+        #region Metody prywatne, pomocnicze
+        /// <summary>
+        /// Ustawia timer który odpytuje blipa czy pojawiły się nowe statusy
+        /// </summary>
+        /// <param name="updateInterval"></param>
         private void StartListeningForUpdates(int updateInterval)
         {
             //start timera
@@ -157,34 +216,15 @@ namespace BlipFace.Presenter
             updateStatusTimer.Enabled = true;
         }
 
-        /// <summary>
-        /// Pozwala dodać nowy satus
-        /// </summary>
-        public void AddStatus(string content)
-        {
-            blpCom.AddUpdateAsync(content);
-        }
 
 
-        /// <summary>
-        /// Pobiera listę statusów asynchronicznie, po wysłaniu zdarzenie
-        /// statusy będą zwrócone jako zgłosznie zdarzenia StatusesLoaded
-        /// </summary>
-        public void LoadStatuses()
-        {
-            //return blpCom.GetUpdates(30);
-
-            //ładuje asynchronicznie listę statusów,
-            //po załadowaniu zgłaszane jest zdarzenie StatusesLoaded
-            blpCom.GetUpdatesAsync(30);
-        }
 
 
         /// <summary>
         /// Pobiera główny status asynchronicznie, po wysłaniu
         /// status będzie zwrócony jako zgłosznie zdarzenia MainStatusLoaded
         /// </summary>
-        public void LoadUserMainStatus(string user)
+        private void LoadUserMainStatus(string user)
         {
             //ładuje asynchronicznie główny status,
             //po załadowaniu zgłaszane jest zdarzenie MainStatusLoaded
@@ -196,9 +236,9 @@ namespace BlipFace.Presenter
         /// ładuje cały Dashboard użytkownika
         /// </summary>
         /// <param name="user">nazwa użytkownika którego dashboard ma załadować</param>
-        public void LoadUserDashboard(string user)
+        private void LoadUserDashboard(string user)
         {
-            blpCom.GetUserDashboard(user, 30);
+            blpCom.GetUserDashboard(user, Limit);
 
         }
 
@@ -207,45 +247,30 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="user">nazwa użytkownika</param>
         /// <param name="since">od jakiego id mamy pobrać</param>
-        public void UpdateUserDashboard(string user, int since)
+        private void UpdateUserDashboard(string user, int since)
         {
             blpCom.GetUserDashboardSince(user, since);
 
         }
-
-        #region IPresenter Members
-
-        public void SetView(IView view)
-        {
-            if (view is IStatusesView)
-            {
-
-
-                this.view = (IStatusesView)view;
-            }
-            else
-            {
-                string message =
-                    string.Format(@"Przekazano nieodpowiedni widok, oczekiwano widoku typu {0} a podano {1} ", typeof(ILoginView), view.GetType().ToString());
-                throw new ArgumentException(message);
-            }
-        }
-
-        public void Init()
-        {
-            LoadUserMainStatus(blipfaceUser.UserName);
-
-            //todo: pobrać listę statusów
-            LoadUserDashboard(blipfaceUser.UserName);
-
-            StartListeningForUpdates(90);
-        }
-
-        public event EventHandler<ActionsEventArgs> WorkDone;
-
         #endregion
+       
+        #region Metody Publiczne
 
-        public void CiteUser(StatusViewModel status, string text, int position)
+        /// <summary>
+        /// Pozwala dodać nowy satus
+        /// </summary>
+        public void AddStatus(string content)
+        {
+            blpCom.AddUpdateAsync(content);
+        }
+       
+        /// <summary>
+        /// Tworzy treść wiadomości do cytowania
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        public void MakeCitation(StatusViewModel status, string text, int position)
         {
             
             StringBuilder blipLink = new StringBuilder("http://blip.pl",26);
@@ -342,5 +367,10 @@ namespace BlipFace.Presenter
             view.TextMessage = blipMessage;
 
         }
+
+
+        #endregion
+
+
     }
 }

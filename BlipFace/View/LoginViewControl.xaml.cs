@@ -74,7 +74,7 @@ namespace BlipFace.View
         {
             get
             {
-                return (string)lblError.Content;
+                return (string) tblError.Text;
             }
             set
             {
@@ -83,8 +83,8 @@ namespace BlipFace.View
                 Dispatcher.Invoke(
                     new Action<string>(delegate(string _err)
                     {
-                       lblError.Visibility = System.Windows.Visibility.Visible;
-                        lblError.Content = _err;
+                       tblError.Visibility = System.Windows.Visibility.Visible;
+                        tblError.Text = _err;
                     }), System.Windows.Threading.DispatcherPriority.Normal,value);
             }
         }

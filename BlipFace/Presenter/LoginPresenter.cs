@@ -24,8 +24,8 @@ namespace BlipFace.Presenter
 
             BlipCommunication com = new BlipCommunication(user, password);
 
-            com.AuthorizationComplete += new BlipCommunication.BoolDelegate(com_AuthorizationComplete);
-
+            com.AuthorizationComplete += new BlipCommunication.BoolDelegate(ComAuthorizationComplete);
+            com.ExceptionOccure += new EventHandler<ExceptionEventArgs>(ComExceptionOccure);
             com.ValideteAsync();
 
             //if (com.Validate())
@@ -45,11 +45,23 @@ namespace BlipFace.Presenter
             //}
         }
 
+
+        /// <summary>
+        /// Callback gdy wystąpi błąd podczas logowania
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void ComExceptionOccure(object sender, ExceptionEventArgs e)
+        {
+            _view.Authorize = false;
+            _view.Error = "Nie mogę się skontaktować z serwerem Blip'a i sprawdzić poprawności danych, spróbuj ponownie.";
+        }
+
         /// <summary>
         /// Callback po wykonaniu autoryzacji
         /// </summary>
         /// <param name="value"></param>
-        private void com_AuthorizationComplete(bool value)
+        private void ComAuthorizationComplete(bool value)
         {
             if (value)
             {
