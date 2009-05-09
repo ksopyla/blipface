@@ -204,7 +204,15 @@ namespace BlipFace.View
         public string ConnectivityStatus
         {
             get { throw new NotImplementedException(); }
-            set { Dispatcher.Invoke(new Action<string>(delegate(string status) { lbOffline.Content = status; }), value); }
+            set
+            {
+                Dispatcher.Invoke(
+                    new Action<string>(delegate(string status)
+                                           {
+                                               lbOffline.Content = status;
+                                               EnableContrlsForSendMessage(true);
+                                           }), value);
+            }
         }
 
         #endregion
@@ -277,6 +285,8 @@ namespace BlipFace.View
             lbShowSave.Visibility = enable ? Visibility.Hidden : Visibility.Visible;
             tbMessage.IsEnabled = enable;
             btnSendBlip.IsEnabled = enable;
+
+            SetTextBoxFocus();
         }
 
         private void SetTextBoxFocus()

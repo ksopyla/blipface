@@ -36,12 +36,14 @@ namespace BlipFace.Presenter
         private readonly BlipCommunication blpCom; // = new BlipCommunication("blipface", @"12Faceewq");
 
         private readonly Timer updateStatusTimer;
-        
-        
+        private const string ConnectivityStatusOnline="Online";
+        private const string ConnectivityStatusOffline = "Offline";
+
+
         /// <summary>
         /// co ile czasu mamy aktualizować 
         /// </summary>
-        private const int UpdateTime=30;
+        private const int UpdateTime=45;
 
         /// <summary>
         /// Limity pobierania statusów
@@ -67,7 +69,7 @@ namespace BlipFace.Presenter
 
             blpCom.ExceptionOccure += new EventHandler<ExceptionEventArgs>(BlpComExceptionOccure);
 
-            blpCom.CommunicationError += new EventHandler<CommunicationErrorEventArgs>(blpCom_CommunicationError);
+            blpCom.CommunicationError += new EventHandler<CommunicationErrorEventArgs>(BlpComCommunicationError);
 
             //domyślnie aktualizacje co 30 sekund
             updateStatusTimer = new Timer(UpdateTime * 1000);
@@ -146,9 +148,15 @@ namespace BlipFace.Presenter
             view.Error = e.Error;
         }
 
-        void blpCom_CommunicationError(object sender, CommunicationErrorEventArgs e)
+
+        /// <summary>
+        /// handler Gdy nie mozemy się skomunikować z blipem
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void BlpComCommunicationError(object sender, CommunicationErrorEventArgs e)
         {
-            view.ConnectivityStatus = "Offline";
+            view.ConnectivityStatus = ConnectivityStatusOffline;
         }
 
         /// <summary>
@@ -162,6 +170,8 @@ namespace BlipFace.Presenter
             IList<StatusViewModel> statuses = ViewModelHelper.MapToViewStatus(e.Statuses,blipfaceUser.UserName);
 
             view.Statuses = statuses.Concat(view.Statuses).ToList();
+
+            view.ConnectivityStatus = ConnectivityStatusOnline;
             // view.Statuses.Insert(0, statuses[0]);
         }
 
@@ -198,6 +208,8 @@ namespace BlipFace.Presenter
         {
             
             view.Statuses = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
+
+            view.ConnectivityStatus = ConnectivityStatusOnline;
         }
 
         /// <summary>
@@ -208,6 +220,8 @@ namespace BlipFace.Presenter
         void BlpComMainStatusLoaded(object sender, MainStatusLoadingEventArgs e)
         {
             view.MainStatus = ViewModelHelper.MapToViewStatus(e.MainStatus);
+
+            view.ConnectivityStatus = ConnectivityStatusOnline;
         }
 
 
@@ -270,6 +284,13 @@ namespace BlipFace.Presenter
         /// </summary>
         public void AddStatus(string content)
         {
+
+            //todo: zwrócić uwagę na to co może się dziać w trakcie dodawania statusu
+            //szczególnie gdy jest błąd dodawania, a inne updaty (np pobieranie głównego statusu)
+            //mogą odblokować panel do wpisywania wiadomości
+            //zatrzymujemy licznik czasu
+            //updateStatusTimer.Enabled = false;
+
             blpCom.AddUpdateAsync(content);
         }
        
