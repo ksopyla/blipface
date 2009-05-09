@@ -15,37 +15,25 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
-        "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "MsmKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
+        "OwnerKey" = "8:_322B3BF02F736C105DAA5443F3D598B9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
+        "MsmKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
         "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_17B12B5B38218E5F3A5584C1F6BF5601"
-        "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "MsmKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
+        "OwnerKey" = "8:_C8F0154B1086F0161A0914029427429B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_17B12B5B38218E5F3A5584C1F6BF5601"
-        "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_17B12B5B38218E5F3A5584C1F6BF5601"
-        "OwnerKey" = "8:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "MsmKey" = "8:_322B3BF02F736C105DAA5443F3D598B9"
         "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -69,6 +57,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_C8F0154B1086F0161A0914029427429B"
+        "OwnerKey" = "8:_322B3BF02F736C105DAA5443F3D598B9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C8F0154B1086F0161A0914029427429B"
+        "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_42C769E6363F4ED3A3393099E93DB46F"
         "MsmSig" = "8:_UNDEFINED"
@@ -76,19 +76,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2C02FC4939DD3E391D325D44C2133BBD"
+        "OwnerKey" = "8:_322B3BF02F736C105DAA5443F3D598B9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
+        "OwnerKey" = "8:_C8F0154B1086F0161A0914029427429B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_17B12B5B38218E5F3A5584C1F6BF5601"
+        "OwnerKey" = "8:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -196,45 +196,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0BE6DCBA3A99D673D9FDCE5C891A4D17"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Http.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_0BE6DCBA3A99D673D9FDCE5C891A4D17"
-                    {
-                    "Name" = "8:Microsoft.Http.Extensions.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.Http.Extensions.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_632709672C43453394F973D6EEF8C87B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_17B12B5B38218E5F3A5584C1F6BF5601"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Http, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_17B12B5B38218E5F3A5584C1F6BF5601"
+                    "_2A8B4FB0823E7E8CA5358F47B5B5BBDC"
                     {
                     "Name" = "8:Microsoft.Http.dll"
                     "Attributes" = "3:512"
@@ -258,14 +227,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2C02FC4939DD3E391D325D44C2133BBD"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_322B3BF02F736C105DAA5443F3D598B9"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:BlipFace.Service, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2C02FC4939DD3E391D325D44C2133BBD"
+                    "_322B3BF02F736C105DAA5443F3D598B9"
                     {
                     "Name" = "8:BlipFace.Service.dll"
                     "Attributes" = "3:512"
@@ -329,6 +298,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C8F0154B1086F0161A0914029427429B"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Http.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_C8F0154B1086F0161A0914029427429B"
+                    {
+                    "Name" = "8:Microsoft.Http.Extensions.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.Http.Extensions.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_632709672C43453394F973D6EEF8C87B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -385,14 +385,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BlipFace"
-        "ProductCode" = "8:{1C4F8A27-0C0A-481C-AB82-FC1FD49C4C4C}"
-        "PackageCode" = "8:{46A9EB82-DD8E-45B1-9E46-9D66A90D6A07}"
+        "ProductCode" = "8:{1263DCC0-E540-4F67-927B-F20F53394E3D}"
+        "PackageCode" = "8:{D4C9A344-2139-4054-AD32-B0CBE207AF73}"
         "UpgradeCode" = "8:{71E3BDC3-6EB1-459A-86E5-22CDC069A369}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.1.6"
+        "ProductVersion" = "8:0.1.7"
         "Manufacturer" = "8:BlipFace.pl"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://blipface.pl"
@@ -934,7 +934,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_42C769E6363F4ED3A3393099E93DB46F"
             {
-            "SourcePath" = "8:..\\BlipFace\\obj\\Release\\BlipFace.exe"
+            "SourcePath" = "8:..\\BlipFace\\obj\\Debug\\BlipFace.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_632709672C43453394F973D6EEF8C87B"
