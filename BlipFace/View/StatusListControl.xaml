@@ -29,7 +29,10 @@
            <!--Lista statusów-->
             <RowDefinition Height="*" MinHeight="200"/>
             <!--Panel do dodawania statusów-->
-            <RowDefinition  Height="130"/>
+            <RowDefinition  Height="Auto"/>
+            
+            <!--Status online offline-->
+            <RowDefinition Height="25"/>
             
         </Grid.RowDefinitions>
         
@@ -105,10 +108,11 @@
         </ItemsControl>
 
         
-        <Grid Margin="3,0,3,5" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" >
+        <!--Panel do dodawania statusuów-->
+        <Grid Margin="5,5,5,0" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="80"/>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="Auto"/>
+               <!-- <RowDefinition Height="40"/> -->
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -125,31 +129,57 @@
                 Style="{DynamicResource RoundedTextInput}"     
                 FontSize="14" FontFamily="Verdana"
 				TextChanged="tbMessage_TextChanged" 
-				KeyDown="tbMessage_KeyDown"  >
-                               
+				KeyDown="tbMessage_KeyDown" 
+                Height="100"     >
+                             
             </TextBox>
 
-            <TextBlock  Grid.Row="1" Grid.Column="0" 
-			x:Name="tblCharLeft" FontSize="26" FontWeight="Bold"  Foreground="#b0b0b0" 
-				Text="160" HorizontalAlignment="Left" Margin="15,0,0,0" Width="55" />
+            <TextBlock  Grid.Row="0" Grid.Column="1" 
+			x:Name="tblCharLeft" 
+                        FontSize="26" 
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        TextAlignment="Right"
+                        FontWeight="Bold"  Foreground="#b0b0b0" 
+				Text="160" Margin="0,0,0,0" Width="55" />
 
-            <Label x:Name="lbShowSave" 
-			Grid.Row="1" 
-			Grid.Column="0"
-			Margin="87,6,10,6" 
-				Visibility="Hidden" Foreground="Yellow"
-				HorizontalAlignment="Left"
-				Content="Zapisuję..."
-                   />
+            
 
-            <Button x:Name="btnSendBlip" Grid.Column="1" Grid.Row="1" 
-				Margin="3,3,3,3"  Content="Blip" 
-				Click="btnSendBlip_Click"  Width="90" Style="{DynamicResource BlackButton}"  
-			/>
+            
+            
 
 
         </Grid>
-
+<Button x:Name="btnSendBlip" Visibility="Collapsed"
+				Margin="3,3,3,3"  Content="Blip" 
+				Click="btnSendBlip_Click"  Width="90" Style="{DynamicResource BlackButton}"  
+			/>
+        
+        <DockPanel Grid.Row="3">
+            
+        
+           <Label DockPanel.Dock="Left" Name="lbOffline"  
+               Foreground="YellowGreen" FontFamily="Verdana" 
+		       FontSize="10" Content="Offline" ToolTip="Nie można nawiązać połączenia z serwisem blip"/>
+            
+            <Label x:Name="lbShowSave" DockPanel.Dock="Left"
+				Visibility="Hidden" Foreground="Yellow" FontSize="10" FontFamily="Verdana"
+				HorizontalAlignment="Left"
+				Content="Zapisuję..."
+                   />
+            
+            <TextBlock DockPanel.Dock="Right" Margin="0,0,10,0" TextAlignment="Right" VerticalAlignment="Center">
+                           <Hyperlink FontSize="10" FontFamily="Verdana"  
+                                       Foreground="YellowGreen" 
+                                         NavigateUri="http://blipface.wikidot.com"
+                                      RequestNavigate="Hyperlink_RequestNavigate"
+                                       >
+                                 <TextBlock Text="Zgłoś uwagę"  ToolTip="Zgłoś błąd lub uwagę"/>
+                                     
+                                 
+                            </Hyperlink>
+                        </TextBlock>
+        </DockPanel>
     </Grid>
 
 </UserControl>

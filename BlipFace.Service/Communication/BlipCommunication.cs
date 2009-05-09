@@ -58,7 +58,7 @@ namespace BlipFace.Service.Communication
         /// <summary>
         /// zdarzenie zgłaszane gdy nie można się skomunikować z blipem
         /// </summary>
-        public event EventHandler<ExceptionEventArgs> CantCommunicate;
+        public event EventHandler<CommunicationErrorEventArgs> CommunicationError;
 
 
 
@@ -67,11 +67,11 @@ namespace BlipFace.Service.Communication
         /// <summary>
         /// Klasa z WCF Rest Starter Kit (http://msdn.microsoft.com/netframework/cc950529(en-us).aspx)
         /// </summary>
-        private HttpClient blipHttpClient = new HttpClient("http://api.blip.pl/");
+        private readonly HttpClient blipHttpClient = new HttpClient("http://api.blip.pl/");
 
 
-        private string ownerLogin;
-        private string password;
+        private readonly string ownerLogin;
+        private readonly string password;
 
         /// <summary>
         /// Konstruktor, ustawia dane do autentykacji, oraz niezbędne
@@ -192,10 +192,11 @@ namespace BlipFace.Service.Communication
             }
             catch (ArgumentOutOfRangeException aorEx)
             {
-                if (CantCommunicate != null)
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
                 {
 
-                    CantCommunicate(this, new ExceptionEventArgs(aorEx));
+                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
             catch (Exception ex)
@@ -298,6 +299,15 @@ namespace BlipFace.Service.Communication
                     }
                 }
             }
+            catch (ArgumentOutOfRangeException aorEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+
+                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
+                }
+            }
             catch (Exception ex)
             {
                 if (ExceptionOccure != null)
@@ -350,6 +360,15 @@ namespace BlipFace.Service.Communication
                 if (MainStatusLoaded != null)
                 {
                     MainStatusLoaded(this, new MainStatusLoadingEventArgs(status));
+                }
+            }
+            catch (ArgumentOutOfRangeException aorEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+
+                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
             catch (Exception ex)
@@ -414,6 +433,15 @@ namespace BlipFace.Service.Communication
                     StatusesAdded(this, EventArgs.Empty);
                 }
             }
+            catch (ArgumentOutOfRangeException aorEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+
+                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
+                }
+            }
             catch (Exception ex)
             {
                 if (ExceptionOccure != null)
@@ -473,6 +501,15 @@ namespace BlipFace.Service.Communication
                     }
                 }
             }
+            catch (ArgumentOutOfRangeException aorEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+
+                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
+                }
+            }
             catch (Exception ex)
             {
                 if (ExceptionOccure != null)
@@ -518,6 +555,63 @@ namespace BlipFace.Service.Communication
         public ExceptionEventArgs(Exception _error)
         {
             this.Error = _error;
+        }
+    }
+
+
+    public class CommunicationErrorEventArgs : EventArgs
+    {
+        public HttpStatusCode Code { get; private set; }
+
+        public string Message { get; private set; }
+
+        public CommunicationErrorEventArgs(HttpStatusCode code)
+        {
+            Code = code;
+            MakeMessage();
+        }
+
+        private void MakeMessage()
+        {
+            /*
+            400 Bad Request
+            401 Unauthorized
+            404 Missing
+            422 Unprocessable Entity
+            503 Server Unavailable
+             * */
+            switch (Code)
+            {
+                case HttpStatusCode.BadRequest:
+                    Message = "Http:400 Blip odrzucił żądanie jako nieprawidłowe";
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    Message = "Http:401 Błędne dane login i hasło";
+                    break;
+
+                case HttpStatusCode.Forbidden:
+                    Message = "Http:403 Serwer odrzucił żądanie jako zabronione";
+                    break;
+                case HttpStatusCode.NotFound:
+                    Message = "Http:404 Nie znaleziono zasobu, lub nie można nawiązać komunikacji z blipem";
+                    break;
+                case HttpStatusCode.RequestTimeout:
+                    Message = "Http:408 RequestTimeout";
+                    break;
+
+                    case HttpStatusCode.ServiceUnavailable:
+                    Message = "Http:503 Blip jest przeciążony";
+                    break;
+                    
+                    
+                case HttpStatusCode.GatewayTimeout:
+                    Message = "Http:504 GatewayTimeout";
+                    break;
+                
+                default:
+                    Message = Code.ToString();
+                    break;
+            }
         }
     }
 }

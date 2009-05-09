@@ -67,10 +67,14 @@ namespace BlipFace.Presenter
 
             blpCom.ExceptionOccure += new EventHandler<ExceptionEventArgs>(BlpComExceptionOccure);
 
+            blpCom.CommunicationError += new EventHandler<CommunicationErrorEventArgs>(blpCom_CommunicationError);
+
             //domyślnie aktualizacje co 30 sekund
             updateStatusTimer = new Timer(UpdateTime * 1000);
             updateStatusTimer.Elapsed += new ElapsedEventHandler(UpdateStatusTimerElapsed);
         }
+
+        
     
         #region IPresenter Members
 
@@ -140,6 +144,11 @@ namespace BlipFace.Presenter
             
 
             view.Error = e.Error;
+        }
+
+        void blpCom_CommunicationError(object sender, CommunicationErrorEventArgs e)
+        {
+            view.ConnectivityStatus = "Offline";
         }
 
         /// <summary>

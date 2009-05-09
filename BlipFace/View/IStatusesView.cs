@@ -39,5 +39,7 @@ namespace BlipFace.View
         /// Powiadomienie że nastąpił błąd aplikacji
         /// </summary>
         Exception Error { get; set; }
+
+        string ConnectivityStatus { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace BlipFace.Presenter
             BlipCommunication com = new BlipCommunication(user, password);
 
             com.AuthorizationComplete += new BlipCommunication.BoolDelegate(ComAuthorizationComplete);
+            com.CommunicationError += new EventHandler<CommunicationErrorEventArgs>(ComCantCommunicate);
             com.ExceptionOccure += new EventHandler<ExceptionEventArgs>(ComExceptionOccure);
             com.ValideteAsync();
 
@@ -45,6 +46,12 @@ namespace BlipFace.Presenter
             //}
         }
 
+        void ComCantCommunicate(object sender, CommunicationErrorEventArgs e)
+        {
+            _view.Authorize = false;
+            _view.Error = e.Message;
+        }
+
 
         /// <summary>
         /// Callback gdy wystąpi błąd podczas logowania
@@ -54,7 +61,10 @@ namespace BlipFace.Presenter
         void ComExceptionOccure(object sender, ExceptionEventArgs e)
         {
             _view.Authorize = false;
-            _view.Error = "Nie mogę się skontaktować z serwerem Blip'a i sprawdzić poprawności danych, spróbuj ponownie.";
+
+            //przekazujemy wyjątek dalej
+            throw e.Error;
+            
         }
 
         /// <summary>

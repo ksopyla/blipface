@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -18,10 +20,10 @@ namespace BlipFace.View
     public partial class StatusListControl : IStatusesView
     {
         private const int BlipSize = 160;
-        int charLeft = BlipSize;
+        private int charLeft = BlipSize;
 
-        private StatusesPresenter presenter;
-        
+        private readonly StatusesPresenter presenter;
+
         public StatusListControl()
         {
             this.InitializeComponent();
@@ -37,7 +39,10 @@ namespace BlipFace.View
 
             SetTextBoxFocus();
         }
-/// <summary>
+
+
+        #region EventHandlers
+        /// <summary>
         /// Służy tylko do wyliczania ilości znaków pozostałych do wpisania
         /// </summary>
         /// <param name="sender"></param>
@@ -76,7 +81,7 @@ namespace BlipFace.View
                 //gdy naciśnięto enter to wysyłamy tekst
 
                 EnableContrlsForSendMessage(false);
-                
+
                 presenter.AddStatus(tbMessage.Text);
             }
         }
@@ -94,23 +99,34 @@ namespace BlipFace.View
         }
 
 
-       
+        /// <summary>
+        /// Otwiera przeglądarkę gdy klikniemy na linka
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Hyperlink hl = (Hyperlink)sender;
+            string navigateUri = hl.NavigateUri.ToString();
+            Process.Start(new ProcessStartInfo(navigateUri));
+            e.Handled = true;
+        }
+
+
+        #endregion
+
+
+        #region IStatusesView
         public IList<StatusViewModel> Statuses
         {
-            get
-            {
-                return lstbStatusList.ItemsSource as IList<StatusViewModel>;
-            }
+            get { return lstbStatusList.ItemsSource as IList<StatusViewModel>; }
             set
             {
-
                 //statusy będą ustawiane asynchronicznie przez prezetnera
                 //więc potrzeba obiektu Dispatcher
-                Dispatcher.Invoke(new Action<IList<StatusViewModel>>(delegate(IList<StatusViewModel> statusesCollection)
-                {
-                    lstbStatusList.ItemsSource = statusesCollection;
-
-                }), value);
+                Dispatcher.Invoke(
+                    new Action<IList<StatusViewModel>>(
+                        delegate(IList<StatusViewModel> statusesCollection) { lstbStatusList.ItemsSource = statusesCollection; }), value);
             }
         }
 
@@ -130,48 +146,38 @@ namespace BlipFace.View
                 //status będzie ustawiany asynchronicznie przez prezetnera
                 //więc potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(new Action<StatusViewModel>(delegate(StatusViewModel status)
-                {
-                    lbUserLogin.Text = status.UserLogin;
-                    lbContent.Text = status.Content;
-                    BitmapImage imgAvatar = new BitmapImage();
-                    imgAvatar.BeginInit();
-                    imgAvatar.UriSource = new Uri(status.UserAvatar50);
-                    imgAvatar.EndInit();
-                    imgUserAvatar.Source = imgAvatar;
-                }), value);
+                                                                  {
+                                                                      lbUserLogin.Text = status.UserLogin;
+                                                                      lbContent.Text = status.Content;
+                                                                      BitmapImage imgAvatar = new BitmapImage();
+                                                                      imgAvatar.BeginInit();
+                                                                      imgAvatar.UriSource = new Uri(status.UserAvatar50);
+                                                                      imgAvatar.EndInit();
+                                                                      imgUserAvatar.Source = imgAvatar;
+                                                                  }), value);
             }
         }
 
         public string TextMessage
         {
-            get
-            {
-                return tbMessage.Text;
-            }
+            get { return tbMessage.Text; }
             set
             {
-
                 //tekst wiadomości ustawiany asynchronicznie przez prezetnera
                 //więc potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(new Action<string>(delegate(string textMessage)
-                {
-                    tbMessage.Text = textMessage;
-                    tbMessage.IsEnabled = true;
-                    lbShowSave.Visibility = Visibility.Hidden;
-                }), value);
+                                                         {
+                                                             tbMessage.Text = textMessage;
+                                                             tbMessage.IsEnabled = true;
+                                                             lbShowSave.Visibility = Visibility.Hidden;
+                                                         }), value);
             }
         }
 
 
-
-
-
         public Exception Error
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotImplementedException(); }
             set
             {
                 //Application.Current.Dispatcher.Invoke(DispatcherPriority.Send,
@@ -186,32 +192,31 @@ namespace BlipFace.View
 
                 Dispatcher.Invoke(
                     new Action<Exception>(delegate(Exception _err)
-                    {
-                        //throw new Exception(_err.Message, _err);
-                        MessageBox.Show(_err.Message);
+                                              {
+                                                  //throw new Exception(_err.Message, _err);
+                                                  MessageBox.Show(_err.Message);
 
-                        EnableContrlsForSendMessage(true);
-
-                    }), System.Windows.Threading.DispatcherPriority.Normal, value);
+                                                  EnableContrlsForSendMessage(true);
+                                              }), System.Windows.Threading.DispatcherPriority.Normal, value);
             }
         }
 
-
-        /// <summary>
-        /// Pomocnicza metoda zawierająca w sobie logikę widoku
-        /// przy dodawaniu, wiadomości
-        /// true - oznacza że można pokazać i aktywować poszczególene części widoku
-        /// zaangażowane w wizualizację wysyłania widomości
-        /// </summary>
-        /// <param name="show"></param>
-        private void EnableContrlsForSendMessage(bool enable)
+        public string ConnectivityStatus
         {
-
-            lbShowSave.Visibility = enable ? Visibility.Hidden : Visibility.Visible;
-            tbMessage.IsEnabled = enable;
-            btnSendBlip.IsEnabled = enable;
+            get { throw new NotImplementedException(); }
+            set { Dispatcher.Invoke(new Action<string>(delegate(string status) { lbOffline.Content = status; }), value); }
         }
 
+        #endregion
+
+
+        #region handlery dla kommend
+
+        /// <summary>
+        /// Komenda wywoływana gdy naciśniemy cytuj
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CiteUser_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             StatusViewModel status = (StatusViewModel) e.Parameter;
@@ -230,13 +235,48 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void DirectMessage_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            StatusViewModel status = (StatusViewModel)e.Parameter;
+            StatusViewModel status = (StatusViewModel) e.Parameter;
 
-            
 
             presenter.MakeDirectMessage(status, tbMessage.Text);
 
             SetTextBoxFocus();
+        }
+
+        
+
+        /// <summary>
+        /// Komenda wywoływana gdy naciśniemy przycisk Prywatna przy statusie,
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PrivateMessage_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            StatusViewModel status = (StatusViewModel) e.Parameter;
+
+
+            presenter.MakePrivateMessage(status, tbMessage.Text);
+
+            SetTextBoxFocus();
+        }
+        #endregion
+
+
+
+        #region metody prywatne
+        /// <summary>
+        /// Pomocnicza metoda zawierająca w sobie logikę widoku
+        /// przy dodawaniu, wiadomości
+        /// true - oznacza że można pokazać i aktywować poszczególene części widoku
+        /// zaangażowane w wizualizację wysyłania widomości
+        /// </summary>
+        /// <param name="show"></param>
+        private void EnableContrlsForSendMessage(bool enable)
+        {
+            lbShowSave.Visibility = enable ? Visibility.Hidden : Visibility.Visible;
+            tbMessage.IsEnabled = enable;
+            btnSendBlip.IsEnabled = enable;
         }
 
         private void SetTextBoxFocus()
@@ -248,23 +288,6 @@ namespace BlipFace.View
             tbMessage.Focus();
         }
 
-        /// <summary>
-        /// Komenda wywoływana gdy naciśniemy przycisk Prywatna przy statusie,
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void PrivateMessage_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-
-            StatusViewModel status = (StatusViewModel)e.Parameter;
-
-
-
-            presenter.MakePrivateMessage(status, tbMessage.Text);
-
-            SetTextBoxFocus();
-            
-        }
+        #endregion
     }
 }

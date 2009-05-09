@@ -52,6 +52,7 @@ namespace BlipFace
             notifyIcon.Icon = new System.Drawing.Icon(iconStream);
             
             
+            
             notifyIcon.Click += new EventHandler(NotifyIconClick);
 
 
@@ -118,7 +119,7 @@ namespace BlipFace
 
             this.Hide();
             if (notifyIcon != null)
-                notifyIcon.ShowBalloonTip(2000);
+                notifyIcon.ShowBalloonTip(BallonTipTime);
         }
 
         #region IHost Members
@@ -155,6 +156,11 @@ namespace BlipFace
         }
 
         private WindowState storedWindowState = WindowState.Normal;
+        
+        /// <summary>
+        /// Czas pokazywania podpowiedzi po zminimalizowaniu aplikacji
+        /// </summary>
+        private const int BallonTipTime=1;
 
         /// <summary>
         /// Gdy zmieni się stan okna np. z normalnego do minmalizowanego
@@ -167,7 +173,7 @@ namespace BlipFace
             {
                 this.Hide();
                 if (notifyIcon != null)
-                    notifyIcon.ShowBalloonTip(2000);
+                    notifyIcon.ShowBalloonTip(BallonTipTime);
             }
             else
                 storedWindowState = WindowState.Normal;
