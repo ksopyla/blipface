@@ -118,6 +118,7 @@ namespace BlipFace.View
         #endregion
 
 
+        //todo: błysk okna testowo
         [DllImport("user32.dll")]
         static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
         public static void FlashMainWindow(Window window, bool invert)
@@ -141,6 +142,7 @@ namespace BlipFace.View
                             {
                                 lstbStatusList.ItemsSource = statusesCollection;
 
+                                //todo:to tak testowo
                                 FlashMainWindow(Window.GetWindow(this.Parent), true);
 
 
