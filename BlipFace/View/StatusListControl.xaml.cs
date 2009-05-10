@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -116,6 +118,15 @@ namespace BlipFace.View
         #endregion
 
 
+        [DllImport("user32.dll")]
+        static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
+        public static void FlashMainWindow(Window window, bool invert)
+        {
+            IntPtr handle = (new WindowInteropHelper(window)).Handle;
+            FlashWindow(handle, invert);
+        }
+
+
         #region IStatusesView
         public IList<StatusViewModel> Statuses
         {
@@ -126,7 +137,14 @@ namespace BlipFace.View
                 //więc potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(
                     new Action<IList<StatusViewModel>>(
-                        delegate(IList<StatusViewModel> statusesCollection) { lstbStatusList.ItemsSource = statusesCollection; }), value);
+                        delegate(IList<StatusViewModel> statusesCollection)
+                            {
+                                lstbStatusList.ItemsSource = statusesCollection;
+
+                                FlashMainWindow(Window.GetWindow(this.Parent), true);
+
+
+                            }), value);
             }
         }
 
