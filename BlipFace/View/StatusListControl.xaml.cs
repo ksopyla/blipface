@@ -211,10 +211,10 @@ namespace BlipFace.View
                 //    , value);
 
                 Dispatcher.Invoke(
-                    new Action<Exception>(delegate(Exception _err)
+                    new Action<Exception>(delegate(Exception err)
                                               {
                                                   //throw new Exception(_err.Message, _err);
-                                                  MessageBox.Show(_err.Message);
+                                                  MessageBox.Show(err.Message);
 
                                                   EnableContrlsForSendMessage(true);
                                               }), System.Windows.Threading.DispatcherPriority.Normal, value);

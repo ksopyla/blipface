@@ -60,8 +60,6 @@ namespace BlipFace.Service.Communication
         /// </summary>
         public event EventHandler<CommunicationErrorEventArgs> CommunicationError;
 
-
-
         #endregion
 
         /// <summary>
@@ -195,7 +193,6 @@ namespace BlipFace.Service.Communication
                 //gdy wystąpiły jakieś błędy w komunikacji
                 if (CommunicationError != null)
                 {
-
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
@@ -304,7 +301,6 @@ namespace BlipFace.Service.Communication
                 //gdy wystąpiły jakieś błędy w komunikacji
                 if (CommunicationError != null)
                 {
-
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
@@ -367,7 +363,6 @@ namespace BlipFace.Service.Communication
                 //gdy wystąpiły jakieś błędy w komunikacji
                 if (CommunicationError != null)
                 {
-
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
@@ -414,12 +409,13 @@ namespace BlipFace.Service.Communication
             //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
-
-            //pobieramy odpowiedź
-            var resp = client.EndSend(result);
-
+            HttpResponseMessage resp=null;
             try
             {
+                //pobieramy odpowiedź
+                resp = client.EndSend(result);
+
+
                 //sprawdź czy odpowiedź jest poprawna
                 resp.EnsureStatusIsSuccessful();
 
@@ -438,7 +434,6 @@ namespace BlipFace.Service.Communication
                 //gdy wystąpiły jakieś błędy w komunikacji
                 if (CommunicationError != null)
                 {
-
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
@@ -506,7 +501,6 @@ namespace BlipFace.Service.Communication
                 //gdy wystąpiły jakieś błędy w komunikacji
                 if (CommunicationError != null)
                 {
-
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
@@ -599,15 +593,15 @@ namespace BlipFace.Service.Communication
                     Message = "Http:408 RequestTimeout";
                     break;
 
-                    case HttpStatusCode.ServiceUnavailable:
+                case HttpStatusCode.ServiceUnavailable:
                     Message = "Http:503 Blip jest przeciążony";
                     break;
-                    
-                    
+
+
                 case HttpStatusCode.GatewayTimeout:
                     Message = "Http:504 GatewayTimeout";
                     break;
-                
+
                 default:
                     Message = Code.ToString();
                     break;

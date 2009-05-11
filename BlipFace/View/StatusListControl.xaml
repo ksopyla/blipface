@@ -88,11 +88,12 @@
             </Menu>-->
         </Grid>
 
+        
         <ItemsControl 
             Grid.Column="0" 
             Grid.Row="1"
 			x:Name="lstbStatusList" 
-			ItemTemplate="{DynamicResource CinekTemplate}">
+			ItemTemplate="{DynamicResource WrapItemTemplate}">
             <ItemsControl.Template>
                 <ControlTemplate>
                     <ScrollViewer>
@@ -116,13 +117,13 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
 
             </Grid.ColumnDefinitions>
 
             
             <TextBox x:Name="tbMessage" 
-				Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+				Grid.Row="0" Grid.Column="0" 
 				ClipToBounds="False" 
 				TextWrapping="Wrap"  
 				VerticalAlignment="Stretch" 
@@ -134,7 +135,7 @@
                              
             </TextBox>
 
-            <TextBlock  Grid.Row="0" Grid.Column="1" 
+            <TextBlock  Grid.Row="0" Grid.Column="0" 
 			x:Name="tblCharLeft" 
                         FontSize="26" 
                         VerticalAlignment="Bottom"
@@ -146,14 +147,14 @@
             
 
             
-            
+            <Button x:Name="btnSendBlip" Grid.Column="1"
+				Margin="3,3,3,3"  Content="Blip" HorizontalAlignment="Right"
+				Click="btnSendBlip_Click"  Width="30" Style="{DynamicResource BlackButton}"  
+			/>
 
 
         </Grid>
-<Button x:Name="btnSendBlip" Visibility="Collapsed"
-				Margin="3,3,3,3"  Content="Blip" 
-				Click="btnSendBlip_Click"  Width="90" Style="{DynamicResource BlackButton}"  
-			/>
+
         
         <DockPanel Grid.Row="3">
             

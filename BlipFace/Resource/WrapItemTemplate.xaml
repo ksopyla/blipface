@@ -2,7 +2,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:helpers="clr-namespace:BlipFace.Helpers"
     xmlns:br="clr-namespace:BlipFace.Helpers.BindableRun">
-    <DataTemplate x:Key="CinekTemplate">
+    <DataTemplate x:Key="WrapItemTemplate">
         <Border Height="Auto" Margin="5,10,5,0">
             <Border.Style>
                 <Style>
@@ -75,49 +75,18 @@
                     </Border>
                 </StackPanel>
                 <!--Treść wiadomości-->
-                <RichTextBox 
-                    Grid.Column="1" 
-                    Grid.Row="0"
-                    BorderThickness="0"
+               
+                
+                <br:StatusBindableTextBlock 
+                    Grid.Column="1" Grid.Row="0" 
+                    TextWrapping="Wrap"
+                    Margin="5,2,2,2"
+                    FontFamily="Verdana"
                     Foreground="#FFFFFDFD"
-                    Background="Transparent">
-                    <FlowDocument>
-                        <Paragraph>
-                            <!--Login użytkownika i odbiorcy wiadomości, ten drugi nie zawsze istnieje-->
-                            <br:BindableRun FontWeight="SemiBold" 
-                                            Foreground="Orange" BoundText="{Binding Path=UserLogin}" 
-                                /><TextBlock 
-                                    FontSize="9" 
-                                    Background="Transparent"
-                                    Margin="0,0,0,0"
-                                    Padding="2,0,2,0" 
-                                    Foreground="Orange" 
-                                    Text=">" 
-                                    Visibility="{Binding Path=HasRecipient, Converter={StaticResource BoolToVisible}}" 
-                                /><TextBlock 
-                                    FontSize="9" 
-                                    Background="Transparent"
-                                    Margin="-4,0,0,0"
-                                    Padding="0,0,2,0" 
-                                    Foreground="Orange" 
-                                    Text=">" 
-                                    Visibility="{Binding Path=PrivateMessage, Converter={StaticResource BoolToVisible}}" 
-                                /><br:BindableRun 
-                                    FontWeight="SemiBold" 
-                                    Foreground="Orange" 
-                                    BoundText="{Binding Path=RecipientLogin}" 
-                                /><Run Foreground="Orange" Text=":" />
-                            <!--Treść statusu-->
-                            <!--
-                            
-                            <br:StatusBindable BoundStatus="{Binding}" />
-                            -->
-                            <br:BindableRun BoundText="{Binding Path=Content}" />
-                            
-                               
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
+                    FontSize="11"
+                    BoundStatus="{Binding}" />
+                
+                
                 
                 <!-- Data i opcje na dole statusu-->
                 <Grid 

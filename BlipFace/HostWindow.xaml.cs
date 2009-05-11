@@ -23,6 +23,7 @@ namespace BlipFace
         private ViewsManager mgr;
         private System.Windows.Forms.NotifyIcon notifyIcon;
 
+        private bool showBallon = true;
 
         public HostWindow()
         {
@@ -118,8 +119,12 @@ namespace BlipFace
            // WindowState = System.Windows.WindowState.Minimized;
 
             this.Hide();
-            if (notifyIcon != null)
+            if (notifyIcon != null && showBallon)
+            {
                 notifyIcon.ShowBalloonTip(BallonTipTime);
+
+                showBallon = false;
+            }
         }
 
         #region IHost Members
@@ -172,8 +177,11 @@ namespace BlipFace
             if (WindowState == WindowState.Minimized)
             {
                 this.Hide();
-                if (notifyIcon != null)
+                if (notifyIcon != null && showBallon)
+                {
                     notifyIcon.ShowBalloonTip(BallonTipTime);
+                    showBallon = false;
+                }
             }
             else
                 storedWindowState = WindowState.Normal;
