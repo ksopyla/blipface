@@ -147,9 +147,9 @@ namespace BlipFace.Presenter
 
             
             //w celu aby wyglądało że się szybciej loguje,
+            com.ConnectAsync();
 
-            Thread t = new Thread(delegate() { com.Connect(); });
-            t.Start();
+            
 
         }
 

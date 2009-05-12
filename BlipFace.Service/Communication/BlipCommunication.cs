@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.Http;
 using System.Runtime.Serialization.Json;
 using System.Net;
@@ -572,6 +573,12 @@ namespace BlipFace.Service.Communication
             blipHttpClient.BeginSend(
                  new HttpRequestMessage("GET", "/bliposphere?limit=1"),null,null);
 
+        }
+
+        public void ConnectAsync()
+        {
+            Thread t = new Thread(delegate() { this.Connect(); });
+            t.Start();
         }
     }
 
