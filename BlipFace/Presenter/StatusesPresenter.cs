@@ -287,7 +287,9 @@ namespace BlipFace.Presenter
         /// </summary>
         public void AddStatus(string content)
         {
-
+            if(string.IsNullOrEmpty(content))
+                return;
+            
             //todo: zwrócić uwagę na to co może się dziać w trakcie dodawania statusu
             //szczególnie gdy jest błąd dodawania, a inne updaty (np pobieranie głównego statusu)
             //mogą odblokować panel do wpisywania wiadomości

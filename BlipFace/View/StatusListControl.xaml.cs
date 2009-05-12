@@ -82,10 +82,12 @@ namespace BlipFace.View
             if (e.Key == Key.Return)
             {
                 //gdy naciśnięto enter to wysyłamy tekst
+                if (!string.IsNullOrEmpty(tbMessage.Text))
+                {
+                    EnableContrlsForSendMessage(false);
 
-                EnableContrlsForSendMessage(false);
-
-                presenter.AddStatus(tbMessage.Text);
+                    presenter.AddStatus(tbMessage.Text);
+                }
             }
         }
 
@@ -96,9 +98,12 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void btnSendBlip_Click(object sender, RoutedEventArgs e)
         {
-            EnableContrlsForSendMessage(false);
+            if (string.IsNullOrEmpty(tbMessage.Text))
+            {
+                EnableContrlsForSendMessage(false);
 
-            presenter.AddStatus(tbMessage.Text);
+                presenter.AddStatus(tbMessage.Text);
+            }
         }
 
 
