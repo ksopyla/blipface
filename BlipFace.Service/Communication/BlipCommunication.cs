@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Json;
 using System.Net;
 using BlipFace.Service.Entities;
 using System.Runtime.Serialization;
+using System.Security;
 
 namespace BlipFace.Service.Communication
 {
@@ -68,9 +69,11 @@ namespace BlipFace.Service.Communication
         private readonly HttpClient blipHttpClient = new HttpClient("http://api.blip.pl/");
 
 
-        private readonly string ownerLogin;
-        private readonly string password;
+        private  string userLogin;
+        
 
+        private  string password;
+        
         /// <summary>
         /// Konstruktor, ustawia dane do autentykacji, oraz niezbędne
         /// nagłówki do komunikacji z blipem
@@ -79,28 +82,60 @@ namespace BlipFace.Service.Communication
         /// <param name="password">hasło</param>
         public BlipCommunication(string userName, string password)
         {
-            this.ownerLogin = userName;
-            this.password = password;
+            
 
             //potrzeba dodać obowiązkowy nagłówek gdy korzystamy z api blip'a
+            SetDefaultHeaders();
+
+
+            this.userLogin = userName;
+            this.password = password;
+            //trzeba zakodować w base64 login:hasło - tak każe blip
+           
+            //ustawiamy nagłówki do autoryzacji na bazie hasła i loginu
+            SetAuthHeader();
+
+
+            
+        }
+        
+        public BlipCommunication()
+        {
+            SetDefaultHeaders();
+        }
+
+
+        /// <summary>
+        /// ustawia nagłówek Auth do autoryzacji, dokonuje kodowania base64
+        /// </summary>
+        /// <returns></returns>
+        private void  SetAuthHeader()
+        {
+            byte[] credentialBuffer = new UTF8Encoding().GetBytes(
+                string.Format("{0}:{1}", this.userLogin, this.password));
+
+            
+
+            //nagłówek autoryzacja - zakodowane w base64
+            blipHttpClient.DefaultHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(credentialBuffer));
+        }
+
+
+        //ustawia domyślne nagłówki dla blipa
+        private void SetDefaultHeaders()
+        {
             blipHttpClient.DefaultHeaders.Add("X-Blip-API", "0.02");
 
             //także wymagane przez blipa
             blipHttpClient.DefaultHeaders.Accept.Add(
                 new Microsoft.Http.Headers.StringWithOptionalQuality("application/json"));
 
-            //trzeba zakodować w base64 login:hasło - tak każe blip
-            byte[] credentialBuffer = new UTF8Encoding().GetBytes(
-                string.Format("{0}:{1}", this.ownerLogin, this.password));
-            string authHeader = "Basic " + Convert.ToBase64String(credentialBuffer);
-
-            //nagłówek autoryzacja - zakodowane w base64
-            blipHttpClient.DefaultHeaders.Add("Authorization", authHeader);
-
             //ustawienie nagłówka UserAgent - po tym blip rozpoznaje transport
             blipHttpClient.DefaultHeaders.UserAgent.Add(
                 new Microsoft.Http.Headers.ProductOrComment("BlipFace/0.1 (http://blipface.pl)"));
         }
+
+       
 
 
         /// <summary>
@@ -511,6 +546,32 @@ namespace BlipFace.Service.Communication
                     ExceptionOccure(this, new ExceptionEventArgs(ex));
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Zmienia dane login i hasło do komunikacji z blipem 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="s"></param>
+        public void SetAuthorizationCredential(string user, string password)
+        {
+            userLogin = user;
+            this.password = password;
+
+            SetAuthHeader();
+        }
+
+        ////
+        /// <summary>
+        /// ta metoda ma na celu tylko połączenie się i ustanowienie
+        /// kanału TCP, 
+        /// </summary>
+        public void Connect()
+        {
+            blipHttpClient.BeginSend(
+                 new HttpRequestMessage("GET", "/bliposphere?limit=1"),null,null);
+
         }
     }
 

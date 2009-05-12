@@ -149,9 +149,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\BindableRun.cs" />
+    <Compile Include="View\Controls\BindableRun.cs" />
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Helpers\StatusBindableTextBlock.cs" />
+    <Compile Include="View\Controls\StatusBindableTextBlock.cs" />
     <Compile Include="Helpers\StatusesCommands.cs" />
     <Compile Include="Helpers\ProtectionHelper.cs" />
     <Compile Include="Helpers\ViewModelHelper.cs" />

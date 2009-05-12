@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Documents;
 
-namespace BlipFace.Helpers.BindableRun
+namespace BlipFace.View.Controls
 {
     /// <summary>
     /// A subclass of the Run element that exposes a DependencyProperty property 
@@ -13,9 +13,9 @@ namespace BlipFace.Helpers.BindableRun
     {
         public static readonly DependencyProperty BoundTextProperty = 
             DependencyProperty.Register("BoundText", 
-            typeof(string), 
-            typeof(BindableRun), 
-            new PropertyMetadata(new PropertyChangedCallback(BindableRun.onBoundTextChanged)));
+                                        typeof(string), 
+                                        typeof(BindableRun), 
+                                        new PropertyMetadata(new PropertyChangedCallback(BindableRun.onBoundTextChanged)));
 
         private static void onBoundTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

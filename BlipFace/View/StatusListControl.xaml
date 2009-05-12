@@ -103,7 +103,9 @@
             </ItemsControl.Template>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" />
+                    <VirtualizingStackPanel Orientation="Vertical"/>
+
+                    <!-- StackPanel Orientation="Vertical" / -->
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

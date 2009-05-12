@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:helpers="clr-namespace:BlipFace.Helpers"
-    xmlns:br="clr-namespace:BlipFace.Helpers.BindableRun">
+    xmlns:Controls="clr-namespace:BlipFace.View.Controls">
     <DataTemplate x:Key="WrapItemTemplate">
         <Border Height="Auto" Margin="5,10,5,0">
             <Border.Style>
@@ -77,7 +77,7 @@
                 <!--Treść wiadomości-->
                
                 
-                <br:StatusBindableTextBlock 
+                <Controls:StatusBindableTextBlock 
                     Grid.Column="1" Grid.Row="0" 
                     TextWrapping="Wrap"
                     Margin="5,2,2,2"

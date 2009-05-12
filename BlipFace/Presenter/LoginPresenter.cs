@@ -9,6 +9,7 @@ using BlipFace.View;
 using BlipFace.Service.Communication;
 using System.IO;
 using BlipFace.Helpers;
+using System.Threading;
 
 namespace BlipFace.Presenter
 {
@@ -18,15 +19,25 @@ namespace BlipFace.Presenter
 
         private const string FileWithUserPassword = "BlipPass.bup";
 
-        public void ValidateCredential(string user, string password)
-        {
-            //tak na dobra sprawe to powinno tu byc odwolanie do logiki
 
-            BlipCommunication com = new BlipCommunication(user, password);
+        readonly BlipCommunication com = new BlipCommunication();
+
+        public LoginPresenter()
+        {
 
             com.AuthorizationComplete += new BlipCommunication.BoolDelegate(ComAuthorizationComplete);
             com.CommunicationError += new EventHandler<CommunicationErrorEventArgs>(ComCantCommunicate);
             com.ExceptionOccure += new EventHandler<ExceptionEventArgs>(ComExceptionOccure);
+
+            
+        }
+
+        public void ValidateCredential(string user, string password)
+        {
+            //tak na dobra sprawe to powinno tu byc odwolanie do logiki
+
+            com.SetAuthorizationCredential(user, password);
+
             com.ValideteAsync();
 
             //if (com.Validate())
@@ -134,7 +145,12 @@ namespace BlipFace.Presenter
                
             }//end foreach
 
-            //jeżeli nie ma pliku to nic nie zostanie ustawione :)
+            
+            //w celu aby wyglądało że się szybciej loguje,
+
+            Thread t = new Thread(delegate() { com.Connect(); });
+            t.Start();
+
         }
 
         public event EventHandler<ActionsEventArgs> WorkDone;
