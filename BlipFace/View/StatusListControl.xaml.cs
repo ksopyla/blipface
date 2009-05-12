@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -131,7 +132,10 @@ namespace BlipFace.View
         #region IStatusesView
         public IList<StatusViewModel> Statuses
         {
-            get { return lstbStatusList.ItemsSource as IList<StatusViewModel>; }
+            get
+            {
+                return lstbStatusList.ItemsSource as IList<StatusViewModel>;
+            }
             set
             {
                 //statusy będą ustawiane asynchronicznie przez prezetnera
@@ -233,6 +237,26 @@ namespace BlipFace.View
                                                EnableContrlsForSendMessage(true);
                                            }), value);
             }
+        }
+
+        public void UpdateStatuses(ObservableCollection<StatusViewModel> statuses)
+        {
+            Dispatcher.Invoke(
+                    new Action<IList<StatusViewModel>>(
+                        delegate(IList<StatusViewModel> statusesList)
+                        {
+                            var currentList = lstbStatusList.ItemsSource as ObservableCollection<StatusViewModel>;
+
+                            for (int i = statusesList.Count-1; i >=0 ; i--)
+                            {
+                                currentList.Insert(0,statusesList[i]);
+                            }
+
+                            //todo:to tak testowo
+                            FlashMainWindow(Window.GetWindow(this.Parent), true);
+
+
+                        }), statuses);
         }
 
         #endregion

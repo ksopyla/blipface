@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using BlipFace.Service.Entities;
@@ -41,5 +42,6 @@ namespace BlipFace.View
         Exception Error { get; set; }
 
         string ConnectivityStatus { get; set; }
+        void UpdateStatuses(ObservableCollection<StatusViewModel> collection);
     }
 }

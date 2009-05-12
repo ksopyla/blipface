@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BlipFace.Service.Entities;
 using BlipFace.Model;
+using System.Collections.ObjectModel;
 
 namespace BlipFace.Helpers
 {
@@ -17,9 +18,13 @@ namespace BlipFace.Helpers
         /// </summary>
         /// <param name="statusesList"></param>
         /// <returns></returns>
-        public static IList<StatusViewModel> MapToViewStatus(IList<BlipStatus> statusesList, string ownerLogin)
+        public static ObservableCollection<StatusViewModel> MapToViewStatus(IList<BlipStatus> statusesList, string ownerLogin)
         {
-            IList<StatusViewModel> sts = new List<StatusViewModel>(statusesList.Count);
+            ObservableCollection<StatusViewModel> statuses =
+                new ObservableCollection<StatusViewModel>();
+
+
+            //IList<StatusViewModel> sts = new List<StatusViewModel>(statusesList.Count);
             try
             {
                 foreach (BlipStatus status in statusesList)
@@ -57,7 +62,7 @@ namespace BlipFace.Helpers
                                            ? "http://static1.blip.pl/images/nn_nano.png?1240395130"
                                            : status.User.Avatar.Url50;
 
-                    sts.Add(new StatusViewModel()
+                    statuses.Add(new StatusViewModel()
                                 {
                                     StatusId = status.Id,
                                     UserId = status.User.Id,
@@ -81,7 +86,7 @@ namespace BlipFace.Helpers
             }
 
 
-            return sts;
+            return statuses;
         }
 
         /// <summary>

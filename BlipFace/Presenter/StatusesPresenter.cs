@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using BlipFace.View;
@@ -167,9 +168,11 @@ namespace BlipFace.Presenter
         void BlpComStatusesUpdated(object sender, StatusesLoadingEventArgs e)
         {
 
-            IList<StatusViewModel> statuses = ViewModelHelper.MapToViewStatus(e.Statuses,blipfaceUser.UserName);
+            ObservableCollection<StatusViewModel> statuses = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
 
-            view.Statuses = statuses.Concat(view.Statuses).ToList();
+            view.UpdateStatuses(statuses);
+            
+            //view.Statuses = statuses.Concat(view.Statuses).ToList();
 
             view.ConnectivityStatus = ConnectivityStatusOnline;
             // view.Statuses.Insert(0, statuses[0]);
