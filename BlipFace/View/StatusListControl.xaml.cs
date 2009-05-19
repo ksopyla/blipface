@@ -98,7 +98,7 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void btnSendBlip_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(tbMessage.Text))
+            if (!string.IsNullOrEmpty(tbMessage.Text))
             {
                 EnableContrlsForSendMessage(false);
 
@@ -230,15 +230,16 @@ namespace BlipFace.View
             }
         }
 
-        public string ConnectivityStatus
+        public TitleMessageViewModel ConnectivityStatus
         {
             get { throw new NotImplementedException(); }
             set
             {
                 Dispatcher.Invoke(
-                    new Action<string>(delegate(string status)
+                    new Action<TitleMessageViewModel>(delegate(TitleMessageViewModel status)
                                            {
-                                               lbOffline.Content = status;
+                                               lbOffline.Content = status.Title;
+                                               lbOffline.ToolTip = status.Message;
                                                EnableContrlsForSendMessage(true);
                                            }), value);
             }

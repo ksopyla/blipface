@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C3BA6088-452E-4D90-B01D-5686B8BA4007}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -149,6 +149,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AppMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\TitleMessageViewModel.cs" />
     <Compile Include="View\Controls\BindableRun.cs" />
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
     <Compile Include="View\Controls\StatusBindableTextBlock.cs" />
@@ -230,6 +236,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

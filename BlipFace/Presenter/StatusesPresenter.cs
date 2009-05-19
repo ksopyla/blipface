@@ -20,6 +20,8 @@ namespace BlipFace.Presenter
     public class StatusesPresenter : IPresenter
     {
 
+        enum ConnectivityStatus { Online, Offline };
+
         //zmienna wskazuje czy jesetśmy online
         private bool isOnLine = false;
 
@@ -37,14 +39,14 @@ namespace BlipFace.Presenter
         private readonly BlipCommunication blpCom; // = new BlipCommunication("blipface", @"12Faceewq");
 
         private readonly Timer updateStatusTimer;
-        private const string ConnectivityStatusOnline="Online";
+        private const string ConnectivityStatusOnline = "Online";
         private const string ConnectivityStatusOffline = "Offline";
 
 
         /// <summary>
         /// co ile czasu mamy aktualizować 
         /// </summary>
-        private const int UpdateTime=45;
+        private const int UpdateTime = 45;
 
         /// <summary>
         /// Limity pobierania statusów
@@ -58,7 +60,7 @@ namespace BlipFace.Presenter
         public StatusesPresenter(UserViewModel user)
         {
             this.blipfaceUser = user;
-            blpCom = new BlipCommunication(blipfaceUser.UserName,blipfaceUser.Password);
+            blpCom = new BlipCommunication(blipfaceUser.UserName, blipfaceUser.Password);
 
             blpCom.StatusesLoaded += new EventHandler<StatusesLoadingEventArgs>(BlpComStatusesLoaded);
 
@@ -77,8 +79,8 @@ namespace BlipFace.Presenter
             updateStatusTimer.Elapsed += new ElapsedEventHandler(UpdateStatusTimerElapsed);
         }
 
-        
-    
+
+
         #region IPresenter Members
 
         public void SetView(IView view)
@@ -123,6 +125,8 @@ namespace BlipFace.Presenter
             //int lastIndex = lstbStatusList.Items.Count;
             //todo: uwaga gdyż może być wyrzucony wyjątek NullReference Exception, gdy za wczesnie tu wejdzie
 
+            LoadUserMainStatus(blipfaceUser.UserName);
+
             if (view.Statuses != null)
             {
                 StatusViewModel lastStatus = view.Statuses[0];
@@ -130,9 +134,15 @@ namespace BlipFace.Presenter
                 if (lastStatus != null)
                 {
                     //todo: zamiast pobierać za każdym razem ostatni status można by najpierw sprawdzić czy się zmienił
-                    LoadUserMainStatus(blipfaceUser.UserName);
+
                     UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
                 }
+            }
+            else
+            {
+                //pobieramy cały dashborad od nowa
+                LoadUserDashboard(blipfaceUser.UserName);
+
             }
         }
 
@@ -144,7 +154,7 @@ namespace BlipFace.Presenter
         /// <param name="e"></param>
         void BlpComExceptionOccure(object sender, ExceptionEventArgs e)
         {
-            
+
 
             view.Error = e.Error;
         }
@@ -157,7 +167,9 @@ namespace BlipFace.Presenter
         /// <param name="e"></param>
         void BlpComCommunicationError(object sender, CommunicationErrorEventArgs e)
         {
-            view.ConnectivityStatus = ConnectivityStatusOffline;
+
+            view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Offline);
+               
         }
 
         /// <summary>
@@ -171,11 +183,38 @@ namespace BlipFace.Presenter
             ObservableCollection<StatusViewModel> statuses = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
 
             view.UpdateStatuses(statuses);
-            
+
             //view.Statuses = statuses.Concat(view.Statuses).ToList();
 
-            view.ConnectivityStatus = ConnectivityStatusOnline;
+            view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
             // view.Statuses.Insert(0, statuses[0]);
+        }
+
+
+
+        //tworzy obiekt z informacjami o stanie połaćzenia z blipem
+        private TitleMessageViewModel SetConnectivityStatus(ConnectivityStatus connectivityStatus)
+        {
+            switch (connectivityStatus)
+            {
+                case ConnectivityStatus.Online:
+                    return new TitleMessageViewModel()
+                    {
+                        Title = AppMessages.OfflineTitle,
+                        Message = AppMessages.OnlineMessage
+                    };
+                case ConnectivityStatus.Offline:
+
+                    return new TitleMessageViewModel()
+                    {
+                        Title = AppMessages.OfflineTitle,
+                        Message = AppMessages.OfflineMessage
+                    };
+
+                default:
+                    return null;
+                    break;
+            }
         }
 
         /// <summary>
@@ -209,10 +248,10 @@ namespace BlipFace.Presenter
         /// <param name="e"></param>
         void BlpComStatusesLoaded(object sender, StatusesLoadingEventArgs e)
         {
-            
+
             view.Statuses = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
 
-            view.ConnectivityStatus = ConnectivityStatusOnline;
+            view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
         }
 
         /// <summary>
@@ -224,7 +263,7 @@ namespace BlipFace.Presenter
         {
             view.MainStatus = ViewModelHelper.MapToViewStatus(e.MainStatus);
 
-            view.ConnectivityStatus = ConnectivityStatusOnline;
+            view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
         }
 
 
@@ -279,7 +318,7 @@ namespace BlipFace.Presenter
 
         }
         #endregion
-       
+
         #region Metody Publiczne
 
         /// <summary>
@@ -287,9 +326,9 @@ namespace BlipFace.Presenter
         /// </summary>
         public void AddStatus(string content)
         {
-            if(string.IsNullOrEmpty(content))
+            if (string.IsNullOrEmpty(content))
                 return;
-            
+
             //todo: zwrócić uwagę na to co może się dziać w trakcie dodawania statusu
             //szczególnie gdy jest błąd dodawania, a inne updaty (np pobieranie głównego statusu)
             //mogą odblokować panel do wpisywania wiadomości
@@ -298,7 +337,7 @@ namespace BlipFace.Presenter
 
             blpCom.AddUpdateAsync(content);
         }
-       
+
         /// <summary>
         /// Tworzy treść wiadomości do cytowania
         /// </summary>
@@ -307,10 +346,10 @@ namespace BlipFace.Presenter
         /// <param name="position"></param>
         public void MakeCitation(StatusViewModel status, string text, int position)
         {
-            
-            StringBuilder blipLink = new StringBuilder("http://blip.pl",26);
 
-            if(status.Type == "DirectedMessage")
+            StringBuilder blipLink = new StringBuilder("http://blip.pl", 26);
+
+            if (status.Type == "DirectedMessage")
             {
                 blipLink.Append("/dm/");
             }
@@ -368,7 +407,7 @@ namespace BlipFace.Presenter
             //string blipMessage = Regex.Replace(messageText, @"^>>.*:", userFormat, RegexOptions.IgnoreCase);
 
             //view.TextMessage = blipMessage;
-            
+
         }
 
         /// <summary>
@@ -388,9 +427,9 @@ namespace BlipFace.Presenter
             Regex regex = new Regex(@"^>.*?:");
 
             string blipMessage;
-            if(regex.IsMatch(messageText))
+            if (regex.IsMatch(messageText))
             {
-               blipMessage= regex.Replace(messageText, userFormat);
+                blipMessage = regex.Replace(messageText, userFormat);
             }
             else
             {

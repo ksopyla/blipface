@@ -313,11 +313,14 @@ namespace BlipFace.Service.Communication
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
 
-            //pobieramy odpowiedź
-            var resp = client.EndSend(result);
+            
+            HttpResponseMessage resp = null;
 
             try
             {
+                //pobieramy odpowiedź
+                resp = client.EndSend(result);
+
                 resp.EnsureStatusIsSuccessful();
 
                 if (resp.Content.GetLength() > 2)
@@ -377,11 +380,14 @@ namespace BlipFace.Service.Communication
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
 
-            //pobieramy odpowiedź
-            var resp = client.EndSend(result);
+            
+            HttpResponseMessage resp=null;
 
             try
             {
+                //pobieramy odpowiedź
+                resp = client.EndSend(result);
+
                 resp.EnsureStatusIsSuccessful();
 
                 //@todo: sprawdzić czy istnieje chociaż jeden status
@@ -512,10 +518,14 @@ namespace BlipFace.Service.Communication
             var client = result.AsyncState as HttpClient;
 
             //pobieramy odpowiedź
-            var resp = client.EndSend(result);
+            HttpResponseMessage resp=null;
 
             try
             {
+                //pobieramy odpowiedź
+                resp = client.EndSend(result);
+
+
                 resp.EnsureStatusIsSuccessful();
 
                 //deserializujemy z json
