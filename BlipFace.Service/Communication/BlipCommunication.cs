@@ -69,6 +69,8 @@ namespace BlipFace.Service.Communication
         /// </summary>
         private readonly HttpClient blipHttpClient = new HttpClient("http://api.blip.pl/");
 
+        
+
 
         private  string userLogin;
         
@@ -125,6 +127,9 @@ namespace BlipFace.Service.Communication
         //ustawia domyślne nagłówki dla blipa
         private void SetDefaultHeaders()
         {
+            blipHttpClient.TransportSettings.ConnectionTimeout = new TimeSpan(0, 0, 20);
+            
+
             blipHttpClient.DefaultHeaders.Add("X-Blip-API", "0.02");
 
             //także wymagane przez blipa
@@ -151,18 +156,20 @@ namespace BlipFace.Service.Communication
             string query = "updates?limit=1";
 
             bool validate = false;
-
-            HttpResponseMessage resp = blipHttpClient.Get(query);
-            //sprawdzamy czy komunikacja się powiodła
             try
             {
-                if (resp.StatusCode != HttpStatusCode.Unauthorized)
+                using (HttpResponseMessage resp = blipHttpClient.Get(query))
                 {
-                    //gdy nie wyrzuci wyjątku znaczy że wszystko jest ok
-                    //lecz gdy wyrzuci wyjątek to znaczy że coś nawaliła komunikacja
-                    resp.EnsureStatusIsSuccessful();
+                    //sprawdzamy czy komunikacja się powiodła
 
-                    validate = true;
+                    if (resp.StatusCode != HttpStatusCode.Unauthorized)
+                    {
+                        //gdy nie wyrzuci wyjątku znaczy że wszystko jest ok
+                        //lecz gdy wyrzuci wyjątek to znaczy że coś nawaliła komunikacja
+                        resp.EnsureStatusIsSuccessful();
+
+                        validate = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -187,6 +194,8 @@ namespace BlipFace.Service.Communication
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
                 new HttpRequestMessage("GET", query), new AsyncCallback(AfterValidate), blipHttpClient);
+
+            
         }
 
         /// <summary>
@@ -196,32 +205,36 @@ namespace BlipFace.Service.Communication
         /// <param name="result"></param>
         private void AfterValidate(IAsyncResult result)
         {
-            //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
-            //przekazaliśmy ten obiekt jako state
-            var client = result.AsyncState as HttpClient;
-
-            //pobieramy odpowiedź
-            var resp = client.EndSend(result);
+           
 
             bool validate = false;
 
-
+            HttpResponseMessage resp = null;
             //sprawdzamy czy komunikacja się powiodła
             try
             {
-                if (resp.StatusCode != HttpStatusCode.Unauthorized)
-                {
-                    //gdy nie wyrzuci wyjątku znaczy że wszystko jest ok
-                    //lecz gdy wyrzuci wyjątek to znaczy że coś nawaliła komunikacja
-                    resp.EnsureStatusIsSuccessful();
+                //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
+                //przekazaliśmy ten obiekt jako state
+                var client = result.AsyncState as HttpClient;
 
-                    validate = true;
-                }
-
-                //zgłaszamy zdarzenie że walidacja zakńczona
-                if (AuthorizationComplete != null)
+                //pobieramy odpowiedź
+                using (resp = client.EndSend(result))
                 {
-                    AuthorizationComplete(validate);
+                    if (resp.StatusCode != HttpStatusCode.Unauthorized)
+                    {
+                        //gdy nie wyrzuci wyjątku znaczy że wszystko jest ok
+                        //lecz gdy wyrzuci wyjątek to znaczy że coś nawaliła komunikacja
+                        resp.EnsureStatusIsSuccessful();
+
+                        validate = true;
+                    }
+                 
+
+                    //zgłaszamy zdarzenie że walidacja zakńczona
+                    if (AuthorizationComplete != null)
+                    {
+                        AuthorizationComplete(validate);
+                    }
                 }
             }
             catch (ArgumentOutOfRangeException aorEx)
@@ -239,6 +252,7 @@ namespace BlipFace.Service.Communication
                     ExceptionOccure(this, new ExceptionEventArgs(ex));
                 }
             }
+            
         }
 
 
@@ -280,6 +294,8 @@ namespace BlipFace.Service.Communication
 
             //blipHttpClient.SendCompleted+=new EventHandler<SendCompletedEventArgs>(blipHttpClient_SendCompleted);
             //blipHttpClient.SendAsync(new HttpRequestMessage("GET",query);
+
+            
         }
 
         /// <summary>
@@ -300,6 +316,7 @@ namespace BlipFace.Service.Communication
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
                 new HttpRequestMessage("GET", query), new AsyncCallback(AfterGetUpdates), blipHttpClient);
+
         }
 
         /// <summary>
@@ -319,19 +336,20 @@ namespace BlipFace.Service.Communication
             try
             {
                 //pobieramy odpowiedź
-                resp = client.EndSend(result);
-
-                resp.EnsureStatusIsSuccessful();
-
-                if (resp.Content.GetLength() > 2)
+                using (resp = client.EndSend(result))
                 {
-                    //deserializujemy z json
-                    var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+                    resp.EnsureStatusIsSuccessful();
 
-                    //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłoszenia wraz z statusami
-                    if (StatusesLoaded != null)
+                    if (resp.Content.GetLength() > 2)
                     {
-                        StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
+                        //deserializujemy z json
+                        var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+
+                        //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłoszenia wraz z statusami
+                        if (StatusesLoaded != null)
+                        {
+                            StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
+                        }
                     }
                 }
             }
@@ -350,6 +368,7 @@ namespace BlipFace.Service.Communication
                     ExceptionOccure(this, new ExceptionEventArgs(ex));
                 }
             }
+           
         }
 
         /// <summary>
@@ -505,6 +524,8 @@ namespace BlipFace.Service.Communication
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
                 new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserDashboardSince), blipHttpClient);
+
+           
         }
 
         /// <summary>
@@ -523,22 +544,23 @@ namespace BlipFace.Service.Communication
             try
             {
                 //pobieramy odpowiedź
-                resp = client.EndSend(result);
-
-
-                resp.EnsureStatusIsSuccessful();
-
-                //deserializujemy z json
-
-                if (resp.Content.GetLength() > 2)
+                using (resp = client.EndSend(result))
                 {
-                    var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
 
-                    //gdy zostały zwrócone jakieś statusy
-                    if ((statuses.Count > 0) && (StatusesUpdated != null))
+                    resp.EnsureStatusIsSuccessful();
+
+                    //deserializujemy z json
+
+                    if (resp.Content.GetLength() > 2)
                     {
-                        //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-                        StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
+                        var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+
+                        //gdy zostały zwrócone jakieś statusy
+                        if ((statuses.Count > 0) && (StatusesUpdated != null))
+                        {
+                            //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+                            StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
+                        }
                     }
                 }
             }
@@ -557,6 +579,7 @@ namespace BlipFace.Service.Communication
                     ExceptionOccure(this, new ExceptionEventArgs(ex));
                 }
             }
+            
         }
 
 

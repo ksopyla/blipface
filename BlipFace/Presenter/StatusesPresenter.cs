@@ -200,7 +200,7 @@ namespace BlipFace.Presenter
                 case ConnectivityStatus.Online:
                     return new TitleMessageViewModel()
                     {
-                        Title = AppMessages.OfflineTitle,
+                        Title = AppMessages.OnlineTitle,
                         Message = AppMessages.OnlineMessage
                     };
                 case ConnectivityStatus.Offline:
