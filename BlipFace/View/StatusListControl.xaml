@@ -176,8 +176,13 @@
                Foreground="YellowGreen" FontFamily="Verdana" Margin="5"
                       VerticalAlignment="Center"
 		       FontSize="10" Text="Offline" />
+            
+            <TextBlock DockPanel.Dock="Left" Name="tbError"  
+               Foreground="YellowGreen" FontFamily="Verdana" Margin="5"
+                      VerticalAlignment="Center" Visibility="Collapsed"
+		       FontSize="10" Text="Error" />
 
-          
+
 
             <TextBlock DockPanel.Dock="Right" Margin="0,0,18,0" TextAlignment="Right" VerticalAlignment="Center">
                            <Hyperlink FontSize="10" FontFamily="Verdana"  
