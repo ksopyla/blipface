@@ -222,9 +222,8 @@ namespace BlipFace.View
                 Dispatcher.Invoke(
                     new Action<Exception>(delegate(Exception err)
                                               {
-                                                  //throw new Exception(_err.Message, _err);
-                                                  MessageBox.Show(err.Message);
-
+                                                  tbError.Visibility = Visibility.Visible;
+                                                  tbError.ToolTip="Błąd: " + err.Message;
                                                   EnableContrlsForSendMessage(true);
                                               }), System.Windows.Threading.DispatcherPriority.Normal, value);
             }
@@ -238,6 +237,9 @@ namespace BlipFace.View
                 Dispatcher.Invoke(
                     new Action<TitleMessageViewModel>(delegate(TitleMessageViewModel status)
                                            {
+                                               //chowamy błędy 
+                                               tbError.Visibility = Visibility.Collapsed;
+
                                                tbOffline.Text = status.Title;
                                                tbOffline.ToolTip = status.Message;
                                                EnableContrlsForSendMessage(true);

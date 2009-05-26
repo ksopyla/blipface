@@ -145,7 +145,7 @@
                        Foreground="Yellow" 
                        FontSize="11" FontFamily="Verdana"
                        VerticalAlignment="Bottom"
-				HorizontalAlignment="Left"
+				HorizontalAlignment="Left" Margin="4"
 				Text="Zapisuję..."
                    />
             <TextBlock  Grid.Row="0" Grid.Column="0" 
@@ -173,7 +173,7 @@
             
         
            <TextBlock DockPanel.Dock="Left" Name="tbOffline"  
-               Foreground="YellowGreen" FontFamily="Verdana" 
+               Foreground="YellowGreen" FontFamily="Verdana" Margin="5"
                       VerticalAlignment="Center"
 		       FontSize="10" Text="Offline" />
 
