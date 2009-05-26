@@ -61,6 +61,8 @@
   <ItemGroup>
     <Compile Include="Communication\BlipCommunication.cs" />
     <Compile Include="Entities\BlipAvatar.cs" />
+    <Compile Include="Entities\BlipPicture.cs" />
+    <Compile Include="Entities\BlipPictureList.cs" />
     <Compile Include="Entities\BlipStatus.cs" />
     <Compile Include="Entities\BlipUser.cs" />
     <Compile Include="Entities\StatusesList.cs" />

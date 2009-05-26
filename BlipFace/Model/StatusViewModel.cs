@@ -38,7 +38,8 @@ namespace BlipFace.Model
                 return !(UserLogin == BlipFaceUser);
             }
         }
-        
+
+        public string FirstPictureUrl { get; set; }
 
         /*
         private string recipientAvatar50;

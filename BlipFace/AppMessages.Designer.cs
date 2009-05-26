@@ -61,7 +61,7 @@ namespace BlipFace {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nie mogę połączyć się z serwisem blip.pl gdyż jest przeciążony.
+        ///   Looks up a localized string similar to Nie mogę połączyć się z serwisem blip.pl gdyż jest przeciążony, będę cały czas próbował połączyć się w tle..
         /// </summary>
         internal static string OfflineMessage {
             get {
@@ -70,7 +70,7 @@ namespace BlipFace {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Offline.
+        ///   Looks up a localized string similar to Rozłączony z blip.
         /// </summary>
         internal static string OfflineTitle {
             get {

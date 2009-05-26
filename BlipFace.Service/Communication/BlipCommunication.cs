@@ -127,7 +127,10 @@ namespace BlipFace.Service.Communication
         //ustawia domyślne nagłówki dla blipa
         private void SetDefaultHeaders()
         {
-            blipHttpClient.TransportSettings.ConnectionTimeout = new TimeSpan(0, 0, 20);
+            //To było ustawiane, nie wiem dlaczego, zbadać
+            //System.Net.ServicePointManager.Expect100Continue = false;
+
+            blipHttpClient.TransportSettings.ConnectionTimeout = new TimeSpan(0, 30, 0);
             
 
             blipHttpClient.DefaultHeaders.Add("X-Blip-API", "0.02");
@@ -138,7 +141,7 @@ namespace BlipFace.Service.Communication
 
             //ustawienie nagłówka UserAgent - po tym blip rozpoznaje transport
             blipHttpClient.DefaultHeaders.UserAgent.Add(
-                new Microsoft.Http.Headers.ProductOrComment("BlipFace/0.1 (http://blipface.pl)"));
+                new Microsoft.Http.Headers.ProductOrComment("BlipFace v0.2"));
         }
 
        
@@ -228,7 +231,7 @@ namespace BlipFace.Service.Communication
 
                         validate = true;
                     }
-                 
+
 
                     //zgłaszamy zdarzenie że walidacja zakńczona
                     if (AuthorizationComplete != null)
@@ -243,6 +246,14 @@ namespace BlipFace.Service.Communication
                 if (CommunicationError != null)
                 {
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
+                }
+            }
+            catch (HttpStageProcessingException timeEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+                    CommunicationError(this, new CommunicationErrorEventArgs());
                 }
             }
             catch (Exception ex)
@@ -306,12 +317,12 @@ namespace BlipFace.Service.Communication
         /// <param name="limit"></param>
         public void GetUserDashboard(string user, int limit)
         {
-            string query =
-                string.Format(
-                    "/users/{0}/dashboard?include=user,user[avatar],recipient,recipient[avatar]&amp;limit={1}", user,
-                    limit.ToString());
+            Uri query =new Uri(string.Format(
+                    "/users/{0}/dashboard?include=user,user[avatar],recipient,recipient[avatar],pictures&amp;limit={1}", user,
+                    limit.ToString()),UriKind.Relative);
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
-            //HttpQueryString query = new HttpQueryString();
+           
+
 
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
@@ -361,6 +372,14 @@ namespace BlipFace.Service.Communication
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
+            catch (HttpStageProcessingException timeEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+                    CommunicationError(this, new CommunicationErrorEventArgs());
+                }
+            }
             catch (Exception ex)
             {
                 if (ExceptionOccure != null)
@@ -379,9 +398,9 @@ namespace BlipFace.Service.Communication
         public void GetUserMainStatus(string user)
         {
             //users/{0}/dashboard?include=user,user[avatar],recipient,recipient[avatar]&amp;limit={1}
-            string query = string.Format("users/{0}/statuses?include=user,user[avatar]&amp;limit=1", user);
-            //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
-            //HttpQueryString query = new HttpQueryString();
+            
+            Uri query = new Uri(string.Format("users/{0}/statuses?include=user,user[avatar]&amp;limit=1", user),UriKind.Relative);
+           
 
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
             blipHttpClient.BeginSend(
@@ -425,6 +444,14 @@ namespace BlipFace.Service.Communication
                 if (CommunicationError != null)
                 {
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
+                }
+            }
+            catch ( HttpStageProcessingException timeEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+                    CommunicationError(this, new CommunicationErrorEventArgs());
                 }
             }
             catch (Exception ex)
@@ -498,6 +525,14 @@ namespace BlipFace.Service.Communication
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
                 }
             }
+            catch (HttpStageProcessingException timeEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+                    CommunicationError(this, new CommunicationErrorEventArgs());
+                }
+            }
             catch (Exception ex)
             {
                 if (ExceptionOccure != null)
@@ -515,9 +550,11 @@ namespace BlipFace.Service.Communication
         /// <param name="since">id statusu od którego należy pobrać nowsze wpisy</param>
         public void GetUserDashboardSince(string user, int since)
         {
-            string query =
-                string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar],recipient,recipient[avatar]",
-                              user, since.ToString());
+
+
+            Uri query =new Uri(
+                string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar],recipient,recipient[avatar],,pictures",
+                              user, since.ToString()),UriKind.Relative);
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
             //HttpQueryString query = new HttpQueryString();
 
@@ -570,6 +607,14 @@ namespace BlipFace.Service.Communication
                 if (CommunicationError != null)
                 {
                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
+                }
+            }
+            catch (HttpStageProcessingException timeEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+                    CommunicationError(this, new CommunicationErrorEventArgs());
                 }
             }
             catch (Exception ex)
@@ -659,6 +704,12 @@ namespace BlipFace.Service.Communication
         public HttpStatusCode Code { get; private set; }
 
         public string Message { get; private set; }
+
+        public CommunicationErrorEventArgs()
+        {
+            Code = HttpStatusCode.RequestTimeout;
+            MakeMessage();
+        }
 
         public CommunicationErrorEventArgs(HttpStatusCode code)
         {

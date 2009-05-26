@@ -22,9 +22,7 @@ namespace BlipFace.Presenter
 
         enum ConnectivityStatus { Online, Offline };
 
-        //zmienna wskazuje czy jesetśmy online
-        private bool isOnLine = false;
-
+        
         /// <summary>
         /// widok 
         /// </summary>
@@ -213,7 +211,7 @@ namespace BlipFace.Presenter
 
                 default:
                     return null;
-                    break;
+                    
             }
         }
 

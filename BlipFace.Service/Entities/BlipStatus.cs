@@ -49,11 +49,14 @@ namespace BlipFace.Service.Entities
         public string StatusTime { get; set; }
 
 
+        [DataMember(Name="pictures")]
+        public BlipPictureList Pictures { get; set; }
+
+        
 
 
-
-        [DataMember(Name = "pictures_path")]
-        public string PicturesPath { get; set; }
+        //[DataMember(Name = "pictures_path")]
+        //public string PicturesPath { get; set; }
 
         [DataMember(Name = "recording_path")]
         public string RecordingPath { get; set; }

@@ -38,20 +38,13 @@
             <Label Canvas.Top="5" Canvas.Left="10" 
 			Foreground="White" FontFamily="Verdana" 
 			FontSize="14"
-			Content="BlipFace" >
+			Content="BlipFace v0.2.3" >
                 <Label.BitmapEffect>
                     <OuterGlowBitmapEffect GlowSize="7" Opacity="0.7" GlowColor="White" />
                 </Label.BitmapEffect>
 
             </Label>
 
-            <Label Canvas.Top="5" Canvas.Right="60" 
-			Foreground="YellowGreen" FontFamily="Verdana" 
-			FontSize="12"
-			Content="Offline"
-            Visibility="Collapsed" >
-                
-            </Label>
 
             <Button x:Name="btnMinimalizeApp" ToolTip="Minimalizuj"
                     Canvas.Right="53" Canvas.Top="5" Click="btnMinimalizeApp_Click">

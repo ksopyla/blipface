@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="OfflineMessage" xml:space="preserve">
-    <value>Nie mogę połączyć się z serwisem blip.pl gdyż jest przeciążony</value>
+    <value>Nie mogę połączyć się z serwisem blip.pl gdyż jest przeciążony, będę cały czas próbował połączyć się w tle.</value>
   </data>
   <data name="OfflineTitle" xml:space="preserve">
-    <value>Offline</value>
+    <value>Rozłączony z blip</value>
   </data>
   <data name="OnlineMessage" xml:space="preserve">
     <value>Komunikacje z blip.pl OK.</value>

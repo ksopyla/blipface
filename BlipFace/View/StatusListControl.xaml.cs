@@ -198,7 +198,7 @@ namespace BlipFace.View
                                                          {
                                                              tbMessage.Text = textMessage;
                                                              tbMessage.IsEnabled = true;
-                                                             lbShowSave.Visibility = Visibility.Hidden;
+                                                             tbShowSave.Visibility = Visibility.Hidden;
                                                          }), value);
             }
         }
@@ -238,8 +238,8 @@ namespace BlipFace.View
                 Dispatcher.Invoke(
                     new Action<TitleMessageViewModel>(delegate(TitleMessageViewModel status)
                                            {
-                                               lbOffline.Content = status.Title;
-                                               lbOffline.ToolTip = status.Message;
+                                               tbOffline.Text = status.Title;
+                                               tbOffline.ToolTip = status.Message;
                                                EnableContrlsForSendMessage(true);
                                            }), value);
             }
@@ -332,7 +332,7 @@ namespace BlipFace.View
         /// <param name="show"></param>
         private void EnableContrlsForSendMessage(bool enable)
         {
-            lbShowSave.Visibility = enable ? Visibility.Hidden : Visibility.Visible;
+            tbShowSave.Visibility = enable ? Visibility.Hidden : Visibility.Visible;
             tbMessage.IsEnabled = enable;
             btnSendBlip.IsEnabled = enable;
 

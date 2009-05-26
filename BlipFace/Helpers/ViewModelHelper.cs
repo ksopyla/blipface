@@ -61,6 +61,7 @@ namespace BlipFace.Helpers
                     string avatarUrl = status.User.Avatar == null
                                            ? "http://static1.blip.pl/images/nn_nano.png?1240395130"
                                            : status.User.Avatar.Url50;
+                    string pictureUrl = status.Pictures == null ? string.Empty : status.Pictures[0].Url;
 
                     statuses.Add(new StatusViewModel()
                                 {
@@ -76,7 +77,8 @@ namespace BlipFace.Helpers
                                     CreationDate = creationDate,
                                     UserLogin = status.User.Login,
                                     Type = status.Type,
-                                    BlipFaceUser = ownerLogin
+                                    BlipFaceUser = ownerLogin,
+                                    FirstPictureUrl= pictureUrl
                                 });
                 }
             }
