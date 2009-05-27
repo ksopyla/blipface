@@ -21,6 +21,8 @@
                 <Grid.Resources>
                     <!--Taki trik aby móc konwertować z wartości boolowskich do wyliczenia Visiblity-->
                     <helpers:BooleanToVisibilityConverter x:Key="BoolToVisible" />
+                    
+                    <SolidColorBrush x:Key="TransparentBlack" Color="Black" Opacity="0.01"/>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -49,20 +51,31 @@
                         <Image Source="{Binding Path=UserAvatar50}" Height="50" Width="50" VerticalAlignment="Center" />
                     </Border>
                     <!--Obrazek ze strzałką, nie zawsze będzie widoczny-->
-                    <Border Margin="0,0,0,0"
+                    
+                    <Image Visibility="{Binding Path=DirectedMessage, Converter={StaticResource BoolToVisible}}"
+                           Source="Img\directedMessage.gif" 
+                           Height="9" Width="6" Margin="1,25,1,1"
+                           VerticalAlignment="Top"/>
+                    
+                    <!-- Border Margin="0,0,0,0"
                         Visibility="{Binding Path=DirectedMessage, Converter={StaticResource BoolToVisible}}"
                         BorderThickness="0" 
                         VerticalAlignment="Center" 
                         Background="{x:Null}" >
-                        <Image Source="Img\directedMessage.gif" Height="50" Width="6" VerticalAlignment="Center" />
-                    </Border>
-                    <Border Margin="0,0,0,0"
+                        <Image Source="Img\directedMessage.gif" Height="50" Width="6" Margin="1,7,1,1" />
+                    </Border -->
+
+                    <Image Visibility="{Binding Path=PrivateMessage, Converter={StaticResource BoolToVisible}}"
+                           Source="Img\privateMessage.gif" Height="9" Width="6" Margin="1,25,1,1"
+                           VerticalAlignment="Top"/>
+
+                    <!--Border Margin="0,0,0,0"
                         Visibility="{Binding Path=PrivateMessage, Converter={StaticResource BoolToVisible}}"
                         BorderThickness="0" 
                         VerticalAlignment="Center" 
                         Background="{x:Null}" >
-                        <Image Source="Img\privateMessage.gif" Height="50" Width="6" VerticalAlignment="Center" />
-                    </Border>
+                        <Image Source="Img\privateMessage.gif" Height="50" Width="6" Margin="1,7,1,1" />
+                    </Border-->
                     <!--Avatar odbiorcy wiadomości, nie zawsze istnieje-->
                     <Border 
                         Visibility="{Binding Path=HasRecipient, Converter={StaticResource BoolToVisible}}"
@@ -78,9 +91,12 @@
                
                 
                 
-                <StackPanel Grid.Column="1" Grid.Row="0">
+                <StackPanel Grid.Column="1" Grid.Row="0" Height="Auto" Background="{StaticResource TransparentBlack}" >
+                    <!--StackPanel.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.01"/>
+                        
+                    </StackPanel.Background -->
                 <Controls:StatusBindableTextBlock 
-                     
                     TextWrapping="Wrap"
                     Margin="5,2,2,2"
                     FontFamily="Verdana"
@@ -110,7 +126,11 @@
                         Grid.Column="0" 
                         Grid.Row="0"
                         FontSize="9" 
-                        Foreground="#FFFFFDFD" />
+                        Foreground="#FFFFFDFD"
+                        FontFamily="Verdana"  
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        />
                     <!--Menu z funkcjami: Cytuj, Odpowiedz, Wiadomość prywatna-->
                    
                     <StackPanel Orientation="Horizontal" Background="Transparent"

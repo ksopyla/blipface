@@ -11,15 +11,17 @@ using System.Text.RegularExpressions;
 
 namespace BlipFace.View.Controls
 {
-    public class StatusBindableTextBlock: TextBlock
+    public class StatusBindableTextBlock : TextBlock
     {
         public static readonly DependencyProperty BoundStatusProperty =
-            DependencyProperty.Register("BoundStatus", 
+            DependencyProperty.Register("BoundStatus",
                                         typeof(StatusViewModel),
-                                        typeof(StatusBindableTextBlock), 
+                                        typeof(StatusBindableTextBlock),
                                         new PropertyMetadata(new PropertyChangedCallback(StatusBindableTextBlock.OnBoundStatusChanged)));
 
 
+        /* Implementacja tworzenie statusu wersja 2
+         * 
         private static Regex linkRegex = new Regex(@"(?<Link>((http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*))");
 
 
@@ -28,28 +30,44 @@ namespace BlipFace.View.Controls
 
         //poprzednie \#(.)*?(?=(\s | $))
         private static Regex tagRegex = new Regex(@"\#(\w)*?(?=\W)", RegexOptions.IgnoreCase | RegexOptions.Singleline); //dopasowuje z spacją lub bez na końcu
+        */
         
+
+        #region Regex
+
+        private static Regex textReg = new Regex(@"^[^\#\^]*");
+
+        private static Regex userReg = new Regex(@"^\^\w*");
+
+        private static Regex tagReg = new Regex(@"^\#\w*");
+
+        private static Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
+        #endregion
+
+
+
+        #region StringFormats
         private static string userLinkFormat = "http://blip.pl/users/{0}/dashboard";
         private static string tagLinkFormat = "http://blip.pl/tags/{0}";
-
         private static string userProfileFormat = "Profil {0}";
+        #endregion
 
+        #region Brushes
         private static SolidColorBrush hyperlinkColor = new SolidColorBrush(Colors.Yellow);
-
         private static SolidColorBrush userColor = new SolidColorBrush(Colors.Orange);
         private static SolidColorBrush tagsColor = new SolidColorBrush(Colors.YellowGreen);
-
+        #endregion
         static StatusBindableTextBlock()
         {
 
             //optymalizacja dzięki temu SolidColorBrush zajmuje mniej pamięci
             //Frozen SolidColorBrush 212 Bytes
             //Non-frozen SolidColorBrush 972 Bytes
- 
 
-           hyperlinkColor.Freeze();
-           userColor.Freeze();
-           tagsColor.Freeze();
+
+            hyperlinkColor.Freeze();
+            userColor.Freeze();
+            tagsColor.Freeze();
         }
 
         private static void OnBoundStatusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -59,36 +77,76 @@ namespace BlipFace.View.Controls
             //ContentControl con = (ContentControl) d;
             //Paragraph paragraph = (Paragraph) run.Parent;
 
-            TextBlock mainTextBlock = (TextBlock) d;
-            StatusViewModel s = (StatusViewModel) e.NewValue;
+            TextBlock mainTextBlock = (TextBlock)d;
+            StatusViewModel s = (StatusViewModel)e.NewValue;
 
 
 
             //tworzymy link użytkownika
-            Hyperlink hypUserLogin = CreateUserHyperLink(s.UserLogin, string.Format(userLinkFormat, s.UserLogin),string.Format(userProfileFormat, s.UserLogin));
+            CreateUsersBegining(mainTextBlock, s);
 
-            //dodajemy link użytkownka
-            mainTextBlock.Inlines.Add(hypUserLogin);
+            //jeśli nie ma linka, tagu lub użytownka to od razu dodajmy całą treść
 
-            //tworzymy link odbiorcy wiadomośći
-            if ((s.Type == "DirectedMessage") || (s.Type == "PrivateMessage"))
+            string blipStatus = s.Content;
+            var linkMatches = linkRegex.Matches(blipStatus);
+
+            
+
+            if (linkMatches.Count < 1)
             {
-                string mark = (s.Type == "DirectedMessage") ? " > " : " >> ";
-                //Run r = CreateRun(mark);
+                //jeśli nie ma dopasowań linków
+                FormatStatusFragment(s.Content,mainTextBlock);
 
-                mainTextBlock.Inlines.Add(mark);
+            }
+            else
+            {
 
-                //tworzymy link użytkownika odbiorcy wiadomości
-                Hyperlink hypRecipientLogin = CreateUserHyperLink(s.RecipientLogin, string.Format(userLinkFormat, s.RecipientLogin), string.Format(userProfileFormat, s.RecipientLogin));
-                //dodajemy link użytkownka
-                mainTextBlock.Inlines.Add(hypRecipientLogin);
+                int start = 0;
+
+                //dla wszystkich dopasowań
+                for (int k = 0; k < linkMatches.Count; k++)
+                {
+                    int startLink = linkMatches[k].Index;
+                    if (startLink > 0)
+                    {
+                        string temp = blipStatus.Substring(start, startLink - start);
+                        FormatStatusFragment(temp, mainTextBlock);
+                    }
+                    //zrób coś z samym linkiem
+
+                    string rlink;
+                    if (linkMatches[k].Value.Contains("blip.pl"))
+                    {
+                        rlink = "[blip]";
+                    }
+                    else
+                    {
+                        rlink = "[link]";
+                    }
+
+                    Hyperlink h = CreateLinkHyperLink(rlink, linkMatches[k].Value, linkMatches[k].Value);
+
+                    //dołączam linka do wyświetlenia
+                    mainTextBlock.Inlines.Add(h);
+
+
+
+                    //ustaw się za linkiem w łańcuchu 
+                    start = startLink + linkMatches[k].Length;
+
+                }
+
+
+                //jeśli został jakiś tekst na końcu 
+                if (start < s.Content.Length)
+                {
+                    FormatStatusFragment(s.Content.Substring(start), mainTextBlock);
+                }
             }
 
 
-
-            //Run rr = CreateRun(": ");
-            mainTextBlock.Inlines.Add(": ");
-
+            #region Second Implementatnio of making Status
+            /*
             //jeśli nie ma linka, tagu lub użytownka to od razu dodajmy całą treść
             if (!linkRegex.IsMatch(s.Content) && !tagRegex.IsMatch(s.Content) && !userRegex.IsMatch(s.Content))
             {
@@ -103,6 +161,10 @@ namespace BlipFace.View.Controls
                 {
                     if (linkRegex.IsMatch(words[i]))
                     {
+                        var match = linkRegex.Match(words[i]);
+
+                        string linkAddress = match.Groups["Link"].ToString();
+
                         //create hyperlink
                         string rlink;
                         if (words[i].Contains("blip.pl"))
@@ -149,8 +211,12 @@ namespace BlipFace.View.Controls
                     }
 
                 }
-            }
-/*
+            } 
+            */
+            #endregion
+
+            #region FirstImplementation of making status
+            /*
                  * Jak to działa
                  * 1. Sprawdzamy czy w naszym blipnięciu znajdują się dopasowane linki
                  * 2. Jeżeli tak to wchodzimy do tego if'a w któym jesteśmy
@@ -160,10 +226,11 @@ namespace BlipFace.View.Controls
                  * 6. Przesuwamy się w łańcuchu na pozycję za linkiem zmienna start
                  * 7. No i zaczynamy nową pętlę z sprawdzeniem czy istnieją jakieś jeszcze linki
                  * 8. Gdy nie ma więcej linków, dodajemy na koniec tekst za ostatnim linkiem
-                 */ 
+                 */
             //trochę nie wydajne, bo zbyt skomplikowane wyrażenie 
             //regularne, można byłoby uprościć gdyż wiemy(narazie)
             //że linki zaczynają się od http://rdir.pl/ a blipy od http://blip.pl/
+
             /*
             if(linkRegex.IsMatch(s.Content))
             {
@@ -230,8 +297,95 @@ namespace BlipFace.View.Controls
                 mainTextBlock.Inlines.Add(s.Content);
             }
              * */
+            #endregion
 
-          
+        }
+
+       
+        private static void FormatStatusFragment(string statusFragment,TextBlock mainTextBlock)
+        {
+            string matchText;
+
+            Match match;
+            int position = 0;
+
+            while (!string.IsNullOrEmpty(statusFragment))
+            {
+
+                //dopasuj sam tekst, do rozpoczęcia tagu lub nazyw użytkonika
+                match = textReg.Match(statusFragment);
+                matchText = match.Value;
+                if (!string.IsNullOrEmpty(matchText))
+                {
+                    position = matchText.Length;
+
+                    //dodaj zwykły tekst do wyświetlenia
+                    mainTextBlock.Inlines.Add(matchText);
+
+                    //skróć łańcuch 
+                    statusFragment = statusFragment.Substring(position);
+                }
+
+                //dopasuj nazwę użytkownika
+                match = userReg.Match(statusFragment);
+                matchText = match.Value;
+                if (!string.IsNullOrEmpty(matchText))
+                {
+                    position = matchText.Length;
+                    //stwórzy linka użytkownika
+                    Hyperlink h = CreateUserHyperLink(matchText, string.Format(userLinkFormat, matchText.Substring(1)), matchText);
+
+                    //dołączam linka do wyświetlenia
+                    mainTextBlock.Inlines.Add(h);
+
+                    statusFragment = statusFragment.Substring(position);
+                }
+
+
+                match = tagReg.Match(statusFragment);
+                matchText = match.Value;
+                if (!string.IsNullOrEmpty(matchText))
+                {
+                    position = matchText.Length;
+                    //stwórzy linka użytkownika
+                    Hyperlink h = CreateTagHyperLink(matchText, string.Format(tagLinkFormat, matchText.Substring(1)), matchText);
+
+                    //dołączam linka do wyświetlenia
+                    mainTextBlock.Inlines.Add(h);
+
+                    statusFragment = statusFragment.Substring(position);
+                }
+
+
+            }
+        }
+
+        //tworzy początek wiadomości, który zaczyna się od loginu(loginów) użytkownika
+        private static void CreateUsersBegining(TextBlock mainTextBlock, StatusViewModel s)
+        {
+            Hyperlink hypUserLogin = CreateUserHyperLink(s.UserLogin, string.Format(userLinkFormat, s.UserLogin), string.Format(userProfileFormat, s.UserLogin));
+
+            //dodajemy link użytkownka
+            mainTextBlock.Inlines.Add(hypUserLogin);
+
+            //tworzymy link odbiorcy wiadomośći
+            if ((s.Type == "DirectedMessage") || (s.Type == "PrivateMessage"))
+            {
+                string mark = (s.Type == "DirectedMessage") ? " > " : " >> ";
+                //Run r = CreateRun(mark);
+
+                mainTextBlock.Inlines.Add(mark);
+
+                //tworzymy link użytkownika odbiorcy wiadomości
+                Hyperlink hypRecipientLogin = CreateUserHyperLink(s.RecipientLogin, string.Format(userLinkFormat, s.RecipientLogin), string.Format(userProfileFormat, s.RecipientLogin));
+                //dodajemy link użytkownka
+                mainTextBlock.Inlines.Add(hypRecipientLogin);
+            }
+
+
+
+            //Run rr = CreateRun(": ");
+            mainTextBlock.Inlines.Add(": ");
         }
 
         private static Hyperlink CreateTagHyperLink(string linkText, string address, string toolTip)
@@ -250,18 +404,6 @@ namespace BlipFace.View.Controls
         }
 
 
-        //private static Run CreateRun(string mark)
-        //{
-        //    Run r = new Run(mark)
-        //                {
-        //                    FontSize = 8,
-        //                    FontWeight = FontWeights.SemiBold,
-        //                    Foreground = linkColor
-        //                };
-        //    return r;
-        //}
-
-
         /// <summary>
         /// Tworzy linka i ustawia jego właściwości
         /// </summary>
@@ -269,7 +411,7 @@ namespace BlipFace.View.Controls
         /// <param name="linkAdress"></param>
         /// <param name="toolTip"></param>
         /// <returns></returns>
-        private static Hyperlink CreateHyperLink(string linkText,string linkAdress,string toolTip,FontWeight weight,Brush linkColor)
+        private static Hyperlink CreateHyperLink(string linkText, string linkAdress, string toolTip, FontWeight weight, Brush linkColor)
         {
             Hyperlink hypUserLogin = new Hyperlink(new Run(linkText))
                                          {
@@ -285,7 +427,7 @@ namespace BlipFace.View.Controls
             return hypUserLogin;
         }
 
-        
+
         public static void HyperLink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             Hyperlink hl = (Hyperlink)sender;
@@ -294,9 +436,9 @@ namespace BlipFace.View.Controls
             e.Handled = true;
         }
 
-        
 
-        public StatusViewModel  BoundStatus
+
+        public StatusViewModel BoundStatus
         {
             get { return (StatusViewModel)GetValue(BoundStatusProperty); }
             set { SetValue(BoundStatusProperty, value); }

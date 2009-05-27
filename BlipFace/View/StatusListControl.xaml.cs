@@ -199,6 +199,9 @@ namespace BlipFace.View
                                                              tbMessage.Text = textMessage;
                                                              tbMessage.IsEnabled = true;
                                                              tbShowSave.Visibility = Visibility.Hidden;
+                                                             
+                                                             SetTextBoxFocus();
+
                                                          }), value);
             }
         }
@@ -338,7 +341,7 @@ namespace BlipFace.View
             tbMessage.IsEnabled = enable;
             btnSendBlip.IsEnabled = enable;
 
-            SetTextBoxFocus();
+            //SetTextBoxFocus();
         }
 
         private void SetTextBoxFocus()
