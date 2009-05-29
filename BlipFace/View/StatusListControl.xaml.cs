@@ -165,8 +165,10 @@ namespace BlipFace.View
             get
             {
                 StatusViewModel status = new StatusViewModel();
-                status.UserLogin = lbUserLogin.Text;
-                status.Content = lbContent.Text;
+                //status.UserLogin = lbUserLogin.Text;
+                //status.Content = lbContent.Text;
+
+
                 status.UserAvatar50 = imgUserAvatar.Source.ToString();
                 return status;
             }
@@ -176,13 +178,21 @@ namespace BlipFace.View
                 //więc potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(new Action<StatusViewModel>(delegate(StatusViewModel status)
                                                                   {
-                                                                      lbUserLogin.Text = status.UserLogin;
-                                                                      lbContent.Text = status.Content;
-                                                                      BitmapImage imgAvatar = new BitmapImage();
-                                                                      imgAvatar.BeginInit();
-                                                                      imgAvatar.UriSource = new Uri(status.UserAvatar50);
-                                                                      imgAvatar.EndInit();
-                                                                      imgUserAvatar.Source = imgAvatar;
+                                                                     // lbUserLogin.Text = status.UserLogin;
+                                                                     // lbContent.Text = status.Content;
+
+                                                                      status.UserLogin = string.Empty;
+                                                                      statusContent.BoundStatus = status;
+
+                                                                      if (imgUserAvatar.Source == null)
+                                                                      {
+
+                                                                          BitmapImage imgAvatar = new BitmapImage();
+                                                                          imgAvatar.BeginInit();
+                                                                          imgAvatar.UriSource = new Uri(status.UserAvatar50);
+                                                                          imgAvatar.EndInit();
+                                                                          imgUserAvatar.Source = imgAvatar;
+                                                                      }
                                                                   }), value);
             }
         }

@@ -4,6 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helper="clr-namespace:BlipFace.Helpers"
+    xmlns:Controls="clr-namespace:BlipFace.View.Controls"
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.StatusListControl"
     
@@ -65,7 +66,18 @@
                 <Image x:Name="imgUserAvatar" Height="50" Width="50" VerticalAlignment="Center" />
             </Border>
             <!--Główny status-->
-            <RichTextBox
+            <Controls:StatusBindableTextBlock x:Name="statusContent"
+                Grid.Column="1" 
+                Grid.Row="0"
+                    TextWrapping="Wrap"
+                    Margin="5,2,2,2"
+                    FontFamily="Verdana"
+                    Foreground="#FFFFFDFD"
+                    FontSize="15"
+                                            
+                     />
+
+            <!-- RichTextBox
                 Grid.Column="1" 
                 Grid.Row="0"
                 BorderThickness="0"
@@ -77,7 +89,7 @@
                         <Run x:Name="lbContent" Foreground="#FFFFFDFD" />
                     </Paragraph>
                 </FlowDocument>
-            </RichTextBox>
+            </RichTextBox -->
             <!--Menu z funkcjami: Kokpit-->
             <!--<Menu
                 Background="Transparent"

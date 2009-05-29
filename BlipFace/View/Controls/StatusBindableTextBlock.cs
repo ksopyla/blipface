@@ -18,8 +18,8 @@ namespace BlipFace.View.Controls
                                         typeof(StatusViewModel),
                                         typeof(StatusBindableTextBlock),
                                         new PropertyMetadata(new PropertyChangedCallback(StatusBindableTextBlock.OnBoundStatusChanged)));
-
-
+        
+        
         /* Implementacja tworzenie statusu wersja 2
          * 
         private static Regex linkRegex = new Regex(@"(?<Link>((http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*))");
@@ -80,13 +80,16 @@ namespace BlipFace.View.Controls
             TextBlock mainTextBlock = (TextBlock)d;
             StatusViewModel s = (StatusViewModel)e.NewValue;
 
+            //czyścimy główny text box z pozostałości
+            mainTextBlock.Inlines.Clear();
 
+            //jeśli UserLogin == null to nie pokazujemy loginu
+            if (!string.IsNullOrEmpty(s.UserLogin))
+            {
+                CreateUsersBegining(mainTextBlock, s);
+            }
 
-            //tworzymy link użytkownika
-            CreateUsersBegining(mainTextBlock, s);
-
-            //jeśli nie ma linka, tagu lub użytownka to od razu dodajmy całą treść
-
+            //jeśli nie ma linka,  to od razu dodajmy całą treść
             string blipStatus = s.Content;
             var linkMatches = linkRegex.Matches(blipStatus);
 
@@ -363,6 +366,8 @@ namespace BlipFace.View.Controls
         //tworzy początek wiadomości, który zaczyna się od loginu(loginów) użytkownika
         private static void CreateUsersBegining(TextBlock mainTextBlock, StatusViewModel s)
         {
+
+
             Hyperlink hypUserLogin = CreateUserHyperLink(s.UserLogin, string.Format(userLinkFormat, s.UserLogin), string.Format(userProfileFormat, s.UserLogin));
 
             //dodajemy link użytkownka
