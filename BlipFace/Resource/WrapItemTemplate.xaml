@@ -66,7 +66,7 @@
                     </Border -->
 
                     <Image Visibility="{Binding Path=PrivateMessage, Converter={StaticResource BoolToVisible}}"
-                           Source="Img\privateMessage.gif" Height="9" Width="6" Margin="1,25,1,1"
+                           Source="Img\privateMessage.gif" Height="17" Width="6" Margin="1,25,1,1"
                            VerticalAlignment="Top"/>
 
                     <!--Border Margin="0,0,0,0"
