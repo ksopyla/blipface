@@ -18,12 +18,15 @@ using System.Windows.Navigation;
 using BlipFace.Model;
 using BlipFace.Presenter;
 
+
 namespace BlipFace.View
 {
     public partial class StatusListControl : IStatusesView
     {
         private const int BlipSize = 160;
         private int charLeft = BlipSize;
+
+        private string pictureFilePath = string.Empty;
 
         private readonly StatusesPresenter presenter;
 
@@ -82,12 +85,29 @@ namespace BlipFace.View
             if (e.Key == Key.Return)
             {
                 //gdy naciśnięto enter to wysyłamy tekst
-                if (!string.IsNullOrEmpty(tbMessage.Text))
-                {
-                    EnableContrlsForSendMessage(false);
+                SendStatus();
+            }
+        }
 
+        private void SendStatus()
+        {
+            if (!string.IsNullOrEmpty(tbMessage.Text) && (tbMessage.Text.Length <= 160))
+            {
+                EnableContrlsForSendMessage(false);
+
+                if (!string.IsNullOrEmpty(pictureFilePath))
+                {
+                    presenter.AddStatus(tbMessage.Text, pictureFilePath);
+                }
+                else
+                {
                     presenter.AddStatus(tbMessage.Text);
                 }
+            }
+            else if (tbMessage.Text.Length > 160)
+            {
+                MessageBox.Show("Status jest za długi");
+                EnableContrlsForSendMessage(true);
             }
         }
 
@@ -98,12 +118,7 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void btnSendBlip_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(tbMessage.Text))
-            {
-                EnableContrlsForSendMessage(false);
-
-                presenter.AddStatus(tbMessage.Text);
-            }
+            SendStatus();
         }
 
 
@@ -120,6 +135,38 @@ namespace BlipFace.View
             e.Handled = true;
         }
 
+        private void btnAddPicture_Click(object sender, RoutedEventArgs e)
+        {
+
+            System.Windows.Forms.OpenFileDialog opf = new System.Windows.Forms.OpenFileDialog();
+            opf.Filter = "Obrazy (*.bmp, *.jpg, *.gif, *.png)|*.bmp; *.jpg; *.gif; *.png|All Files|*.*";
+            opf.Title = "Wybierz obraz do załączenia do statusu";
+            opf.InitialDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            opf.AutoUpgradeEnabled = true;
+
+
+            if (opf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                //todo: ustaw obrazek
+                //opf.FileName
+                Uri iconUri = new Uri(opf.FileName, UriKind.RelativeOrAbsolute);
+
+                imgAttachPic.Source = BitmapFrame.Create(iconUri);
+                btnDeletePic.Visibility = Visibility.Visible;
+
+                pictureFilePath = opf.FileName;
+            }
+
+
+        }
+
+
+        private void btnDeletePic_Click(object sender, RoutedEventArgs e)
+        {
+            btnDeletePic.Visibility = Visibility.Collapsed;
+            imgAttachPic.Source = null;
+            pictureFilePath = string.Empty;
+        }
 
         #endregion
 
@@ -364,5 +411,9 @@ namespace BlipFace.View
         }
 
         #endregion
+
+      
+
+        
     }
 }

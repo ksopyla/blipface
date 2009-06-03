@@ -337,6 +337,27 @@ namespace BlipFace.Presenter
         }
 
         /// <summary>
+        /// Pozwala dodać nowy satus wraz z obrazkiem
+        /// </summary>
+        public void AddStatus(string content, string pictureFileName)
+        {
+            if (string.IsNullOrEmpty(content) || string.IsNullOrEmpty(pictureFileName))
+            {
+                throw new ArgumentNullException("content,pictureFile", "content lub picture są puste");
+            }
+
+            //todo: zwrócić uwagę na to co może się dziać w trakcie dodawania statusu
+            //szczególnie gdy jest błąd dodawania, a inne updaty (np pobieranie głównego statusu)
+            //mogą odblokować panel do wpisywania wiadomości
+            //zatrzymujemy licznik czasu
+            //updateStatusTimer.Enabled = false;
+
+
+
+            blpCom.AddUpdateAsync(content);
+        }
+
+        /// <summary>
         /// Tworzy treść wiadomości do cytowania
         /// </summary>
         /// <param name="status"></param>

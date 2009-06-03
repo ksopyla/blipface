@@ -129,6 +129,7 @@
         <!--Panel do dodawania statusuów-->
         <Grid Margin="5,5,5,0" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" >
             <Grid.RowDefinitions>
+                <RowDefinition Height="12"></RowDefinition>
                 <RowDefinition Height="Auto"/>
                <!-- <RowDefinition Height="40"/> -->
             </Grid.RowDefinitions>
@@ -138,9 +139,17 @@
 
             </Grid.ColumnDefinitions>
 
+            <TextBlock x:Name="tbShowSave" Grid.Row="0" Grid.Column="0"
+				       Visibility="Hidden" 
+                       Foreground="Yellow" 
+                       FontSize="11" FontFamily="Verdana"
+                       VerticalAlignment="Bottom"
+				HorizontalAlignment="Left" Margin="4,0,0,0"
+				Text="Zapisuję..."
+                   />
             
             <TextBox x:Name="tbMessage" 
-				Grid.Row="0" Grid.Column="0" 
+				Grid.Row="1" Grid.Column="0" 
 				ClipToBounds="False" 
 				TextWrapping="Wrap"  
 				VerticalAlignment="Stretch" 
@@ -148,19 +157,18 @@
                 FontSize="14" FontFamily="Verdana"
 				TextChanged="tbMessage_TextChanged" 
 				KeyDown="tbMessage_KeyDown" 
-                Height="100"     >
+                Height="105"     >
                              
             </TextBox>
-
-            <TextBlock x:Name="tbShowSave" Grid.Row="0" Grid.Column="0"
-				       Visibility="Hidden" 
-                       Foreground="Yellow" 
-                       FontSize="11" FontFamily="Verdana"
-                       VerticalAlignment="Bottom"
-				HorizontalAlignment="Left" Margin="4"
-				Text="Zapisuję..."
-                   />
-            <TextBlock  Grid.Row="0" Grid.Column="0" 
+            
+            <Button Name="btnDeletePic" Grid.Row="1" Grid.Column="0" Width="30"
+                    VerticalAlignment="Bottom" Visibility="Collapsed"
+                    Click="btnDeletePic_Click"
+				HorizontalAlignment="Left" Margin="10,0,3,10">
+            <Image Name="imgAttachPic"  />
+            </Button>
+                
+            <TextBlock  Grid.Row="1" Grid.Column="0" 
 			x:Name="tblCharLeft" 
                         FontSize="26" 
                         VerticalAlignment="Bottom"
@@ -171,13 +179,27 @@
 
             
 
-            
-            <Button x:Name="btnSendBlip" Grid.Column="1"
-				Margin="3,3,3,3"  Content="Blip" HorizontalAlignment="Right"
-				Click="btnSendBlip_Click"  Width="30" Style="{DynamicResource BlackButton}"  
+            <StackPanel Grid.Row="1" Grid.Column="1">
+            <Button x:Name="btnSendBlip" 
+				Margin="3,3,3,3"  Content="Blip" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+				Click="btnSendBlip_Click" Height="52"  Style="{StaticResource BlackButton}" 
+                    ToolTip="Wyślij wiadomość"
 			/>
+           
+            <Button Grid.Row="1" Grid.Column="1"  VerticalAlignment="Bottom"
+                    Margin="3,3,3,3"
+                    Name="btnAddPicture" 
+                    Style="{StaticResource BlackButton}"
+                    ToolTip="Załącz obraz do statusu"
+                    Click="btnAddPicture_Click"
+                    >
+                <Button.Content>
+                    <Image Source="pack://application:,,,/Resource/Img/picture_add.png"
+                          Width="37"></Image>
+                </Button.Content>
 
-
+            </Button>
+</StackPanel>
         </Grid>
 
         

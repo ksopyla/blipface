@@ -9,6 +9,7 @@ using System.Net;
 using BlipFace.Service.Entities;
 using System.Runtime.Serialization;
 using System.Security;
+using System.Drawing;
 
 namespace BlipFace.Service.Communication
 {
@@ -502,6 +503,33 @@ namespace BlipFace.Service.Communication
 
             HttpUrlEncodedForm form = new HttpUrlEncodedForm();
             form.Add("body", content);
+
+            //nowy sposób dodawania statusów
+            //blipHttpClient.Post(query, form.CreateHttpContent());
+
+            //stary sposób dodawania elementów
+            //blipHttpClient.Post(query,HttpContent.Create(string.Format(@"body={0}",content)) );
+
+
+            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+            blipHttpClient.BeginSend(
+                new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
+                new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
+        }
+        /// <summary>
+        /// Asynchronicznie dodaje status do blipa
+        /// </summary>
+        /// <param name="content">treść</param>
+        public void AddUpdateAsync(string content,Bitmap image)
+        {
+            string query = "/updates";
+
+            HttpUrlEncodedForm form = new HttpUrlEncodedForm();
+            form.Add("body", content);
+
+            
+            
+            //form.Add("picture");
 
             //nowy sposób dodawania statusów
             //blipHttpClient.Post(query, form.CreateHttpContent());
