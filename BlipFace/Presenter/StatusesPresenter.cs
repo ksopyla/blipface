@@ -10,6 +10,7 @@ using BlipFace.Model;
 using System.Timers;
 using BlipFace.Helpers;
 using System.Text.RegularExpressions;
+using System.Drawing;
 
 namespace BlipFace.Presenter
 {
@@ -224,7 +225,7 @@ namespace BlipFace.Presenter
         {
             //tylko powiadomienie że dodał 
             view.TextMessage = string.Empty;
-
+            view.PicturePath = string.Empty;
             //int lastIndex = lstbStatusList.Items.Count;
             if (view.Statuses != null)
             {
@@ -353,8 +354,9 @@ namespace BlipFace.Presenter
             //updateStatusTimer.Enabled = false;
 
 
+           // Image img = Image.FromFile(pictureFileName);
 
-            blpCom.AddUpdateAsync(content);
+            blpCom.AddUpdateAsync(content, pictureFileName);
         }
 
         /// <summary>

@@ -11,6 +11,8 @@ using System.Runtime.Serialization;
 using System.Security;
 using System.Drawing;
 
+using System.IO;
+
 namespace BlipFace.Service.Communication
 {
     /// <summary>
@@ -78,7 +80,9 @@ namespace BlipFace.Service.Communication
 
         private string password;
 
-
+        /// <summary>
+        /// obiekt "lock" do blokowania konkurującym wątką dostępu do obiektu blipHttpClient
+        /// </summary>
         private object httpClientLock = new object();
         /// <summary>
         /// Konstruktor, ustawia dane do autentykacji, oraz niezbędne
@@ -105,6 +109,9 @@ namespace BlipFace.Service.Communication
 
         }
 
+        /// <summary>
+        /// Domyślny konstruktor, ustawia podstawowe nagłówki
+        /// </summary>
         public BlipCommunication()
         {
             SetDefaultHeaders();
@@ -131,7 +138,7 @@ namespace BlipFace.Service.Communication
         private void SetDefaultHeaders()
         {
             //To było ustawiane, nie wiem dlaczego, zbadać
-            //System.Net.ServicePointManager.Expect100Continue = false;
+            System.Net.ServicePointManager.Expect100Continue = false;
 
             blipHttpClient.TransportSettings.ConnectionTimeout = new TimeSpan(0, 30, 0);
 
@@ -144,7 +151,7 @@ namespace BlipFace.Service.Communication
 
             //ustawienie nagłówka UserAgent - po tym blip rozpoznaje transport
             blipHttpClient.DefaultHeaders.UserAgent.Add(
-                new Microsoft.Http.Headers.ProductOrComment("BlipFace v0.2"));
+                new Microsoft.Http.Headers.ProductOrComment("BlipFace v0.3"));
         }
 
 
@@ -520,28 +527,32 @@ namespace BlipFace.Service.Communication
         /// Asynchronicznie dodaje status do blipa
         /// </summary>
         /// <param name="content">treść</param>
-        public void AddUpdateAsync(string content,Bitmap image)
+        public void AddUpdateAsync(string content, string image)
         {
             string query = "/updates";
 
-            HttpUrlEncodedForm form = new HttpUrlEncodedForm();
-            form.Add("body", content);
-
             
-            
-            //form.Add("picture");
+            HttpMultipartMimeForm form = new HttpMultipartMimeForm();
+            form.Add("update[body]", content);
 
-            //nowy sposób dodawania statusów
-            //blipHttpClient.Post(query, form.CreateHttpContent());
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Image img = Image.FromFile(image);
+                
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
 
-            //stary sposób dodawania elementów
-            //blipHttpClient.Post(query,HttpContent.Create(string.Format(@"body={0}",content)) );
+                byte[] imageBytes = ms.ToArray();
+               
+                HttpContent pic = HttpContent.Create(imageBytes, "application/octet-stream");
 
+                form.Add("update[picture]", image, pic);
 
-            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
-            blipHttpClient.BeginSend(
-                new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
-                new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
+                //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+                blipHttpClient.BeginSend(
+                    new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
+                    new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
+
+            }
         }
 
 
@@ -636,79 +647,79 @@ namespace BlipFace.Service.Communication
 
         }
 
-        
+
         /// <summary>
         /// Wywoływana jako callback po metodzie <see cref="GetUserDashboardSince"/>
         /// </summary>
         /// <param name="result"></param>
-         private void AfterUserDashboardSince(IAsyncResult result)
-         {
-             //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
-             //przekazaliśmy ten obiekt jako state
-             var client = result.AsyncState as HttpClient;
+        private void AfterUserDashboardSince(IAsyncResult result)
+        {
+            //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
+            //przekazaliśmy ten obiekt jako state
+            var client = result.AsyncState as HttpClient;
 
-             //pobieramy odpowiedź
-             HttpResponseMessage resp = null;
+            //pobieramy odpowiedź
+            HttpResponseMessage resp = null;
 
-             try
-             {
-                 lock (httpClientLock)
-                 {
+            try
+            {
+                lock (httpClientLock)
+                {
 
-                     resp = client.EndSend(result);
-                 }
+                    resp = client.EndSend(result);
+                }
 
-                 resp.EnsureStatusIsSuccessful();
+                resp.EnsureStatusIsSuccessful();
 
-                 //deserializujemy z json
+                //deserializujemy z json
 
-                 if (resp.Content.GetLength() > 2)
-                 {
-                     var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+                if (resp.Content.GetLength() > 2)
+                {
+                    var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
 
-                     //gdy zostały zwrócone jakieś statusy
-                     if ((statuses.Count > 0) && (StatusesUpdated != null))
-                     {
-                         //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-                         StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
-                     }
-                 }
+                    //gdy zostały zwrócone jakieś statusy
+                    if ((statuses.Count > 0) && (StatusesUpdated != null))
+                    {
+                        //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+                        StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
+                    }
+                }
 
-             }
-             catch (ArgumentOutOfRangeException aorEx)
-             {
-                 //gdy wystąpiły jakieś błędy w komunikacji
-                 if (CommunicationError != null)
-                 {
-                     CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
-                 }
-             }
-             catch (HttpStageProcessingException timeEx)
-             {
-                 //gdy wystąpiły jakieś błędy w komunikacji
-                 if (CommunicationError != null)
-                 {
-                     CommunicationError(this, new CommunicationErrorEventArgs());
-                 }
-             }
-             catch (Exception ex)
-             {
-                 if (ExceptionOccure != null)
-                 {
-                     ExceptionOccure(this, new ExceptionEventArgs(ex));
-                 }
-             }
-             finally
-             {
-                 if (resp != null)
-                 {
-                     resp.Dispose();
-                     resp = null;
-                 }
-             }
+            }
+            catch (ArgumentOutOfRangeException aorEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
+                }
+            }
+            catch (HttpStageProcessingException timeEx)
+            {
+                //gdy wystąpiły jakieś błędy w komunikacji
+                if (CommunicationError != null)
+                {
+                    CommunicationError(this, new CommunicationErrorEventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ExceptionOccure != null)
+                {
+                    ExceptionOccure(this, new ExceptionEventArgs(ex));
+                }
+            }
+            finally
+            {
+                if (resp != null)
+                {
+                    resp.Dispose();
+                    resp = null;
+                }
+            }
 
-         }
-        
+        }
+
 
         /// <summary>
         /// Zmienia dane login i hasło do komunikacji z blipem 

@@ -149,12 +149,10 @@ namespace BlipFace.View
             {
                 //todo: ustaw obrazek
                 //opf.FileName
-                Uri iconUri = new Uri(opf.FileName, UriKind.RelativeOrAbsolute);
 
-                imgAttachPic.Source = BitmapFrame.Create(iconUri);
-                btnDeletePic.Visibility = Visibility.Visible;
+                PicturePath = opf.FileName;
 
-                pictureFilePath = opf.FileName;
+                
             }
 
 
@@ -163,9 +161,7 @@ namespace BlipFace.View
 
         private void btnDeletePic_Click(object sender, RoutedEventArgs e)
         {
-            btnDeletePic.Visibility = Visibility.Collapsed;
-            imgAttachPic.Source = null;
-            pictureFilePath = string.Empty;
+            PicturePath = string.Empty;
         }
 
         #endregion
@@ -269,16 +265,6 @@ namespace BlipFace.View
             get { throw new NotImplementedException(); }
             set
             {
-                //Application.Current.Dispatcher.Invoke(DispatcherPriority.Send,
-                //    (DispatcherOperationCallback)delegate(object arg)
-                //    {
-
-                //        Exception ex = (Exception)arg;
-                //        //throw new Exception(ex.Message,ex);
-                //        MessageBox.Show(ex.Message);
-                //    }
-                //    , value);
-
                 Dispatcher.Invoke(
                     new Action<Exception>(delegate(Exception err)
                                               {
@@ -325,6 +311,39 @@ namespace BlipFace.View
 
 
                         }), statuses);
+        }
+
+
+        public string PicturePath
+        {
+            get
+            {
+                return pictureFilePath;
+            }
+            set
+            {
+                Dispatcher.Invoke(new Action<string>(delegate(string picturePath)
+                {
+                    if (string.IsNullOrEmpty(picturePath))
+                    {
+                        btnDeletePic.Visibility = Visibility.Collapsed;
+                        imgAttachPic.Source = null;
+                        pictureFilePath = string.Empty;
+
+                    }
+                    else
+                    {
+                        
+                        pictureFilePath = picturePath;
+
+                        Uri iconUri = new Uri(picturePath, UriKind.RelativeOrAbsolute);
+
+                        imgAttachPic.Source = BitmapFrame.Create(iconUri);
+                        btnDeletePic.Visibility = Visibility.Visible;
+                    }
+                    
+                }), value);
+            }
         }
 
         #endregion
@@ -412,8 +431,15 @@ namespace BlipFace.View
 
         #endregion
 
-      
 
-        
+
+
+
+        #region IStatusesView Members
+
+
+       
+
+        #endregion
     }
 }

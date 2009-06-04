@@ -63,7 +63,7 @@
                    Text="" 
                        Visibility="Hidden" TextWrapping="WrapWithOverflow"
                        Padding="5"/>
-
+            
         </StackPanel>
     </StackPanel>
 </UserControl>

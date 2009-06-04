@@ -31,10 +31,14 @@ namespace BlipFace.View
 
 
         /// <summary>
-        /// powiadomienie dla widoku że update został dodany
+        /// tekst wiadomości
         /// </summary>
         string TextMessage { get; set; }
 
+        /// <summary>
+        /// ścieżka do załączonego pliku
+        /// </summary>
+        string PicturePath { get; set; }
 
         /// <summary>
         /// Powiadomienie że nastąpił błąd aplikacji

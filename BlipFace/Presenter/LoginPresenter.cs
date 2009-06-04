@@ -29,7 +29,7 @@ namespace BlipFace.Presenter
             com.CommunicationError += new EventHandler<CommunicationErrorEventArgs>(ComCantCommunicate);
             com.ExceptionOccure += new EventHandler<ExceptionEventArgs>(ComExceptionOccure);
 
-            
+
         }
 
         public void ValidateCredential(string user, string password)
@@ -75,7 +75,7 @@ namespace BlipFace.Presenter
 
             //przekazujemy wyjątek dalej
             throw e.Error;
-            
+
         }
 
         /// <summary>
@@ -101,20 +101,20 @@ namespace BlipFace.Presenter
         {
             if (view is ILoginView)
             {
-                _view = (ILoginView) view;
+                _view = (ILoginView)view;
             }
             else
             {
                 string message =
                     string.Format(@"Przekazano nieodpowiedni widok, oczekiwano widoku typu {0} a podano {1} ",
-                                  typeof (ILoginView), view.GetType().ToString());
+                                  typeof(ILoginView), view.GetType().ToString());
                 throw new ArgumentException(message);
             }
         }
 
         public void Init()
         {
-            
+
 
             IsolatedStorageFile isoStore =
                     IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
@@ -142,14 +142,14 @@ namespace BlipFace.Presenter
                         _view.Password = pass;
                     }
                 }
-               
+
             }//end foreach
 
-            
+
             //w celu aby wyglądało że się szybciej loguje,
             com.ConnectAsync();
 
-            
+
 
         }
 
@@ -191,15 +191,19 @@ namespace BlipFace.Presenter
                 {
                     //zapisujem login
                     sw.Write(usr.Encrypt());
-                    
+
                     //nowa linia
                     sw.Write(Environment.NewLine);
-                    
+
                     //zapisujemy hasło
                     sw.Write(pas.Encrypt());
 
                     sw.Close();
                 }
+            }
+            else
+            {
+                //todo: usuń plik z hasłami
             }
 
 

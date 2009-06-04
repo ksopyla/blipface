@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     
         Title="BlipFace" 
-        Height="600" Width="390" 
+        Height="630" Width="360" 
         MinWidth="200"
         MinHeight="450"
     BorderBrush="#FF686868" BorderThickness="1,1,1,1" 
@@ -38,7 +38,7 @@
             <Label Canvas.Top="5" Canvas.Left="10" 
 			Foreground="White" FontFamily="Verdana" 
 			FontSize="14"
-			Content="BlipFace v0.2.4" >
+			Content="BlipFace v0.3.0" >
                 <Label.BitmapEffect>
                     <OuterGlowBitmapEffect GlowSize="7" Opacity="0.7" GlowColor="White" />
                 </Label.BitmapEffect>
