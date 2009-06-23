@@ -208,17 +208,14 @@ namespace BlipFace.View
         }
 
         //todo: to może powinno być jako StatusViewModel
+
+        private StatusViewModel mainStatus;
         public StatusViewModel MainStatus
         {
             get
             {
-                StatusViewModel status = new StatusViewModel();
-                //status.UserLogin = lbUserLogin.Text;
-                //status.Content = lbContent.Text;
 
-
-                status.UserAvatar50 = imgUserAvatar.Source.ToString();
-                return status;
+                return mainStatus;
             }
             set
             {
@@ -228,6 +225,8 @@ namespace BlipFace.View
                                                                   {
                                                                       // lbUserLogin.Text = status.UserLogin;
                                                                       // lbContent.Text = status.Content;
+
+                                                                      mainStatus = status;
 
                                                                       status.UserLogin = string.Empty;
                                                                       statusContent.BoundStatus = status;
@@ -321,7 +320,7 @@ namespace BlipFace.View
                         }), statuses);
         }
 
-        public void AddStatus(StatusViewModel statusView)
+        public void AddStatus(StatusViewModel statusView, bool insertAtBeginning)
         {
             Dispatcher.Invoke(
                 new Action<StatusViewModel>(
@@ -331,8 +330,15 @@ namespace BlipFace.View
                         var currentList = lstbStatusList.ItemsSource as IList<StatusViewModel>;
                         //currentList.Insert(0, status);
 
-                        currentList.Add(status);
+                        if(insertAtBeginning)
+                        {
+                            currentList.Insert(0, status);
+                        }
+                        else
+                        {
 
+                        currentList.Add(status);
+                        }
                         //todo:to tak testowo
                         FlashMainWindow(Window.GetWindow(this.Parent), true);
                     }), statusView);

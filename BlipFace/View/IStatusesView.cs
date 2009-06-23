@@ -48,6 +48,6 @@ namespace BlipFace.View
         TitleMessageViewModel ConnectivityStatus { get; set; }
         void UpdateStatuses(IList<StatusViewModel> collection);
 
-        void AddStatus(StatusViewModel status);
+        void AddStatus(StatusViewModel status,bool insertAtBeginning);
     }
 }

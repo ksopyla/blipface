@@ -41,7 +41,7 @@ namespace BlipFace.Presenter
         private const string ConnectivityStatusOnline = "Online";
         private const string ConnectivityStatusOffline = "Offline";
 
-        private ObservableCollection<StatusViewModel> statuses;
+        private Queue<StatusViewModel> statusQueue= new Queue<StatusViewModel>(31);
 
         /// <summary>
         /// co ile czasu mamy aktualizować 
@@ -49,6 +49,7 @@ namespace BlipFace.Presenter
         private const int UpdateTime = 30;
 
         private static Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
+        private readonly object lockQueue= new object();
 
         /// <summary>
         /// Limity pobierania statusów
@@ -190,13 +191,25 @@ namespace BlipFace.Presenter
             IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
 
             //RetriveBlipHyperlinks(sts);
-           //
 
-            foreach (var st in sts)
+            lock (lockQueue)
             {
-                RetriveStatusHyperlinks(st);
+
+
+                foreach (var st in sts)
+                {
+                    statusQueue.Enqueue(st);
+                }
             }
-            view.UpdateStatuses(sts);
+           
+            
+            AddStatusesWithHyperlinks(true);
+
+            //foreach (var st in sts)
+            //{
+            //    RetriveStatusHyperlinks(st);
+            //}
+            //view.UpdateStatuses(sts);
            
             //view.Statuses = statuses.Concat(view.Statuses).ToList();
 
@@ -226,22 +239,42 @@ namespace BlipFace.Presenter
             view.Statuses = oneStatusList;
 
             sts.RemoveAt(0);
+
+            lock (lockQueue)
+            {
+
+
+                foreach (var st in sts)
+                {
+                    statusQueue.Enqueue(st);
+                }
+            }
             
-            AddStatusesWithHyperlinks(sts);
-          //view.Statuses = new List<StatusViewModel>(sts);
+            AddStatusesWithHyperlinks(false);
+          
+            
+            //view.Statuses = new List<StatusViewModel>(sts);
             view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
         }
 
         
 
-        private void AddStatusesWithHyperlinks(IList<StatusViewModel> sts)
+        private void AddStatusesWithHyperlinks(bool insertAtBeginning)
         {
-            
-            foreach (var status in sts)
+
+            while (statusQueue.Count>0)
             {
+                StatusViewModel status = statusQueue.Dequeue();
+
                 RetriveStatusHyperlinks(status);
-                view.AddStatus(status);
+                view.AddStatus(status,insertAtBeginning);
             }
+
+            //foreach (var status in sts)
+            //{
+            //    RetriveStatusHyperlinks(status);
+            //    view.AddStatus(status);
+            //}
         }
 
         private void RetriveStatusHyperlinks(StatusViewModel status)
@@ -346,8 +379,13 @@ namespace BlipFace.Presenter
         /// <param name="e"></param>
         void BlpComMainStatusLoaded(object sender, MainStatusLoadingEventArgs e)
         {
-            view.MainStatus = ViewModelHelper.MapToViewStatus(e.MainStatus);
+            StatusViewModel sts = ViewModelHelper.MapToViewStatus(e.MainStatus);
 
+            if (view.MainStatus == null || !view.MainStatus.Content.Equals(sts.Content))
+            {
+                RetriveStatusHyperlinks(sts);
+                view.MainStatus = sts;
+            }
             view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
         }
 

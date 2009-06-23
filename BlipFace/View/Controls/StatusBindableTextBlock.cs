@@ -435,6 +435,7 @@ namespace BlipFace.View.Controls
                                              FontWeight = weight, //FontWeights.SemiBold,
                                              Foreground = linkColor,
                                              ToolTip = toolTip
+                                             
                                          };
 
 
