@@ -135,6 +135,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\BigPictureWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Compile Include="App.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>App.xaml</DependentUpon>
@@ -147,6 +151,9 @@
       <DependentUpon>AppMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="Model\TitleMessageViewModel.cs" />
+    <Compile Include="View\BigPictureWindow.xaml.cs">
+      <DependentUpon>BigPictureWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Controls\BindableRun.cs" />
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
     <Compile Include="View\Controls\StatusBindableTextBlock.cs" />

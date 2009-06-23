@@ -8,7 +8,9 @@
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.StatusListControl"
     
-	x:Name="StatusList"
+    PreviewKeyDown="TbMessage_OnPreviewKeyDown"
+	
+    x:Name="StatusList"
     Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
     
     <UserControl.CommandBindings>
@@ -19,6 +21,8 @@
         <CommandBinding Command="helper:StatusesCommands.PrivateMessage" 
                         Executed="PrivateMessage_Executed" />
         
+        <CommandBinding Command="helper:StatusesCommands.ShowPicture" 
+                        Executed="ShowPicture_Executed" />
     </UserControl.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -156,16 +160,16 @@
                 Style="{DynamicResource RoundedTextInput}"     
                 FontSize="14" FontFamily="Verdana"
 				TextChanged="tbMessage_TextChanged" 
-				KeyDown="tbMessage_KeyDown" 
-                Height="105"     >
+                                Height="105"     ><!--     PreviewKeyDown="TbMessage_OnPreviewKeyDown"
+				KeyDown="tbMessage_KeyDown" -->
                              
             </TextBox>
             
             <Button Name="btnDeletePic" Grid.Row="1" Grid.Column="0" Width="30"
                     VerticalAlignment="Bottom" Visibility="Collapsed"
                     Click="btnDeletePic_Click"
-				HorizontalAlignment="Left" Margin="10,0,3,10">
-            <Image Name="imgAttachPic"  />
+				HorizontalAlignment="Left" Margin="10,0,3,10" ToolTip="Usuń obraz">
+            <Image Name="imgAttachPic"  MinHeight="20"/>
             </Button>
                 
             <TextBlock  Grid.Row="1" Grid.Column="0" 

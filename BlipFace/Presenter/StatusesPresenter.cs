@@ -41,11 +41,14 @@ namespace BlipFace.Presenter
         private const string ConnectivityStatusOnline = "Online";
         private const string ConnectivityStatusOffline = "Offline";
 
+        private ObservableCollection<StatusViewModel> statuses;
 
         /// <summary>
         /// co ile czasu mamy aktualizować 
         /// </summary>
-        private const int UpdateTime = 45;
+        private const int UpdateTime = 30;
+
+        private static Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
 
         /// <summary>
         /// Limity pobierania statusów
@@ -100,6 +103,11 @@ namespace BlipFace.Presenter
 
         public void Init()
         {
+
+            //var empty =new ObservableCollection<StatusViewModel>();
+            //empty.Add(new StatusViewModel());
+            //view.Statuses = empty;
+            
             LoadUserMainStatus(blipfaceUser.UserName);
 
             //todo: pobrać listę statusów
@@ -179,16 +187,106 @@ namespace BlipFace.Presenter
         void BlpComStatusesUpdated(object sender, StatusesLoadingEventArgs e)
         {
 
-            ObservableCollection<StatusViewModel> statuses = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
+            IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
 
-            view.UpdateStatuses(statuses);
+            //RetriveBlipHyperlinks(sts);
+           //
 
+            foreach (var st in sts)
+            {
+                RetriveStatusHyperlinks(st);
+            }
+            view.UpdateStatuses(sts);
+           
             //view.Statuses = statuses.Concat(view.Statuses).ToList();
 
             view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
             // view.Statuses.Insert(0, statuses[0]);
         }
 
+        /// <summary>
+        /// calback do zdarzenia gdy statusy zostają załadowane od nowa
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void BlpComStatusesLoaded(object sender, StatusesLoadingEventArgs e)
+        {
+
+            //view.Statuses = 
+          IList<StatusViewModel> sts =ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
+         
+            //RetriveBlipHyperlinks(sts);
+          var oneStatusList = new ObservableCollection<StatusViewModel>();
+            StatusViewModel initStatus =sts[0];
+            RetriveStatusHyperlinks(initStatus);
+            oneStatusList.Add(initStatus);
+
+            //inicjujemy listę statusów tylko jednym statusem, pozostałe będą dodawanie
+            //kolejno
+            view.Statuses = oneStatusList;
+
+            sts.RemoveAt(0);
+            
+            AddStatusesWithHyperlinks(sts);
+          //view.Statuses = new List<StatusViewModel>(sts);
+            view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
+        }
+
+        
+
+        private void AddStatusesWithHyperlinks(IList<StatusViewModel> sts)
+        {
+            
+            foreach (var status in sts)
+            {
+                RetriveStatusHyperlinks(status);
+                view.AddStatus(status);
+            }
+        }
+
+        private void RetriveStatusHyperlinks(StatusViewModel status)
+        {
+            var linkMatches = linkRegex.Matches(status.Content);
+
+            if (linkMatches.Count > 0)
+            {
+
+                for (int i = 0; i < linkMatches.Count; i++)
+                {
+                    var url = linkMatches[i].Value;
+
+                    int index = url.LastIndexOf("/");
+                    string code = url.Substring(index + 1);
+
+                    if (url.Contains("blip.pl"))
+                    {
+
+                        if(status.Cites==null)
+                        {
+                            status.Cites = new Dictionary<string, string>();
+                        }
+                        //http://blip.pl/s/11552391
+                        BlipStatus blpStat = blpCom.GetUpdate(code);
+
+                        string blipContent = blpStat.User.Login + ": " + blpStat.Content;
+                        status.Cites.Add(url, blipContent);
+
+                    }
+                    else
+                    {
+                        if (status.Links == null)
+                        {
+                            status.Links = new Dictionary<string, string>();
+                        }
+                        string originalLink = blpCom.GetShortLink(code);
+
+                        status.Links.Add(url, originalLink);
+
+                    }
+                }
+            }
+            
+        }
 
 
         //tworzy obiekt z informacjami o stanie połaćzenia z blipem
@@ -240,18 +338,6 @@ namespace BlipFace.Presenter
         }
 
 
-        /// <summary>
-        /// calback do zdarzenia gdy statusy zostają załadowane od nowa
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void BlpComStatusesLoaded(object sender, StatusesLoadingEventArgs e)
-        {
-
-            view.Statuses = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
-
-            view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
-        }
 
         /// <summary>
         /// calback do zdarzenia gdy główny status zostanie załadowany od nowa
@@ -333,6 +419,8 @@ namespace BlipFace.Presenter
             //mogą odblokować panel do wpisywania wiadomości
             //zatrzymujemy licznik czasu
             //updateStatusTimer.Enabled = false;
+
+            
 
             blpCom.AddUpdateAsync(content);
         }

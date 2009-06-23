@@ -289,8 +289,14 @@ namespace BlipFace.Service.Communication
             string query = string.Format("updates?include=user,user[avatar]&amp;limit={0}", limit.ToString());
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
 
-            HttpResponseMessage resp = blipHttpClient.Get(query);
+            HttpResponseMessage resp;
+            lock (httpClientLock)
+            {
+                resp = blipHttpClient.Get(query);    
+            }
+            
             //sprawdzamy czy komunikacja się powiodła
+            
             resp.EnsureStatusIsSuccessful();
 
 
@@ -298,6 +304,34 @@ namespace BlipFace.Service.Communication
 
 
             return statuses;
+        }
+
+
+        /// <summary>
+        /// Pobiera status o podanym ID, w sposób synchroniczny
+        /// </summary>
+        /// <param name="limit">limit statusów</param>
+        /// <returns></returns>
+        public BlipStatus GetUpdate(string id)
+        {
+            string query = string.Format("updates/{0}/?include=user&amp;", id);
+            
+
+            HttpResponseMessage resp;
+            lock (httpClientLock)
+            {
+                resp = blipHttpClient.Get(query);
+            }
+
+            //sprawdzamy czy komunikacja się powiodła
+
+            resp.EnsureStatusIsSuccessful();
+
+
+            var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
+
+
+            return status;
         }
 
 
@@ -750,6 +784,28 @@ namespace BlipFace.Service.Communication
         {
             Thread t = new Thread(delegate() { this.Connect(); });
             t.Start();
+        }
+
+        public string GetShortLink(string code)
+        {
+            string query = string.Format("shortlinks/{0}", code);
+            //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
+
+            HttpResponseMessage resp;
+            lock (httpClientLock)
+            {
+                resp = blipHttpClient.Get(query);
+            }
+
+            //sprawdzamy czy komunikacja się powiodła
+
+            resp.EnsureStatusIsSuccessful();
+
+
+            var link = resp.Content.ReadAsJsonDataContract<BlipShortLink>();
+
+
+            return link.OriginalLink;
         }
     }
 

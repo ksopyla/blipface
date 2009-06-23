@@ -18,10 +18,10 @@ namespace BlipFace.Helpers
         /// </summary>
         /// <param name="statusesList"></param>
         /// <returns></returns>
-        public static ObservableCollection<StatusViewModel> MapToViewStatus(IList<BlipStatus> statusesList, string ownerLogin)
+        public static IList<StatusViewModel> MapToViewStatus(IList<BlipStatus> statusesList, string ownerLogin)
         {
-            ObservableCollection<StatusViewModel> statuses =
-                new ObservableCollection<StatusViewModel>();
+            IList<StatusViewModel> statuses =
+                new  ObservableCollection<StatusViewModel>();
 
 
             //IList<StatusViewModel> sts = new List<StatusViewModel>(statusesList.Count);

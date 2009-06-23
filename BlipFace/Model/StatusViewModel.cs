@@ -82,5 +82,18 @@ namespace BlipFace.Model
         public string Type { get; set; }
 
         public string CreationDate { get; set; }
+
+
+        /// <summary>
+        /// Słownik linków , shortlink=>originalLink
+        /// </summary>
+        public Dictionary<string, string> Links { get; set; }
+
+        /// <summary>
+        /// Słownik cytowań innych użytkowników blipLing=>message
+        /// </summary>
+        public Dictionary<string, string> Cites { get; set; }
+        
+            
     }
 }

@@ -104,8 +104,13 @@
                     FontSize="12"
                     BoundStatus="{Binding}" />
                 
-                   
-                    <Image Source="{Binding Path=FirstPictureUrl}" Margin="5" />
+                  <TextBlock>
+                    <Hyperlink TextDecorations="None"
+                        Command="helpers:StatusesCommands.ShowPicture" CommandParameter="{Binding ElementName=StatusImage}">
+                        <Image x:Name="StatusImage" Source="{Binding Path=FirstPictureUrl}" Margin="5" Tag="{Binding Path=FirstPictureUrl}"  />
+                    </Hyperlink>
+                   </TextBlock>
+                    
                 </StackPanel>
                 
                 <!-- Data i opcje na dole statusu-->

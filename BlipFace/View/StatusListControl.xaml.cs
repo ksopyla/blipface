@@ -26,6 +26,8 @@ namespace BlipFace.View
         private const int BlipSize = 160;
         private int charLeft = BlipSize;
 
+        object  statusListLock = new object();
+
         private string pictureFilePath = string.Empty;
 
         private readonly StatusesPresenter presenter;
@@ -46,8 +48,8 @@ namespace BlipFace.View
             SetTextBoxFocus();
         }
 
-
         #region EventHandlers
+
         /// <summary>
         /// Służy tylko do wyliczania ilości znaków pozostałych do wpisania
         /// </summary>
@@ -82,11 +84,24 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void tbMessage_KeyDown(object sender, KeyEventArgs e)
         {
+            //if (e.Key == Key.Return)
+            //{
+            //    //gdy naciśnięto enter to wysyłamy tekst
+            //    SendStatus();
+            //}
+
+            //e.Handled = true;
+        }
+
+        private void TbMessage_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
             if (e.Key == Key.Return)
             {
-                //gdy naciśnięto enter to wysyłamy tekst
                 SendStatus();
+
+                e.Handled = true;
             }
+            //gdy naciśnięto enter to wysyłamy tekst
         }
 
         private void SendStatus()
@@ -129,7 +144,7 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Hyperlink hl = (Hyperlink)sender;
+            Hyperlink hl = (Hyperlink) sender;
             string navigateUri = hl.NavigateUri.ToString();
             Process.Start(new ProcessStartInfo(navigateUri));
             e.Handled = true;
@@ -137,7 +152,6 @@ namespace BlipFace.View
 
         private void btnAddPicture_Click(object sender, RoutedEventArgs e)
         {
-
             System.Windows.Forms.OpenFileDialog opf = new System.Windows.Forms.OpenFileDialog();
             opf.Filter = "Obrazy (*.bmp, *.jpg, *.gif, *.png)|*.bmp; *.jpg; *.gif; *.png|All Files|*.*";
             opf.Title = "Wybierz obraz do załączenia do statusu";
@@ -151,11 +165,7 @@ namespace BlipFace.View
                 //opf.FileName
 
                 PicturePath = opf.FileName;
-
-                
             }
-
-
         }
 
 
@@ -166,24 +176,21 @@ namespace BlipFace.View
 
         #endregion
 
-
         //todo: błysk okna testowo
         [DllImport("user32.dll")]
-        static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
+        private static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
+
         public static void FlashMainWindow(Window window, bool invert)
         {
             IntPtr handle = (new WindowInteropHelper(window)).Handle;
             FlashWindow(handle, invert);
         }
 
-
         #region IStatusesView
+
         public IList<StatusViewModel> Statuses
         {
-            get
-            {
-                return lstbStatusList.ItemsSource as IList<StatusViewModel>;
-            }
+            get { return lstbStatusList.ItemsSource as IList<StatusViewModel>; }
             set
             {
                 //statusy będą ustawiane asynchronicznie przez prezetnera
@@ -196,8 +203,6 @@ namespace BlipFace.View
 
                                 //todo:to tak testowo
                                 FlashMainWindow(Window.GetWindow(this.Parent), true);
-
-
                             }), value);
             }
         }
@@ -221,18 +226,18 @@ namespace BlipFace.View
                 //więc potrzeba obiektu Dispatcher
                 Dispatcher.Invoke(new Action<StatusViewModel>(delegate(StatusViewModel status)
                                                                   {
-                                                                     // lbUserLogin.Text = status.UserLogin;
-                                                                     // lbContent.Text = status.Content;
+                                                                      // lbUserLogin.Text = status.UserLogin;
+                                                                      // lbContent.Text = status.Content;
 
                                                                       status.UserLogin = string.Empty;
                                                                       statusContent.BoundStatus = status;
 
                                                                       if (imgUserAvatar.Source == null)
                                                                       {
-
                                                                           BitmapImage imgAvatar = new BitmapImage();
                                                                           imgAvatar.BeginInit();
-                                                                          imgAvatar.UriSource = new Uri(status.UserAvatar50);
+                                                                          imgAvatar.UriSource =
+                                                                              new Uri(status.UserAvatar50);
                                                                           imgAvatar.EndInit();
                                                                           imgUserAvatar.Source = imgAvatar;
                                                                       }
@@ -252,9 +257,8 @@ namespace BlipFace.View
                                                              tbMessage.Text = textMessage;
                                                              tbMessage.IsEnabled = true;
                                                              tbShowSave.Visibility = Visibility.Hidden;
-                                                             
-                                                             SetTextBoxFocus();
 
+                                                             SetTextBoxFocus();
                                                          }), value);
             }
         }
@@ -269,7 +273,7 @@ namespace BlipFace.View
                     new Action<Exception>(delegate(Exception err)
                                               {
                                                   tbError.Visibility = Visibility.Visible;
-                                                  tbError.ToolTip="Błąd: " + err.Message;
+                                                  tbError.ToolTip = "Błąd: " + err.Message;
                                                   EnableContrlsForSendMessage(true);
                                               }), System.Windows.Threading.DispatcherPriority.Normal, value);
             }
@@ -282,72 +286,89 @@ namespace BlipFace.View
             {
                 Dispatcher.Invoke(
                     new Action<TitleMessageViewModel>(delegate(TitleMessageViewModel status)
-                                           {
-                                               //chowamy błędy 
-                                               tbError.Visibility = Visibility.Collapsed;
+                                                          {
+                                                              //chowamy błędy 
+                                                              tbError.Visibility = Visibility.Collapsed;
 
-                                               tbOffline.Text = status.Title;
-                                               tbOffline.ToolTip = status.Message;
-                                               EnableContrlsForSendMessage(true);
-                                           }), value);
+                                                              tbOffline.Text = status.Title;
+                                                              tbOffline.ToolTip = status.Message;
+                                                              EnableContrlsForSendMessage(true);
+                                                          }), value);
             }
         }
 
-        public void UpdateStatuses(ObservableCollection<StatusViewModel> statuses)
+        public void UpdateStatuses(IList<StatusViewModel> statuses)
         {
             Dispatcher.Invoke(
-                    new Action<IList<StatusViewModel>>(
-                        delegate(IList<StatusViewModel> statusesList)
+                new Action<IList<StatusViewModel>>(
+                    delegate(IList<StatusViewModel> statusesList)
                         {
-                            var currentList = lstbStatusList.ItemsSource as ObservableCollection<StatusViewModel>;
 
-                            for (int i = statusesList.Count-1; i >=0 ; i--)
-                            {
-                                currentList.Insert(0,statusesList[i]);
-                            }
+                               // var currentList = lstbStatusList.ItemsSource as ObservableCollection<StatusViewModel>;
+                            var currentList = lstbStatusList.ItemsSource as IList<StatusViewModel>;
+                                for (int i = statusesList.Count - 1; i >= 0; i--)
+                                {
+                                    currentList.Insert(0, statusesList[i]);
+                                }
 
+                                //for (int i =0 ; i <statusesList.Count; i++)
+                                //{
+                                //    currentList.Insert(0, statusesList[i]);
+                                //}
+                           
                             //todo:to tak testowo
                             FlashMainWindow(Window.GetWindow(this.Parent), true);
-
-
                         }), statuses);
+        }
+
+        public void AddStatus(StatusViewModel statusView)
+        {
+            Dispatcher.Invoke(
+                new Action<StatusViewModel>(
+                    delegate(StatusViewModel status)
+                    {
+
+                        var currentList = lstbStatusList.ItemsSource as IList<StatusViewModel>;
+                        //currentList.Insert(0, status);
+
+                        currentList.Add(status);
+
+                        //todo:to tak testowo
+                        FlashMainWindow(Window.GetWindow(this.Parent), true);
+                    }), statusView);
         }
 
 
         public string PicturePath
         {
-            get
-            {
-                return pictureFilePath;
-            }
+            get { return pictureFilePath; }
             set
             {
                 Dispatcher.Invoke(new Action<string>(delegate(string picturePath)
-                {
-                    if (string.IsNullOrEmpty(picturePath))
-                    {
-                        btnDeletePic.Visibility = Visibility.Collapsed;
-                        imgAttachPic.Source = null;
-                        pictureFilePath = string.Empty;
+                                                         {
+                                                             if (string.IsNullOrEmpty(picturePath))
+                                                             {
+                                                                 btnDeletePic.Visibility = Visibility.Collapsed;
+                                                                 imgAttachPic.Source = null;
+                                                                 pictureFilePath = string.Empty;
+                                                             }
+                                                             else
+                                                             {
+                                                                 pictureFilePath = picturePath;
 
-                    }
-                    else
-                    {
-                        
-                        pictureFilePath = picturePath;
+                                                                 Uri iconUri = new Uri(picturePath,
+                                                                                       UriKind.RelativeOrAbsolute);
 
-                        Uri iconUri = new Uri(picturePath, UriKind.RelativeOrAbsolute);
-
-                        imgAttachPic.Source = BitmapFrame.Create(iconUri);
-                        btnDeletePic.Visibility = Visibility.Visible;
-                    }
-                    
-                }), value);
+                                                                 imgAttachPic.Source = BitmapFrame.Create(iconUri);
+                                                                 btnDeletePic.Visibility = Visibility.Visible;
+                                                                 btnDeletePic.ToolTip = string.Format("Usuń obraz {0}",
+                                                                                                      picturePath);
+                                                             }
+                                                         }), value);
             }
         }
 
         #endregion
-
 
         #region handlery dla kommend
 
@@ -382,7 +403,6 @@ namespace BlipFace.View
             SetTextBoxFocus();
         }
 
-        
 
         /// <summary>
         /// Komenda wywoływana gdy naciśniemy przycisk Prywatna przy statusie,
@@ -399,11 +419,45 @@ namespace BlipFace.View
 
             SetTextBoxFocus();
         }
+
+        private void ShowPicture_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            //throw new NotImplementedException();
+
+
+            //Image img = new Image();
+            //img.Source = ((Image) e.Parameter).Source;
+            
+            //BitmapImage imgAvatar = new BitmapImage();
+            //imgAvatar.BeginInit();
+
+            //string picUrl = e.Parameter.ToString();
+            
+            //imgAvatar.UriSource = new Uri(picUrl);
+            //imgAvatar.EndInit();
+            //img.Source = imgAvatar;
+
+
+            BigPictureWindow w = new BigPictureWindow();
+
+            //w.WindowStyle = WindowStyle.ToolWindow;
+            //w.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //w.Background = new SolidColorBrush(Colors.Black);
+
+            //w.Width = SystemParameters.WorkArea.Width*0.9;
+            //w.Height = SystemParameters.WorkArea.Height * 0.9;
+            //w.Content = img;
+
+            
+            w.PictureSource = ((Image)e.Parameter).Source;
+            w.PictureUrl = (string)((Image)e.Parameter).Tag;
+            w.Show();
+        }
+
         #endregion
 
-
-
         #region metody prywatne
+
         /// <summary>
         /// Pomocnicza metoda zawierająca w sobie logikę widoku
         /// przy dodawaniu, wiadomości
@@ -431,14 +485,7 @@ namespace BlipFace.View
 
         #endregion
 
-
-
-
-
         #region IStatusesView Members
-
-
-       
 
         #endregion
     }

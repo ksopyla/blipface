@@ -76,9 +76,13 @@ namespace BlipFace.View.Controls
             //InlineUIContainer run = (InlineUIContainer) d;
             //ContentControl con = (ContentControl) d;
             //Paragraph paragraph = (Paragraph) run.Parent;
-
+            if(d ==null)
+                return;
             TextBlock mainTextBlock = (TextBlock)d;
             StatusViewModel s = (StatusViewModel)e.NewValue;
+            if (s == null || s.Content ==null)
+                return;
+            
 
             //czyścimy główny text box z pozostałości
             mainTextBlock.Inlines.Clear();
@@ -117,17 +121,23 @@ namespace BlipFace.View.Controls
                     }
                     //zrób coś z samym linkiem
 
-                    string rlink;
+                    string rlink,tooltip;
+                    Hyperlink h;
+
                     if (linkMatches[k].Value.Contains("blip.pl"))
                     {
                         rlink = "[blip]";
+                        tooltip = s.Cites == null ? linkMatches[k].Value : s.Cites[linkMatches[k].Value];
+                        h = CreateLinkHyperLink(rlink, linkMatches[k].Value, tooltip);
                     }
                     else
                     {
                         rlink = "[link]";
+                        tooltip = s.Links == null ? linkMatches[k].Value : s.Links[linkMatches[k].Value];
+                        h = CreateLinkHyperLink(rlink, linkMatches[k].Value, tooltip);
                     }
 
-                    Hyperlink h = CreateLinkHyperLink(rlink, linkMatches[k].Value, linkMatches[k].Value);
+                   // Hyperlink h = CreateLinkHyperLink(rlink, linkMatches[k].Value, linkMatches[k].Value);
 
                     //dołączam linka do wyświetlenia
                     mainTextBlock.Inlines.Add(h);
@@ -428,12 +438,12 @@ namespace BlipFace.View.Controls
                                          };
 
 
-            hypUserLogin.AddHandler(Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler(HyperLink_RequestNavigate));
+            hypUserLogin.AddHandler(Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler(HyperLinkRequestNavigate));
             return hypUserLogin;
         }
 
 
-        public static void HyperLink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        public static void HyperLinkRequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             Hyperlink hl = (Hyperlink)sender;
             string navigateUri = hl.NavigateUri.ToString();
@@ -446,7 +456,12 @@ namespace BlipFace.View.Controls
         public StatusViewModel BoundStatus
         {
             get { return (StatusViewModel)GetValue(BoundStatusProperty); }
-            set { SetValue(BoundStatusProperty, value); }
+            set
+            {
+                if(value ==null)
+                    return;
+                SetValue(BoundStatusProperty, value);
+            }
         }
     }
 }
