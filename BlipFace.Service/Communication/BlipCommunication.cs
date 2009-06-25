@@ -324,14 +324,17 @@ namespace BlipFace.Service.Communication
             }
 
             //sprawdzamy czy komunikacja się powiodła
+            //todo: trochę to niebezpieczne, na razie to zostawiam
 
-            resp.EnsureStatusIsSuccessful();
+            if (resp.StatusCode == HttpStatusCode.OK)
+            {
 
+                var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
+                return status;
+            }
 
-            var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
-
-
-            return status;
+            //jeśli nie uda się pobrać statusu to zwróć null
+            return null;
         }
 
 
@@ -798,14 +801,18 @@ namespace BlipFace.Service.Communication
             }
 
             //sprawdzamy czy komunikacja się powiodła
+            //todo: trochę to niebezpiecznie, na razie zostawiam
+            if (resp.StatusCode == HttpStatusCode.OK)
+            {
+                var link = resp.Content.ReadAsJsonDataContract<BlipShortLink>();
+                return link.OriginalLink;
+            }
 
-            resp.EnsureStatusIsSuccessful();
+            //jeśli nie uda się pobrać linka to zwróć null
+            return null;
 
 
-            var link = resp.Content.ReadAsJsonDataContract<BlipShortLink>();
-
-
-            return link.OriginalLink;
+            
         }
     }
 

@@ -93,12 +93,11 @@ namespace BlipFace.View.Controls
                 CreateUsersBegining(mainTextBlock, s);
             }
 
-            //jeśli nie ma linka,  to od razu dodajmy całą treść
+
             string blipStatus = s.Content;
             var linkMatches = linkRegex.Matches(blipStatus);
 
-            
-
+            //jeśli nie ma linka,  to od razu dodajmy całą treść
             if (linkMatches.Count < 1)
             {
                 //jeśli nie ma dopasowań linków
@@ -134,6 +133,8 @@ namespace BlipFace.View.Controls
                     {
                         rlink = "[link]";
                         tooltip = s.Links == null ? linkMatches[k].Value : s.Links[linkMatches[k].Value];
+                        
+
                         h = CreateLinkHyperLink(rlink, linkMatches[k].Value, tooltip);
                     }
 
