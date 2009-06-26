@@ -130,6 +130,7 @@ namespace BlipFace.Service.Communication
 
 
             //nagłówek autoryzacja - zakodowane w base64
+            blipHttpClient.DefaultHeaders.Remove("Authorization");
             blipHttpClient.DefaultHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(credentialBuffer));
         }
 
@@ -314,7 +315,7 @@ namespace BlipFace.Service.Communication
         /// <returns></returns>
         public BlipStatus GetUpdate(string id)
         {
-            string query = string.Format("updates/{0}/?include=user&amp;", id);
+            string query = string.Format("updates/{0}?include=user", id);
             
 
             HttpResponseMessage resp;

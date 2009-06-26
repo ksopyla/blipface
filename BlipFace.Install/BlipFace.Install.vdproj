@@ -577,7 +577,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BlipFace.Service, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:BlipFace.Service, Version=0.3.5.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_2C02FC4939DD3E391D325D44C2133BBD"
@@ -948,14 +948,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BlipFace"
-        "ProductCode" = "8:{8DB4177C-1774-43EB-BA84-7143A954B405}"
-        "PackageCode" = "8:{62183C0E-0044-40AE-A4D7-20F9077C98CC}"
+        "ProductCode" = "8:{208EBE46-F296-4EAF-B45A-3A2139F134AF}"
+        "PackageCode" = "8:{1332FEB2-B89A-472D-AB58-655DF081AF8A}"
         "UpgradeCode" = "8:{71E3BDC3-6EB1-459A-86E5-22CDC069A369}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.3.5"
+        "ProductVersion" = "8:0.3.6"
         "Manufacturer" = "8:BlipFace.pl"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://blipface.pl"
