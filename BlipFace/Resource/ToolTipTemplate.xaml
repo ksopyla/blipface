@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="VerticalOffset" Value="-2" />
+        <Setter Property="HorizontalOffset" Value="10" />
+        <Setter Property="Placement" Value="Top" />
+        <Setter Property="Opacity" Value=".8" />
+        <Setter Property="ToolTipService.ShowDuration" Value="15000" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToolTip}">
+                    <Grid Name="Border" Background="Transparent" MaxWidth="280" MinHeight="40">
+                        <Rectangle  RadiusX="7.5" RadiusY="7.5">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0.5,-0.5" EndPoint="0.547,0.913">
+                                    <GradientStop Color="YellowGreen" Offset="0"/>
+                                    <GradientStop Color="Yellow" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+
+                        <ContentPresenter Margin="7" 
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center" 
+                                          TextBlock.Foreground="Black" 
+                                          TextBlock.FontSize="12"
+                                          
+                                          >
+                            <ContentPresenter.Content>
+                                <TextBlock TextWrapping="Wrap" Text="{TemplateBinding Content}"></TextBlock>
+                            </ContentPresenter.Content>
+                        </ContentPresenter>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+</ResourceDictionary>
