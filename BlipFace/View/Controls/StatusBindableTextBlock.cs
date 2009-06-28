@@ -126,14 +126,25 @@ namespace BlipFace.View.Controls
                     if (linkMatches[k].Value.Contains("blip.pl"))
                     {
                         rlink = "[blip]";
-                        tooltip = s.Cites == null ? linkMatches[k].Value : s.Cites[linkMatches[k].Value];
+                        tooltip = linkMatches[k].Value;
+
+                        if(s.Cites!=null && s.Cites.ContainsKey(tooltip))
+                        {
+                            tooltip = s.Cites[linkMatches[k].Value];
+                        }
+
                         h = CreateLinkHyperLink(rlink, linkMatches[k].Value, tooltip);
                     }
                     else
                     {
                         rlink = "[link]";
-                        tooltip = s.Links == null ? linkMatches[k].Value : s.Links[linkMatches[k].Value];
-                        
+
+                        tooltip = linkMatches[k].Value;
+
+                        if (s.Links != null && s.Links.ContainsKey(tooltip))
+                        {
+                            tooltip = s.Links[linkMatches[k].Value];
+                        }
 
                         h = CreateLinkHyperLink(rlink, linkMatches[k].Value, tooltip);
                     }

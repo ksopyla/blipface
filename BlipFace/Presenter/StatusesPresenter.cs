@@ -45,9 +45,18 @@ namespace BlipFace.Presenter
         /// Limity pobierania statusów
         /// </summary>
         private const int Limit = 30;
-        private Queue<StatusViewModel> statusQueue = new Queue<StatusViewModel> (Limit+1); 
+        private Queue<StatusViewModel> statusQueue = new Queue<StatusViewModel> (Limit+1);
+
+        private object  lockLastStatus = new object();
+        /// <summary>
+        /// przechowuje ostatni pobrany status
+        /// </summary>
+        private StatusViewModel newestStatus;
         
-        
+        /// <summary>
+        /// informuje czy na początku statusy zostały pobrane
+        /// </summary>
+        private bool statusesLoaded = false;
 
         /// <summary>
         /// co ile czasu mamy aktualizować 
@@ -127,74 +136,7 @@ namespace BlipFace.Presenter
 
         #region Calbacks
 
-        /// <summary>
-        /// Calback do akutalizacji, metoda wywoływana co UpdateTime
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void UpdateStatusTimerElapsed(object sender, ElapsedEventArgs e)
-        {
-            
-            LoadUserMainStatus(blipfaceUser.UserName);
-
-            int queueSize = 0;
-            lock (lockQueue)
-            {
-                queueSize = statusQueue.Count;
-            }
-
-            if (queueSize < 1)
-            {
-                StatusViewModel lastStatus = GetLastStatus();
-
-
-                if (lastStatus != null)
-                {
-
-                    UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
-                }
-                else
-                {
-                    //z powyższych nie udało się pobrać ostatniego statusu,
-                    //więc pobieramy cały dashborad od nowa
-                    LoadUserDashboard(blipfaceUser.UserName);
-                }
-            }
-
-            //else
-            //{
-            //    //pobieramy cały dashborad od nowa
-            //    LoadUserDashboard(blipfaceUser.UserName);
-
-            //}
-
-            //trzeba tu uruchomić na nowo czasomierz, nie ma sensu w zdarzeniach bo 
-            //gdy nic nie ma do pobrania to nie są wywoływane
-            updateStatusTimer.Start();
-
-        }
-
-        private StatusViewModel GetLastStatus()
-        {
-            StatusViewModel lastStatus = null;
-            lock (lockQueue)
-            {
-                if (statusQueue.Count > 0)
-                {
-                    //jeśli jest coś w kolejce to pobierz ostatni z kolejki
-                    lastStatus = statusQueue.Last();
-                }
-            }
-            
-            if (lastStatus==null && view.Statuses != null)
-            {
-                //jeśli kolejka statusuów jest pusta to pobierz najnowszy z listy
-                lastStatus = view.Statuses[0];
-            }
-            return lastStatus;
-        }
-
-
+       
         /// <summary>
         /// Callback do zdarzenie gdzie podczas pobierania, dodawania itp wystąpi wyjątek
         /// </summary>
@@ -223,6 +165,80 @@ namespace BlipFace.Presenter
             updateStatusTimer.Start();
         }
 
+
+        /// <summary>
+        /// Calback do akutalizacji, metoda wywoływana co UpdateTime
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void UpdateStatusTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+
+            LoadUserMainStatus(blipfaceUser.UserName);
+
+            //int queueSize = 0;
+            //lock (lockQueue)
+            //{
+            //    queueSize = statusQueue.Count;
+            //}
+
+            //if (queueSize < 1)
+            //{
+
+            //    StatusViewModel lastStatus = GetLastStatus();
+
+
+            //    if (lastStatus != null)
+            //    {
+
+            //        UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
+            //    }
+            //    else
+            //    {
+            //        //z powyższych nie udało się pobrać ostatniego statusu,
+            //        //więc pobieramy cały dashborad od nowa
+            //        LoadUserDashboard(blipfaceUser.UserName);
+            //    }
+            //}
+
+            if(newestStatus!=null)
+            {
+                UpdateUserDashboard(blipfaceUser.UserName, newestStatus.StatusId);
+            }
+            else if(!statusesLoaded)
+            {
+                LoadUserDashboard(blipfaceUser.UserName);
+            }
+           
+
+            //trzeba tu uruchomić na nowo czasomierz, nie ma sensu w zdarzeniach bo 
+            //gdy nic nie ma do pobrania to nie są wywoływane
+            updateStatusTimer.Start();
+
+        }
+
+        private StatusViewModel GetLastStatus()
+        {
+            StatusViewModel lastStatus = null;
+            lock (lockQueue)
+            {
+                if (statusQueue.Count > 0)
+                {
+                    //jeśli jest coś w kolejce to pobierz ostatni z kolejki
+                    lastStatus = statusQueue.Last();
+                }
+            }
+
+            if (lastStatus == null && view.Statuses != null)
+            {
+                //jeśli kolejka statusuów jest pusta to pobierz najnowszy z listy
+                lastStatus = view.Statuses[0];
+            }
+            return lastStatus;
+        }
+
+
+
         /// <summary>
         /// Callback do zdarzenia gdy statusy zostają zaktualizowane
         /// </summary>
@@ -232,6 +248,14 @@ namespace BlipFace.Presenter
         {
 
             IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
+
+
+            lock (lockLastStatus)
+            {
+                //pierwszy status jest najnowszy
+                if(sts.Count>0)
+                    newestStatus = sts[0];
+            }
 
             //RetriveBlipHyperlinks(sts);
             //blokujemy kolejką gdy dodajemy do niej nowe statusy,
@@ -277,7 +301,19 @@ namespace BlipFace.Presenter
             //view.Statuses = 
 
             IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
+            lock (lockLastStatus)
+            {
+                //pierwszy status jest najnowszy
+                if (sts.Count > 0)
+                {
+                    newestStatus = sts[0];
+                    
+                    //informacja że załadowano statusy
+                    statusesLoaded = true;
+                }
+            }
 
+            
             
             lock (lockQueue)
             {
@@ -495,12 +531,14 @@ namespace BlipFace.Presenter
             //    }
             //}
 
+            LoadUserMainStatus(blipfaceUser.UserName);
+
             StatusViewModel lastStatus = GetLastStatus();
 
 
             if (lastStatus != null)
             {
-
+                
                 UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
             }
             else

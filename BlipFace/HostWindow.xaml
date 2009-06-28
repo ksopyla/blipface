@@ -38,7 +38,7 @@
             <Label Canvas.Top="5" Canvas.Left="10" 
 			Foreground="White" FontFamily="Verdana" 
 			FontSize="14"
-			Content="BlipFace v0.3.6" >
+			Content="BlipFace v0.3.7" >
                 <Label.BitmapEffect>
                     <OuterGlowBitmapEffect GlowSize="7" Opacity="0.7" GlowColor="White" />
                 </Label.BitmapEffect>

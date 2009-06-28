@@ -220,6 +220,9 @@ namespace BlipFace.Service.Communication
         private void AfterValidate(IAsyncResult result)
         {
 
+            BlipCommunicationState state = BlipCommunicationState.OK;
+            Exception exp = null;
+            HttpStatusCode httpCode = HttpStatusCode.OK;
 
             bool validate = false;
 
@@ -244,37 +247,41 @@ namespace BlipFace.Service.Communication
 
                         validate = true;
                     }
+                    httpCode = resp.StatusCode;
 
-
-                    //zgłaszamy zdarzenie że walidacja zakńczona
-                    if (AuthorizationComplete != null)
-                    {
-                        AuthorizationComplete(validate);
-                    }
                 }
             }
             catch (ArgumentOutOfRangeException aorEx)
             {
-                //gdy wystąpiły jakieś błędy w komunikacji
-                if (CommunicationError != null)
-                {
-                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
-                }
+                state = BlipCommunicationState.CommunicationError;
+
             }
-            //catch (HttpStageProcessingException timeEx)
-            //{
-            //    //gdy wystąpiły jakieś błędy w komunikacji
-            //    if (CommunicationError != null)
-            //    {
-            //        CommunicationError(this, new CommunicationErrorEventArgs());
-            //    }
-            //}
             catch (Exception ex)
             {
-                if (ExceptionOccure != null)
-                {
-                    ExceptionOccure(this, new ExceptionEventArgs(ex));
-                }
+                state = BlipCommunicationState.Error;
+                exp = ex;
+            }
+
+
+            //gdy wystąpiły jakieś błędy w komunikacji
+            if (state == BlipCommunicationState.Error && ExceptionOccure != null)
+            {
+                ExceptionOccure(this, new ExceptionEventArgs(exp));
+                return;
+
+            }
+
+
+            if (state == BlipCommunicationState.CommunicationError && CommunicationError != null)
+            {
+                CommunicationError(this, new CommunicationErrorEventArgs(httpCode));
+                return;
+            }
+
+            //zgłaszamy zdarzenie że walidacja zakńczona
+            if (AuthorizationComplete != null)
+            {
+                AuthorizationComplete(validate);
             }
 
         }
@@ -293,11 +300,11 @@ namespace BlipFace.Service.Communication
             HttpResponseMessage resp;
             lock (httpClientLock)
             {
-                resp = blipHttpClient.Get(query);    
+                resp = blipHttpClient.Get(query);
             }
-            
+
             //sprawdzamy czy komunikacja się powiodła
-            
+
             resp.EnsureStatusIsSuccessful();
 
 
@@ -316,7 +323,7 @@ namespace BlipFace.Service.Communication
         public BlipStatus GetUpdate(string id)
         {
             string query = string.Format("updates/{0}?include=user", id);
-            
+
 
             HttpResponseMessage resp;
             lock (httpClientLock)
@@ -387,12 +394,84 @@ namespace BlipFace.Service.Communication
         /// <param name="result"></param>
         private void AfterGetUpdates(IAsyncResult result)
         {
+
+            #region stara implementacja
+
+            /*
             //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
             //przekazaliśmy ten obiekt jako state
+            //var client = result.AsyncState as HttpClient;
+
+
+            //HttpResponseMessage resp = null;
+
+            //try
+            //{
+            //    lock (httpClientLock)
+            //    {
+
+            //        resp = client.EndSend(result);
+            //    }
+
+            //    //pobieramy odpowiedź
+
+            //    resp.EnsureStatusIsSuccessful();
+
+            //    if (resp.Content.GetLength() > 2)
+            //    {
+            //        //deserializujemy z json
+            //        var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
+
+            //        //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłoszenia wraz z statusami
+            //        if (StatusesLoaded != null)
+            //        {
+            //            StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
+            //        }
+            //    }
+
+            //}
+            //catch (ArgumentOutOfRangeException aorEx)
+            //{
+            //    //gdy wystąpiły jakieś błędy w komunikacji
+            //    if (CommunicationError != null)
+            //    {
+            //        CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
+            //    }
+            //}
+            ////catch (HttpStageProcessingException timeEx)
+            ////{
+            ////    //gdy wystąpiły jakieś błędy w komunikacji
+            ////    if (CommunicationError != null)
+            ////    {
+            ////        CommunicationError(this, new CommunicationErrorEventArgs());
+            ////    }
+            ////}
+            //catch (Exception ex)
+            //{
+            //    if (ExceptionOccure != null)
+            //    {
+            //        ExceptionOccure(this, new ExceptionEventArgs(ex));
+            //    }
+            //}
+            //finally
+            //{
+            //    if (resp != null)
+            //    {
+            //        resp.Dispose();
+            //        resp = null;
+            //    }
+            //}
+
+            */
+            #endregion
             var client = result.AsyncState as HttpClient;
 
-
+            //pobieramy odpowiedź
             HttpResponseMessage resp = null;
+            StatusesList statuses = null;
+            BlipCommunicationState state = BlipCommunicationState.OK;
+            Exception exp = null;
+            HttpStatusCode httpCode = HttpStatusCode.OK;
 
             try
             {
@@ -402,30 +481,23 @@ namespace BlipFace.Service.Communication
                     resp = client.EndSend(result);
                 }
 
-                //pobieramy odpowiedź
-
                 resp.EnsureStatusIsSuccessful();
+
+                //deserializujemy z json
 
                 if (resp.Content.GetLength() > 2)
                 {
-                    //deserializujemy z json
-                    var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
-
-                    //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłoszenia wraz z statusami
-                    if (StatusesLoaded != null)
-                    {
-                        StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
-                    }
+                    statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
                 }
 
             }
             catch (ArgumentOutOfRangeException aorEx)
             {
+
+                state = BlipCommunicationState.CommunicationError;
+                httpCode = resp.StatusCode;
                 //gdy wystąpiły jakieś błędy w komunikacji
-                if (CommunicationError != null)
-                {
-                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
-                }
+
             }
             //catch (HttpStageProcessingException timeEx)
             //{
@@ -437,10 +509,10 @@ namespace BlipFace.Service.Communication
             //}
             catch (Exception ex)
             {
-                if (ExceptionOccure != null)
-                {
-                    ExceptionOccure(this, new ExceptionEventArgs(ex));
-                }
+
+                state = BlipCommunicationState.Error;
+                exp = ex;
+
             }
             finally
             {
@@ -449,6 +521,31 @@ namespace BlipFace.Service.Communication
                     resp.Dispose();
                     resp = null;
                 }
+            }
+
+            if (state == BlipCommunicationState.Error && ExceptionOccure != null)
+            {
+                ExceptionOccure(this, new ExceptionEventArgs(exp));
+                return;
+
+            }
+
+
+            if (state == BlipCommunicationState.CommunicationError && CommunicationError != null)
+            {
+                CommunicationError(this, new CommunicationErrorEventArgs(httpCode));
+                return;
+            }
+
+
+
+            if (statuses == null)
+                return;
+
+            //gdy zostały zwrócone jakieś statusy
+            if ((statuses.Count > 0) && (StatusesLoaded != null))
+            {
+                StatusesLoaded(this, new StatusesLoadingEventArgs(statuses));
             }
 
         }
@@ -477,41 +574,41 @@ namespace BlipFace.Service.Communication
         /// <param name="result"></param>
         private void AfterUserMainStatus(IAsyncResult result)
         {
-            //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
-            //przekazaliśmy ten obiekt jako state
-            var client = result.AsyncState as HttpClient;
-
 
             HttpResponseMessage resp = null;
+            BlipStatus status = null;
+            BlipCommunicationState state = BlipCommunicationState.OK;
+            Exception exp = null;
+            HttpStatusCode httpCode = HttpStatusCode.OK;
 
             try
             {
+                //pobieramy obiekt HttpClient, dzięki któremu został wysłany request
+                //przekazaliśmy ten obiekt jako state
+                var client = result.AsyncState as HttpClient;
+
                 //pobieramy odpowiedź
                 lock (httpClientLock)
                 {
-
                     resp = client.EndSend(result);
                 }
 
                 resp.EnsureStatusIsSuccessful();
 
-                //@todo: sprawdzić czy istnieje chociaż jeden status
+
                 //deserializujemy z json
-                var status = resp.Content.ReadAsJsonDataContract<StatusesList>()[0];
+                status = resp.Content.ReadAsJsonDataContract<StatusesList>()[0];
 
                 //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłoszenia wraz ze statusem
-                if (MainStatusLoaded != null)
-                {
-                    MainStatusLoaded(this, new MainStatusLoadingEventArgs(status));
-                }
+
             }
             catch (ArgumentOutOfRangeException aorEx)
             {
                 //gdy wystąpiły jakieś błędy w komunikacji
-                if (CommunicationError != null)
-                {
-                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
-                }
+                state = BlipCommunicationState.CommunicationError;
+                httpCode = resp.StatusCode;
+
+
             }
             //catch (HttpStageProcessingException timeEx)
             //{
@@ -523,10 +620,8 @@ namespace BlipFace.Service.Communication
             //}
             catch (Exception ex)
             {
-                if (ExceptionOccure != null)
-                {
-                    ExceptionOccure(this, new ExceptionEventArgs(ex));
-                }
+                state = BlipCommunicationState.Error;
+                exp = ex;
             }
             finally
             {
@@ -535,6 +630,26 @@ namespace BlipFace.Service.Communication
                     resp.Dispose();
                     resp = null;
                 }
+            }
+
+            if (state == BlipCommunicationState.Error && ExceptionOccure != null)
+            {
+                ExceptionOccure(this, new ExceptionEventArgs(exp));
+                return;
+
+            }
+
+
+            if (state == BlipCommunicationState.CommunicationError && CommunicationError != null)
+            {
+                CommunicationError(this, new CommunicationErrorEventArgs(httpCode));
+                return;
+            }
+
+
+            if (status != null && MainStatusLoaded != null)
+            {
+                MainStatusLoaded(this, new MainStatusLoadingEventArgs(status));
             }
         }
 
@@ -547,7 +662,7 @@ namespace BlipFace.Service.Communication
             string query = "/updates";
 
             HttpUrlEncodedForm form = new HttpUrlEncodedForm();
-            form.Add("body", content);
+            form.Add("update[body]", content);
 
             //nowy sposób dodawania statusów
             //blipHttpClient.Post(query, form.CreateHttpContent());
@@ -564,26 +679,29 @@ namespace BlipFace.Service.Communication
         /// <summary>
         /// Asynchronicznie dodaje status do blipa
         /// </summary>
-        /// <param name="content">treść</param>
-        public void AddUpdateAsync(string content, string image)
+        /// <param name="content">treść statusu</param>
+        /// <param name="imagePath">ścieżka do pliku z obrazem</param>
+        public void AddUpdateAsync(string content, string imagePath)
         {
             string query = "/updates";
 
+            string fileName = Path.GetFileName(imagePath);
             
+
             HttpMultipartMimeForm form = new HttpMultipartMimeForm();
             form.Add("update[body]", content);
 
             using (MemoryStream ms = new MemoryStream())
             {
-                Image img = Image.FromFile(image);
-                
+                Image img = Image.FromFile(imagePath);
+
                 img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
 
                 byte[] imageBytes = ms.ToArray();
-               
+
                 HttpContent pic = HttpContent.Create(imageBytes, "application/octet-stream");
 
-                form.Add("update[picture]", image, pic);
+                form.Add("update[picture]", fileName, pic);
 
                 //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
                 blipHttpClient.BeginSend(
@@ -595,7 +713,7 @@ namespace BlipFace.Service.Communication
 
 
         /// <summary>
-        /// callback do <seealso cref="AddStatusAsync"/> wywoływany po dodaniu statusu
+        /// callback do <seealso cref="AddUpdateAsync"/> wywoływany po dodaniu statusu
         /// </summary>
         /// <param name="result"></param>
         private void AfterAddStatusAsync(IAsyncResult result)
@@ -604,6 +722,11 @@ namespace BlipFace.Service.Communication
             //przekazaliśmy ten obiekt jako state
             var client = result.AsyncState as HttpClient;
             HttpResponseMessage resp = null;
+            StatusesList statuses = null;
+            BlipCommunicationState state = BlipCommunicationState.OK;
+            Exception exp = null;
+            HttpStatusCode httpCode = HttpStatusCode.OK;
+
             try
             {
                 //pobieramy odpowiedź
@@ -613,44 +736,33 @@ namespace BlipFace.Service.Communication
                     resp = client.EndSend(result);
                 }
 
-
-
-
                 //sprawdź czy odpowiedź jest poprawna
                 resp.EnsureStatusIsSuccessful();
 
-                //to poniżej chyba nie potrzebne
-                //deserializujemy z json
-                // var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
-
-                //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-                if (StatusesAdded != null)
-                {
-                    StatusesAdded(this, EventArgs.Empty);
-                }
+                //jeżeli status ok to znaczy że dodano status
+                httpCode = HttpStatusCode.OK;
+               
+               
             }
             catch (ArgumentOutOfRangeException aorEx)
             {
                 //gdy wystąpiły jakieś błędy w komunikacji
-                if (CommunicationError != null)
-                {
-                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
-                }
+                state = BlipCommunicationState.CommunicationError;
+                httpCode = resp.StatusCode;
+                
             }
-            catch (HttpStageProcessingException timeEx)
-            {
-                //gdy wystąpiły jakieś błędy w komunikacji
-                if (CommunicationError != null)
-                {
-                    CommunicationError(this, new CommunicationErrorEventArgs());
-                }
-            }
+            //catch (HttpStageProcessingException timeEx)
+            //{
+            //    //gdy wystąpiły jakieś błędy w komunikacji
+            //    if (CommunicationError != null)
+            //    {
+            //        CommunicationError(this, new CommunicationErrorEventArgs());
+            //    }
+            //}
             catch (Exception ex)
             {
-                if (ExceptionOccure != null)
-                {
-                    ExceptionOccure(this, new ExceptionEventArgs(ex));
-                }
+                state = BlipCommunicationState.Error;
+                exp = ex;
             }
             finally
             {
@@ -660,6 +772,28 @@ namespace BlipFace.Service.Communication
                     resp = null;
                 }
             }
+
+
+            if (state == BlipCommunicationState.Error && ExceptionOccure != null)
+            {
+                ExceptionOccure(this, new ExceptionEventArgs(exp));
+                return;
+
+            }
+
+
+            if (state == BlipCommunicationState.CommunicationError && CommunicationError != null)
+            {
+                CommunicationError(this, new CommunicationErrorEventArgs(httpCode));
+                return;
+            }
+
+            //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+            if (StatusesAdded != null)
+            {
+                StatusesAdded(this, EventArgs.Empty);
+            }
+
         }
 
         /// <summary>
@@ -698,6 +832,10 @@ namespace BlipFace.Service.Communication
 
             //pobieramy odpowiedź
             HttpResponseMessage resp = null;
+            StatusesList statuses = null;
+            BlipCommunicationState state = BlipCommunicationState.OK;
+            Exception exp = null;
+            HttpStatusCode httpCode = HttpStatusCode.OK;
 
             try
             {
@@ -713,39 +851,32 @@ namespace BlipFace.Service.Communication
 
                 if (resp.Content.GetLength() > 2)
                 {
-                    var statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
-
-                    //gdy zostały zwrócone jakieś statusy
-                    if ((statuses.Count > 0) && (StatusesUpdated != null))
-                    {
-                        //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
-                        StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
-                    }
+                    statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();
                 }
 
             }
             catch (ArgumentOutOfRangeException aorEx)
             {
+
+                state = BlipCommunicationState.CommunicationError;
+                httpCode = resp.StatusCode;
                 //gdy wystąpiły jakieś błędy w komunikacji
-                if (CommunicationError != null)
-                {
-                    CommunicationError(this, new CommunicationErrorEventArgs(resp.StatusCode));
-                }
+
             }
-            catch (HttpStageProcessingException timeEx)
-            {
-                //gdy wystąpiły jakieś błędy w komunikacji
-                if (CommunicationError != null)
-                {
-                    CommunicationError(this, new CommunicationErrorEventArgs());
-                }
-            }
+            //catch (HttpStageProcessingException timeEx)
+            //{
+            //    //gdy wystąpiły jakieś błędy w komunikacji
+            //    if (CommunicationError != null)
+            //    {
+            //        CommunicationError(this, new CommunicationErrorEventArgs());
+            //    }
+            //}
             catch (Exception ex)
             {
-                if (ExceptionOccure != null)
-                {
-                    ExceptionOccure(this, new ExceptionEventArgs(ex));
-                }
+
+                state = BlipCommunicationState.Error;
+                exp = ex;
+
             }
             finally
             {
@@ -754,6 +885,32 @@ namespace BlipFace.Service.Communication
                     resp.Dispose();
                     resp = null;
                 }
+            }
+
+            if (state == BlipCommunicationState.Error && ExceptionOccure != null)
+            {
+                ExceptionOccure(this, new ExceptionEventArgs(exp));
+                return;
+
+            }
+
+
+            if (state == BlipCommunicationState.CommunicationError && CommunicationError != null)
+            {
+                CommunicationError(this, new CommunicationErrorEventArgs(httpCode));
+                return;
+            }
+
+
+
+            if (statuses == null)
+                return;
+
+            //gdy zostały zwrócone jakieś statusy
+            if ((statuses.Count > 0) && (StatusesUpdated != null))
+            {
+                //zgłaszamy zdarzenie że dane załadowaliśmy, przekazując nasze parametry zgłosznie wraz z statusami
+                StatusesUpdated(this, new StatusesLoadingEventArgs(statuses));
             }
 
         }
@@ -813,8 +970,15 @@ namespace BlipFace.Service.Communication
             return null;
 
 
-            
+
         }
+    }
+
+    internal enum BlipCommunicationState
+    {
+        OK,
+        CommunicationError,
+        Error
     }
 
 
