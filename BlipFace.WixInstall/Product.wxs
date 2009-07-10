@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?define ProductName = "BlipFace"?>
+<?define ProductVersion = "1.0.0.0"?>
+<?define UpgradeCode = "d08a32ee-27fd-420d-b047-8df62e4c23b1"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="65ab0f9d-cb87-48bb-bd13-42699f83a111" 
+           Name="$(var.ProductName)" 
+           Language="1045" 
+           Version="$(var.ProductVersion)" 
+           Manufacturer="BlipFace.WixInstall" 
+           UpgradeCode="$(var.UpgradeCode)"
+           >
+		<Package InstallerVersion="200" Compressed="yes" />
+
+		<Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLLOCATION" Name="$(var.ProductName)">
+					<Component Id="BlipFaceMainComponent" Guid="c50c995c-726e-4894-90d6-c8c82fc2c383">
+            <File Id="F_BlipFaceExe" Source="$(var.BlipFace.TargetDir)\BlipFace.exe"/>
+					</Component>
+				</Directory>
+			</Directory>
+		</Directory>
+
+		<Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
+			<ComponentRef Id="BlipFaceMainComponent" />
+		</Feature>
+
+    <UIRef Id="WixUI_Mondo"/>
+  </Product>
+</Wix>
