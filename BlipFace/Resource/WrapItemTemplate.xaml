@@ -92,17 +92,15 @@
                 
                 
                 <StackPanel Grid.Column="1" Grid.Row="0" Height="Auto" Background="{StaticResource TransparentBlack}" >
-                    <!--StackPanel.Background>
-                        <SolidColorBrush Color="Black" Opacity="0.01"/>
-                        
-                    </StackPanel.Background -->
+                   
                 <Controls:StatusBindableTextBlock 
                     TextWrapping="Wrap"
                     Margin="5,2,2,2"
                     FontFamily="Verdana"
                     Foreground="#FFFFFDFD"
                     FontSize="12"
-                    BoundStatus="{Binding}" />
+                    BoundStatus="{Binding}"
+                    />
                 
                   <TextBlock>
                     <Hyperlink TextDecorations="None"

@@ -428,38 +428,35 @@ namespace BlipFace.View
 
         private void ShowPicture_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //throw new NotImplementedException();
-
-
-            //Image img = new Image();
-            //img.Source = ((Image) e.Parameter).Source;
             
-            //BitmapImage imgAvatar = new BitmapImage();
-            //imgAvatar.BeginInit();
-
-            //string picUrl = e.Parameter.ToString();
-            
-            //imgAvatar.UriSource = new Uri(picUrl);
-            //imgAvatar.EndInit();
-            //img.Source = imgAvatar;
-
-
             BigPictureWindow w = new BigPictureWindow();
 
-            //w.WindowStyle = WindowStyle.ToolWindow;
-            //w.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            //w.Background = new SolidColorBrush(Colors.Black);
-
-            //w.Width = SystemParameters.WorkArea.Width*0.9;
-            //w.Height = SystemParameters.WorkArea.Height * 0.9;
-            //w.Content = img;
-
-            
+           
             w.PictureSource = ((Image)e.Parameter).Source;
             w.PictureUrl = (string)((Image)e.Parameter).Tag;
             w.Show();
         }
 
+        private void ShowVideo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string videoUrl = (string) e.Parameter;
+
+            VideoViewWindow vw = new VideoViewWindow(videoUrl);
+            
+            vw.Show();
+
+        }
+
+        private void Navigate_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+            //Hyperlink hl = (Hyperlink)sender;
+            //string navigateUri = hl.NavigateUri.ToString();
+
+            string navigateUri = (string) e.Parameter;
+            Process.Start(new ProcessStartInfo(navigateUri));
+            e.Handled = true;
+        }
         #endregion
 
         #region metody prywatne
@@ -491,8 +488,19 @@ namespace BlipFace.View
 
         #endregion
 
+     
+
+       
+
+       
+
         #region IStatusesView Members
 
         #endregion
+
+        //private void StatusListControl_Unloaded(object sender, RoutedEventArgs e)
+        //{
+        //    presenter.Close();
+        //}
     }
 }

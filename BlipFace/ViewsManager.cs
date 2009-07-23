@@ -11,8 +11,7 @@ namespace BlipFace
 {
     public class ViewsManager
     {
-        readonly IHostView _hostWindow;
-
+        private readonly IHostView _hostWindow;
 
 
         public ViewsManager(IHostView host)
@@ -20,15 +19,12 @@ namespace BlipFace
             _hostWindow = host;
         }
 
-
+        private IPresenter currentPresenter;
 
         public void ShowView(UserControl view)
         {
-
             _hostWindow.AttachView(view);
-
         }
-
 
 
         public void Run()
@@ -36,30 +32,35 @@ namespace BlipFace
             //pokazuje domyślny widok
             //tworzymy nowego prezentera
             var loginPresenter = new LoginPresenter();
+
+            //obecny prezenter
+            currentPresenter = loginPresenter;
+
             //dołączamy do niego widok, jednocześnie przkazując mu referencję 
             var loginView = new LoginViewControl(loginPresenter);
             loginPresenter.SetView(loginView);
-            
+
             loginPresenter.WorkDone += new EventHandler<ActionsEventArgs>(PresenterWorkDone);
 
             loginPresenter.Init();
             _hostWindow.AttachView(loginView);
         }
 
-        void PresenterWorkDone(object sender, ActionsEventArgs e)
+        private void PresenterWorkDone(object sender, ActionsEventArgs e)
         {
-
             switch (e.NextAction)
             {
                 case Actions.Login:
-                    CreateLoginPresenter();
+                    currentPresenter = CreateLoginPresenter();
                     break;
                 case Actions.Statuses:
 
                     UserViewModel usr = e.Data as UserViewModel;
 
                     if (usr != null)
-                        CreateStatusesPresenter(usr);
+                    {
+                        currentPresenter = CreateStatusesPresenter(usr);
+                    }
                     else
                     {
                         throw new ArgumentNullException();
@@ -67,15 +68,16 @@ namespace BlipFace
                     break;
                 case Actions.Configuration:
                     break;
+                case  Actions.Close:
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
         }
 
 
-
-        private void CreateStatusesPresenter(UserViewModel user)
+        private IPresenter CreateStatusesPresenter(UserViewModel user)
         {
             var statusPresenter = new StatusesPresenter(user);
             //dołączamy do niego widok, jednocześnie przkazując mu referencję 
@@ -86,9 +88,11 @@ namespace BlipFace
             statusPresenter.Init();
 
             _hostWindow.SwitchView(statusView);
+
+            return statusPresenter;
         }
 
-        private void CreateLoginPresenter()
+        private IPresenter CreateLoginPresenter()
         {
             var loginPresenter = new LoginPresenter();
             //dołączamy do niego widok, jednocześnie przkazując mu referencję 
@@ -98,6 +102,14 @@ namespace BlipFace
 
             loginPresenter.Init();
             _hostWindow.SwitchView(loginView);
+
+            return loginPresenter;
+        }
+
+        public void Close()
+        {
+            if (currentPresenter != null)
+                currentPresenter.Close();
         }
     }
 }

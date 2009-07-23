@@ -8,21 +8,27 @@
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.StatusListControl"
     
-    PreviewKeyDown="TbMessage_OnPreviewKeyDown"
-	
+   
+    PreviewKeyDown="TbMessage_OnPreviewKeyDown"	
     x:Name="StatusList"
-    Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto">
+    Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto"
+    >
+    
     
     <UserControl.CommandBindings>
-        <CommandBinding Command="helper:StatusesCommands.CiteUser" 
-                        Executed="CiteUser_Executed" />
-        <CommandBinding Command="helper:StatusesCommands.DirectMessage" 
-                        Executed="DirectMessage_Executed" />
+        <CommandBinding Command="helper:StatusesCommands.CiteUser" Executed="CiteUser_Executed" />
+        
+        <CommandBinding Command="helper:StatusesCommands.DirectMessage" Executed="DirectMessage_Executed" />
+        
         <CommandBinding Command="helper:StatusesCommands.PrivateMessage" 
                         Executed="PrivateMessage_Executed" />
-        
+
         <CommandBinding Command="helper:StatusesCommands.ShowPicture" 
                         Executed="ShowPicture_Executed" />
+        
+        <CommandBinding Command="helper:StatusesCommands.ShowVideo"  Executed="ShowVideo_Executed" />
+            
+        <CommandBinding Command="helper:StatusesCommands.Navigate"  Executed="Navigate_Executed" />
     </UserControl.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -78,7 +84,7 @@
                     FontFamily="Verdana"
                     Foreground="#FFFFFDFD"
                     FontSize="15"
-                                            
+                                           
                      />
 
             <!-- RichTextBox
@@ -112,7 +118,7 @@
             Grid.Column="0" 
             Grid.Row="1"
 			x:Name="lstbStatusList" 
-			ItemTemplate="{DynamicResource WrapItemTemplate}">
+			ItemTemplate="{StaticResource WrapItemTemplate}">
             <ItemsControl.Template>
                 <ControlTemplate>
                     <ScrollViewer>
@@ -160,6 +166,7 @@
                 Style="{DynamicResource RoundedTextInput}"     
                 FontSize="14" FontFamily="Verdana"
 				TextChanged="tbMessage_TextChanged" 
+                     
                                 Height="105"     ><!--     PreviewKeyDown="TbMessage_OnPreviewKeyDown"
 				KeyDown="tbMessage_KeyDown" -->
                              
@@ -179,7 +186,7 @@
                         HorizontalAlignment="Right"
                         TextAlignment="Right"
                         FontWeight="Bold"  Foreground="#b0b0b0" 
-				Text="160" Margin="0,0,5,0" Width="55" />
+				Text="160" Margin="0,0,5,0" />
 
             
 

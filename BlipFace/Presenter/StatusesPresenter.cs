@@ -11,17 +11,21 @@ using System.Timers;
 using BlipFace.Helpers;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Threading;
+using Timer=System.Timers.Timer;
 
 namespace BlipFace.Presenter
 {
-
     /// <summary>
     /// Klasa prezentera do naszego głównego widoku, zgodnie z wzorcem MVP
     /// </summary>
     public class StatusesPresenter : IPresenter
     {
-
-        enum ConnectivityStatus { Online, Offline };
+        private enum ConnectivityStatus
+        {
+            Online,
+            Offline
+        } ;
 
 
         /// <summary>
@@ -38,21 +42,27 @@ namespace BlipFace.Presenter
         private readonly BlipCommunication blpCom; // = new BlipCommunication("blipface", @"12Faceewq");
 
         private readonly Timer updateStatusTimer;
-       // private const string ConnectivityStatusOnline = "Online";
-        //private const string ConnectivityStatusOffline = "Offline";
-        
+
         /// <summary>
         /// Limity pobierania statusów
         /// </summary>
-        private const int Limit = 30;
-        private Queue<StatusViewModel> statusQueue = new Queue<StatusViewModel> (Limit+1);
+        private const int Limit = 40;
 
-        private object  lockLastStatus = new object();
+        private readonly Queue<StatusViewModel> statusQueue = new Queue<StatusViewModel>(Limit + 1);
+
+        private readonly object lockLastStatus = new object();
+
+
+        /// <summary>
+        /// Wątek do konsumpcji statusów z kolejki
+        /// </summary>
+        private Thread consumeStatusesThread;
+
         /// <summary>
         /// przechowuje ostatni pobrany status
         /// </summary>
         private StatusViewModel newestStatus;
-        
+
         /// <summary>
         /// informuje czy na początku statusy zostały pobrane
         /// </summary>
@@ -61,12 +71,11 @@ namespace BlipFace.Presenter
         /// <summary>
         /// co ile czasu mamy aktualizować 
         /// </summary>
-        private const int UpdateTime = 45;
+        private const int UpdateTime = 20;
 
-        private static Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
+        private static readonly Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
         private readonly object lockQueue = new object();
 
-       
 
         /// <summary>
         /// Konstruktor główny
@@ -89,12 +98,10 @@ namespace BlipFace.Presenter
 
             blpCom.CommunicationError += new EventHandler<CommunicationErrorEventArgs>(BlpComCommunicationError);
 
-            
-            updateStatusTimer = new Timer(UpdateTime * 1000);//time in milisconds
+
+            updateStatusTimer = new Timer(UpdateTime*1000); //time in milisconds
             updateStatusTimer.Elapsed += new ElapsedEventHandler(UpdateStatusTimerElapsed);
         }
-
-
 
         #region IPresenter Members
 
@@ -102,21 +109,19 @@ namespace BlipFace.Presenter
         {
             if (view is IStatusesView)
             {
-
-
-                this.view = (IStatusesView)view;
+                this.view = (IStatusesView) view;
             }
             else
             {
                 string message =
-                    string.Format(@"Przekazano nieodpowiedni widok, oczekiwano widoku typu {0} a podano {1} ", typeof(ILoginView), view.GetType().ToString());
+                    string.Format(@"Przekazano nieodpowiedni widok, oczekiwano widoku typu {0} a podano {1} ",
+                                  typeof (ILoginView), view.GetType().ToString());
                 throw new ArgumentException(message);
             }
         }
 
         public void Init()
         {
-
             //var empty =new ObservableCollection<StatusViewModel>();
             //empty.Add(new StatusViewModel());
             //view.Statuses = empty;
@@ -127,22 +132,36 @@ namespace BlipFace.Presenter
             LoadUserDashboard(blipfaceUser.UserName);
 
             //włączamy timer, lecz początkowo z wydłużonym czasem
-           StartListeningForUpdates(3*UpdateTime);
+            StartListeningForUpdates(3*UpdateTime);
         }
 
         public event EventHandler<ActionsEventArgs> WorkDone;
+
+        public void Close()
+        {
+            if (consumeStatusesThread != null)
+                consumeStatusesThread.Abort();
+
+            if (updateStatusTimer != null)
+                updateStatusTimer.Stop();
+
+
+            //if(WorkDone!=null)
+            //{
+            //    WorkDone(this,new ActionsEventArgs(Actions.Close));
+            //}
+        }
 
         #endregion
 
         #region Calbacks
 
-       
         /// <summary>
         /// Callback do zdarzenie gdzie podczas pobierania, dodawania itp wystąpi wyjątek
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void BlpComExceptionOccure(object sender, ExceptionEventArgs e)
+        private void BlpComExceptionOccure(object sender, ExceptionEventArgs e)
         {
             view.Error = e.Error;
 
@@ -156,9 +175,8 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void BlpComCommunicationError(object sender, CommunicationErrorEventArgs e)
+        private void BlpComCommunicationError(object sender, CommunicationErrorEventArgs e)
         {
-
             view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Offline);
 
             //gdy licznik jest zatrzymany to go uruchamiamy
@@ -171,72 +189,19 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void UpdateStatusTimerElapsed(object sender, ElapsedEventArgs e)
+        private void UpdateStatusTimerElapsed(object sender, ElapsedEventArgs e)
         {
-
+            //gdy upłynie czas to pobierz status główny 
             LoadUserMainStatus(blipfaceUser.UserName);
 
-            //int queueSize = 0;
-            //lock (lockQueue)
-            //{
-            //    queueSize = statusQueue.Count;
-            //}
 
-            //if (queueSize < 1)
-            //{
+            LoadOrUpdateDashboard();
 
-            //    StatusViewModel lastStatus = GetLastStatus();
-
-
-            //    if (lastStatus != null)
-            //    {
-
-            //        UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
-            //    }
-            //    else
-            //    {
-            //        //z powyższych nie udało się pobrać ostatniego statusu,
-            //        //więc pobieramy cały dashborad od nowa
-            //        LoadUserDashboard(blipfaceUser.UserName);
-            //    }
-            //}
-
-            if(newestStatus!=null)
-            {
-                UpdateUserDashboard(blipfaceUser.UserName, newestStatus.StatusId);
-            }
-            else if(!statusesLoaded)
-            {
-                LoadUserDashboard(blipfaceUser.UserName);
-            }
-           
 
             //trzeba tu uruchomić na nowo czasomierz, nie ma sensu w zdarzeniach bo 
             //gdy nic nie ma do pobrania to nie są wywoływane
             updateStatusTimer.Start();
-
         }
-
-        private StatusViewModel GetLastStatus()
-        {
-            StatusViewModel lastStatus = null;
-            lock (lockQueue)
-            {
-                if (statusQueue.Count > 0)
-                {
-                    //jeśli jest coś w kolejce to pobierz ostatni z kolejki
-                    lastStatus = statusQueue.Last();
-                }
-            }
-
-            if (lastStatus == null && view.Statuses != null)
-            {
-                //jeśli kolejka statusuów jest pusta to pobierz najnowszy z listy
-                lastStatus = view.Statuses[0];
-            }
-            return lastStatus;
-        }
-
 
 
         /// <summary>
@@ -244,21 +209,55 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void BlpComStatusesUpdated(object sender, StatusesLoadingEventArgs e)
+        private void BlpComStatusesUpdated(object sender, StatusesLoadingEventArgs e)
         {
-
-            IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
-
-
-            lock (lockLastStatus)
+            try
             {
-                //pierwszy status jest najnowszy
-                if(sts.Count>0)
-                    newestStatus = sts[0];
-            }
+                IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
 
-            //RetriveBlipHyperlinks(sts);
-            //blokujemy kolejką gdy dodajemy do niej nowe statusy,
+
+                lock (lockLastStatus)
+                {
+                    //jeżeli pobrało jakieś statusu i pierwszy(najnowszy) ma id większe 
+                    //od dotychczaoswego to przypisz
+                    if (sts.Count > 0)
+                    {
+                        if (newestStatus == null || (sts[0].StatusId > newestStatus.StatusId))
+                            newestStatus = sts[0];
+                    }
+                    else
+                    {
+                        //jeżeli nie ma statusów lub najnowszy pobrany status ma id mniejsze
+                        //to można przerwać przetwarzanie gdyż one już są
+                        return;
+                    }
+                }
+
+
+                //blokujemy kolejką gdy dodajemy do niej nowe statusy,
+                EnqueueStatuses(sts);
+
+                //pobierz z kolejki dodane wyżej statusu i przetworz je
+                //AddStatusesWithHyperlinks(true);
+
+
+                view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
+                // view.Statuses.Insert(0, statuses[0]);
+
+                updateStatusTimer.Start();
+            }
+            catch (Exception exp)
+            {
+                view.Error = exp;
+            }
+        }
+
+        /// <summary>
+        /// Wstawia statusy do kolejki, w kolejności odwrotnej gdyż chcemy aby najnowsze były wstawione na końcu
+        /// </summary>
+        /// <param name="sts"></param>
+        private void EnqueueStatuses(IList<StatusViewModel> sts)
+        {
             lock (lockQueue)
             {
                 //dodajemy statusy od końca
@@ -266,28 +265,7 @@ namespace BlipFace.Presenter
                 {
                     statusQueue.Enqueue(sts[i]);
                 }
-
-                //foreach (var st in sts)
-                //{
-                //    statusQueue.Enqueue(st);
-                //}
             }
-
-            //pobierz z kolejki dodane wyżej statusu i przetworz je
-            AddStatusesWithHyperlinks(true);
-
-            //foreach (var st in sts)
-            //{
-            //    RetriveStatusHyperlinks(st);
-            //}
-            //view.UpdateStatuses(sts);
-
-            //view.Statuses = statuses.Concat(view.Statuses).ToList();
-
-            view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
-            // view.Statuses.Insert(0, statuses[0]);
-
-            updateStatusTimer.Start();
         }
 
         /// <summary>
@@ -295,77 +273,77 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void BlpComStatusesLoaded(object sender, StatusesLoadingEventArgs e)
+        private void BlpComStatusesLoaded(object sender, StatusesLoadingEventArgs e)
         {
-
-            //view.Statuses = 
-
-            IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
-            lock (lockLastStatus)
+            try
             {
-                //pierwszy status jest najnowszy
-                if (sts.Count > 0)
+                IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
+                lock (lockLastStatus)
                 {
-                    newestStatus = sts[0];
-                    
-                    //informacja że załadowano statusy
-                    statusesLoaded = true;
-                }
-            }
+                    //jeżeli pobrało jakieś statusu i pierwszy(najnowszy) ma id większe 
+                    //od dotychczaoswego to przypisz
+                    if (sts.Count > 0)
+                    {
+                        if (newestStatus == null || (sts[0].StatusId > newestStatus.StatusId))
+                            newestStatus = sts[0];
 
-            
-            
-            lock (lockQueue)
+                        //informacja że załadowano statusy
+                        statusesLoaded = true;
+                    }
+                    else
+                    {
+                        //jeżeli nie ma statusów lub najnowszy pobrany status ma id mniejsze
+                        //to można przerwać przetwarzanie gdyż one już są
+                        return;
+                    }
+                }
+                //ostatni ststus
+                StatusViewModel initStatus = sts[0];
+                sts.RemoveAt(0);
+
+
+                //blokujemy kolejką gdy dodajemy do niej nowe statusy,
+                //EnqueueStatuses(sts);
+
+
+                //jak najszybciej ustawiamy status na liście, aby użytkownik nie czekał
+                //aż zostaną przetworzone wszystkie statusy
+                var oneStatusList = new ObservableCollection<StatusViewModel>();
+                RetriveStatusHyperlinks(initStatus);
+                oneStatusList.Add(initStatus);
+
+                //inicjujemy listę statusów tylko jednym statusem, pozostałe będą dodawanie
+                //kolejno
+                view.Statuses = oneStatusList;
+
+                for (int i = 0; i < sts.Count; i++)
+                {
+                    RetriveStatusHyperlinks(sts[i]);
+                    view.AddStatus(sts[i], false);
+                }
+
+
+                //view.Statuses = new List<StatusViewModel>(sts);
+                view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
+
+                //uruchamiamy wątek z przetważaniem statusów
+
+                consumeStatusesThread = new Thread(ConsumeStatuses);
+                consumeStatusesThread.Start();
+
+                //uruchamiamy z normalnym czasem timer
+                StartListeningForUpdates(UpdateTime);
+            }
+            catch (Exception exeption)
             {
-                //tu nie musimy odwracać bo i tak dodajemy na koniec statusy
-                //dodajemy do kolejki od razu, lecz od drugiego statusu dopiero, pierwszy o indeksie 0
-                //w celu złudzenia przyspieszenia dodajemy od razu
-
-                for (int i = 1; i < sts.Count; i++)
-                {
-                    statusQueue.Enqueue(sts[i]);
-                }
-
-
-                //foreach (var st in sts)
-                //{
-                //    statusQueue.Enqueue(st);
-                //}
+                view.Error = exeption;
             }
-            //jak najszybciej ustawiamy pierwszy status na liście, aby użytkownik nie czekał
-            //aż zostaną przetworzone wszystkie statusy
-            var oneStatusList = new ObservableCollection<StatusViewModel>();
-            StatusViewModel initStatus = sts[0];
-            RetriveStatusHyperlinks(initStatus);
-            oneStatusList.Add(initStatus);
-
-            //inicjujemy listę statusów tylko jednym statusem, pozostałe będą dodawanie
-            //kolejno
-            view.Statuses = oneStatusList;
-
-            //chyba to już nie potrzebne będzie
-            //sts.RemoveAt(0);
-
-            
-
-            //parametr false - dodajemy na koniec statusy
-            AddStatusesWithHyperlinks(false);
-
-
-            //view.Statuses = new List<StatusViewModel>(sts);
-            view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
-
-            
-            //uruchamiamy z normalnym czasem timer
-            StartListeningForUpdates(UpdateTime);
-            
         }
 
 
-
+/*
         private void AddStatusesWithHyperlinks(bool insertAtBeginning)
         {
-
             int queueSize = 0;
             lock (lockQueue)
             {
@@ -374,7 +352,6 @@ namespace BlipFace.Presenter
 
                 while (queueSize > 0)
                 {
-
                     StatusViewModel status;
 
 
@@ -402,6 +379,7 @@ namespace BlipFace.Presenter
             //    view.AddStatus(status);
             //}
         }
+*/
 
         private void RetriveStatusHyperlinks(StatusViewModel status)
         {
@@ -409,7 +387,6 @@ namespace BlipFace.Presenter
 
             if (linkMatches.Count > 0)
             {
-
                 for (int i = 0; i < linkMatches.Count; i++)
                 {
                     var url = linkMatches[i].Value;
@@ -431,7 +408,6 @@ namespace BlipFace.Presenter
                     }
 
 
-
                     if (url.Contains("blip.pl"))
                     {
                         //gdy mamy do czynienia z blipnięciem cytowaniem
@@ -449,12 +425,9 @@ namespace BlipFace.Presenter
                             string blipContent = blpStat.User.Login + ": " + blpStat.Content;
                             status.Cites.Add(url, blipContent);
                         }
-
-
                     }
                     else if (url.Contains("rdir.pl"))
                     {
-
                         string originalLink = blpCom.GetShortLink(code);
                         if (!string.IsNullOrEmpty(originalLink))
                         {
@@ -465,9 +438,6 @@ namespace BlipFace.Presenter
                             }
                             status.Links.Add(url, originalLink);
                         }
-
-
-
                     }
                     else
                     {
@@ -480,80 +450,63 @@ namespace BlipFace.Presenter
                     }
                 }
             }
-
         }
 
 
-        //tworzy obiekt z informacjami o stanie połaćzenia z blipem
-        private TitleMessageViewModel SetConnectivityStatus(ConnectivityStatus connectivityStatus)
+        private void ConsumeStatuses()
         {
-            switch (connectivityStatus)
+            StatusViewModel status = null;
+
+            while (true)
             {
-                case ConnectivityStatus.Online:
-                    return new TitleMessageViewModel()
+                try
+                {
+                    lock (lockQueue)
                     {
-                        Title = AppMessages.OnlineTitle,
-                        Message = AppMessages.OnlineMessage
-                    };
-                case ConnectivityStatus.Offline:
+                        if (statusQueue.Count > 0)
+                        {
+                            status = statusQueue.Dequeue();
+                        }
+                    }
 
-                    return new TitleMessageViewModel()
+                    if (status == null)
                     {
-                        Title = AppMessages.OfflineTitle,
-                        Message = AppMessages.OfflineMessage
-                    };
+                        Thread.Sleep(5000);
+                        continue;
+                    }
 
-                default:
-                    return null;
-
+                    RetriveStatusHyperlinks(status);
+                    view.AddStatus(status, true);
+                    status = null;
+                }
+                catch (Exception exp)
+                {
+                    view.Error = exp;
+                }
             }
         }
+
 
         /// <summary>
         /// callback do zdarzenia gdy status zostanie dodany
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void BlpComStatusesAdded(object sender, EventArgs e)
+        private void BlpComStatusesAdded(object sender, EventArgs e)
         {
             //tylko powiadomienie że dodał 
             view.TextMessage = string.Empty;
             view.PicturePath = string.Empty;
-            //int lastIndex = lstbStatusList.Items.Count;
-            //if (view.Statuses != null)
-            //{
-            //    StatusViewModel lastStatus = view.Statuses[0] as StatusViewModel;
 
-            //    if (lastStatus != null)
-            //    {
-            //        LoadUserMainStatus(blipfaceUser.UserName);
-            //        UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
-            //    }
-            //}
 
             LoadUserMainStatus(blipfaceUser.UserName);
 
-            StatusViewModel lastStatus = GetLastStatus();
-
-
-            if (lastStatus != null)
-            {
-                
-                UpdateUserDashboard(blipfaceUser.UserName, lastStatus.StatusId);
-            }
-            else
-            {
-                //z powyższych nie udało się pobrać ostatniego statusu,
-                //więc pobieramy cały dashborad od nowa
-                LoadUserDashboard(blipfaceUser.UserName);
-            }
-
-
+            //aktualizujemy kokpit
+            LoadOrUpdateDashboard();
 
             //gdy licznik jest zatrzymany to go uruchamiamy
             updateStatusTimer.Start();
         }
-
 
 
         /// <summary>
@@ -561,7 +514,7 @@ namespace BlipFace.Presenter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void BlpComMainStatusLoaded(object sender, MainStatusLoadingEventArgs e)
+        private void BlpComMainStatusLoaded(object sender, MainStatusLoadingEventArgs e)
         {
             StatusViewModel sts = ViewModelHelper.MapToViewStatus(e.MainStatus);
 
@@ -573,10 +526,69 @@ namespace BlipFace.Presenter
             view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
         }
 
-
         #endregion
 
         #region Metody prywatne, pomocnicze
+
+        /// <summary>
+        /// W zależności od stanu ładuje cały kokpit lub aktualizuje go
+        /// </summary>
+        private void LoadOrUpdateDashboard()
+        {
+            int ststusId = 0;
+
+            //blokujemy dostęp do ostatniego statusu
+            lock (lockLastStatus)
+            {
+                if (newestStatus != null)
+                {
+                    //zczytujemy ostatnie ID
+                    ststusId = newestStatus.StatusId;
+                }
+            }
+
+            //jeśli udało się zczytać ostatnie id
+            if (ststusId > 0)
+            {
+                //ualtualinij dashboard
+                UpdateUserDashboard(blipfaceUser.UserName, ststusId);
+            }
+            else if (!statusesLoaded)
+            {
+                LoadUserDashboard(blipfaceUser.UserName);
+            }
+        }
+
+
+        /// <summary>
+        /// tworzy obiekt z informacjami o stanie połaćzenia z blipem
+        /// </summary>
+        /// <param name="connectivityStatus"></param>
+        /// <returns></returns>
+        private TitleMessageViewModel SetConnectivityStatus(ConnectivityStatus connectivityStatus)
+        {
+            switch (connectivityStatus)
+            {
+                case ConnectivityStatus.Online:
+                    return new TitleMessageViewModel()
+                               {
+                                   Title = AppMessages.OnlineTitle,
+                                   Message = AppMessages.OnlineMessage
+                               };
+                case ConnectivityStatus.Offline:
+
+                    return new TitleMessageViewModel()
+                               {
+                                   Title = AppMessages.OfflineTitle,
+                                   Message = AppMessages.OfflineMessage
+                               };
+
+                default:
+                    return null;
+            }
+        }
+
+
         /// <summary>
         /// Ustawia timer który odpytuje blipa czy pojawiły się nowe statusy
         /// </summary>
@@ -584,12 +596,9 @@ namespace BlipFace.Presenter
         private void StartListeningForUpdates(int updateInterval)
         {
             //start timera
-            updateStatusTimer.Interval = updateInterval * 1000; //time in milisconds
+            updateStatusTimer.Interval = updateInterval*1000; //time in milisconds
             updateStatusTimer.Enabled = true;
         }
-
-
-
 
 
         /// <summary>
@@ -611,7 +620,6 @@ namespace BlipFace.Presenter
         private void LoadUserDashboard(string user)
         {
             blpCom.GetUserDashboard(user, Limit);
-
         }
 
         /// <summary>
@@ -621,11 +629,11 @@ namespace BlipFace.Presenter
         /// <param name="since">od jakiego id mamy pobrać</param>
         private void UpdateUserDashboard(string user, int since)
         {
-            updateStatusTimer.Stop();
+            // updateStatusTimer.Stop();
 
             blpCom.GetUserDashboardSince(user, since);
-
         }
+
         #endregion
 
         #region Metody Publiczne
@@ -644,7 +652,7 @@ namespace BlipFace.Presenter
             //zatrzymujemy licznik czasu
 
 
-            updateStatusTimer.Stop();
+            // updateStatusTimer.Stop();
 
             blpCom.AddUpdateAsync(content);
         }
@@ -665,7 +673,7 @@ namespace BlipFace.Presenter
             //zatrzymujemy licznik czasu
             //updateStatusTimer.Enabled = false;
 
-            updateStatusTimer.Stop();
+            //updateStatusTimer.Stop();
             blpCom.AddUpdateAsync(content, pictureFileName);
         }
 
@@ -677,7 +685,6 @@ namespace BlipFace.Presenter
         /// <param name="position"></param>
         public void MakeCitation(StatusViewModel status, string text, int position)
         {
-
             StringBuilder blipLink = new StringBuilder("http://blip.pl", 26);
 
             if (status.Type == "DirectedMessage")
@@ -701,7 +708,6 @@ namespace BlipFace.Presenter
         /// <param name="messageText">dotychczasowa treść wiadomości</param>
         public void MakeDirectMessage(StatusViewModel status, string messageText)
         {
-
             //format wiadomości dla zwykłej odpowiedzia
             string userFormat = string.Format(">{0}:", status.UserLogin);
 
@@ -738,7 +744,6 @@ namespace BlipFace.Presenter
             //string blipMessage = Regex.Replace(messageText, @"^>>.*:", userFormat, RegexOptions.IgnoreCase);
 
             //view.TextMessage = blipMessage;
-
         }
 
         /// <summary>
@@ -770,12 +775,8 @@ namespace BlipFace.Presenter
             //string blipMessage = Regex.Replace(messageText, @"^>.*:", userFormat, RegexOptions.IgnoreCase);
 
             view.TextMessage = blipMessage;
-
         }
 
-
         #endregion
-
-
     }
 }

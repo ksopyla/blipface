@@ -153,7 +153,14 @@ namespace BlipFace.Presenter
 
         }
 
+       
+
         public event EventHandler<ActionsEventArgs> WorkDone;
+        public void Close()
+        {
+            
+            //nic nie robi
+        }
 
         #endregion
 

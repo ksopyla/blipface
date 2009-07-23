@@ -10,8 +10,10 @@ namespace BlipFace.Presenter
     {
         void SetView(IView view);
         void Init();
+       
         event EventHandler<ActionsEventArgs> WorkDone;
 
+        void Close();
     }
 
     public class ActionsEventArgs : EventArgs
@@ -36,6 +38,7 @@ namespace BlipFace.Presenter
     {
         Login,
         Statuses,
-        Configuration
+        Configuration,
+        Close
     } ;
 }

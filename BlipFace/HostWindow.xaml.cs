@@ -71,7 +71,10 @@ namespace BlipFace
 
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
         {
+
+            mgr.Close();
             this.Close();
+
         }
 
         private void NonRectangularWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

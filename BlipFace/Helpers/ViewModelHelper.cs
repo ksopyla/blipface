@@ -61,7 +61,12 @@ namespace BlipFace.Helpers
                     string avatarUrl = status.User.Avatar == null
                                            ? "http://static1.blip.pl/images/nn_nano.png?1240395130"
                                            : status.User.Avatar.Url50;
-                    string pictureUrl = status.Pictures == null ? string.Empty : status.Pictures[0].Url;
+                    string pictureUrl = string.Empty;
+                    if(status.Pictures!=null && status.Pictures.Count>0)
+                    {
+                        pictureUrl = status.Pictures[0].Url;
+                    }
+                    
 
                     statuses.Add(new StatusViewModel()
                                 {

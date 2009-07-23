@@ -73,7 +73,9 @@ namespace BlipFace.Service.Communication
         private readonly HttpClient blipHttpClient = new HttpClient("http://api.blip.pl/");
 
 
-
+        //todo: trochę to brzydko w kodzie coś na stałe wpisywać, do poprawy
+        private string userAgent= "BlipFace";
+        
 
         private string userLogin;
 
@@ -151,8 +153,13 @@ namespace BlipFace.Service.Communication
                 new Microsoft.Http.Headers.StringWithOptionalQuality("application/json"));
 
             //ustawienie nagłówka UserAgent - po tym blip rozpoznaje transport
-            blipHttpClient.DefaultHeaders.UserAgent.Add(
-                new Microsoft.Http.Headers.ProductOrComment("BlipFace v0.3"));
+            //blipHttpClient.DefaultHeaders.UserAgent.Add(
+            //    new Microsoft.Http.Headers.ProductOrComment("BlipFace v0.3"));
+
+
+            blipHttpClient.DefaultHeaders.Add("User-Agent", userAgent);
+            
+
         }
 
 
@@ -205,10 +212,12 @@ namespace BlipFace.Service.Communication
             /// zalogować
             string query = "updates?limit=1";
 
-            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
-            blipHttpClient.BeginSend(
-                new HttpRequestMessage("GET", query), new AsyncCallback(AfterValidate), blipHttpClient);
-
+            lock (httpClientLock)
+            {
+                //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+                blipHttpClient.BeginSend(
+                    new HttpRequestMessage("GET", query), new AsyncCallback(AfterValidate), blipHttpClient);
+            }
 
         }
 
@@ -355,11 +364,12 @@ namespace BlipFace.Service.Communication
         {
             string query = string.Format("updates?include=user,user[avatar]&amp;limit={0}", limit.ToString());
 
-
-            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
-            blipHttpClient.BeginSend(
-                new HttpRequestMessage("GET", query), new AsyncCallback(AfterGetUpdates), blipHttpClient);
-
+            lock (httpClientLock)
+            {
+                //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+                blipHttpClient.BeginSend(
+                    new HttpRequestMessage("GET", query), new AsyncCallback(AfterGetUpdates), blipHttpClient);
+            }
             //blipHttpClient.SendCompleted+=new EventHandler<SendCompletedEventArgs>(blipHttpClient_SendCompleted);
             //blipHttpClient.SendAsync(new HttpRequestMessage("GET",query);
 
@@ -380,11 +390,12 @@ namespace BlipFace.Service.Communication
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
 
 
-
-            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
-            blipHttpClient.BeginSend(
-                new HttpRequestMessage("GET", query), new AsyncCallback(AfterGetUpdates), blipHttpClient);
-
+            lock (httpClientLock)
+            {
+                //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+                blipHttpClient.BeginSend(
+                    new HttpRequestMessage("GET", query), new AsyncCallback(AfterGetUpdates), blipHttpClient);
+            }
         }
 
         /// <summary>
@@ -563,8 +574,11 @@ namespace BlipFace.Service.Communication
 
 
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
-            blipHttpClient.BeginSend(
-                new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserMainStatus), blipHttpClient);
+            lock (httpClientLock)
+            {
+                blipHttpClient.BeginSend(
+                    new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserMainStatus), blipHttpClient);
+            }
         }
 
         /// <summary>
@@ -670,11 +684,13 @@ namespace BlipFace.Service.Communication
             //stary sposób dodawania elementów
             //blipHttpClient.Post(query,HttpContent.Create(string.Format(@"body={0}",content)) );
 
-
-            //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
-            blipHttpClient.BeginSend(
-                new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
-                new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
+            lock (httpClientLock)
+            {
+                //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+                blipHttpClient.BeginSend(
+                    new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
+                    new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
+            }
         }
         /// <summary>
         /// Asynchronicznie dodaje status do blipa
@@ -703,11 +719,13 @@ namespace BlipFace.Service.Communication
 
                 form.Add("update[picture]", fileName, pic);
 
-                //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
-                blipHttpClient.BeginSend(
-                    new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
-                    new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
-
+                lock (httpClientLock)
+                {
+                    //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+                    blipHttpClient.BeginSend(
+                        new HttpRequestMessage("POST", new Uri(query, UriKind.Relative), form.CreateHttpContent()),
+                        new AsyncCallback(AfterAddStatusAsync), blipHttpClient);
+                }
             }
         }
 
@@ -807,15 +825,17 @@ namespace BlipFace.Service.Communication
 
 
             Uri query = new Uri(
-                string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar],recipient,recipient[avatar],,pictures",
+                string.Format("/users/{0}/dashboard/since/{1}?include=user,user[avatar],recipient,recipient[avatar],pictures",
                               user, since.ToString()), UriKind.Relative);
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
             //HttpQueryString query = new HttpQueryString();
 
             //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
-            blipHttpClient.BeginSend(
-                new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserDashboardSince), blipHttpClient);
-
+            lock (httpClientLock)
+            {
+                blipHttpClient.BeginSend(
+                    new HttpRequestMessage("GET", query), new AsyncCallback(AfterUserDashboardSince), blipHttpClient);
+            }
 
         }
 
@@ -936,9 +956,11 @@ namespace BlipFace.Service.Communication
         /// </summary>
         public void Connect()
         {
-            blipHttpClient.BeginSend(
-                 new HttpRequestMessage("GET", "/bliposphere?limit=1"), null, null);
-
+            lock (httpClientLock)
+            {
+                blipHttpClient.BeginSend(
+                    new HttpRequestMessage("GET", "/bliposphere?limit=1"), null, null);
+            }
         }
 
         public void ConnectAsync()

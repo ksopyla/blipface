@@ -82,7 +82,8 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" MouseLeftButtonDown="Window_MouseLeftButtonDown"
                     Background="Black">
         <TextBlock  Margin="20,0,0,10" VerticalAlignment="Bottom">
-            <Hyperlink x:Name="hypPictureUrl" FontSize="14" FontFamily="Verdana"  RequestNavigate="hypPictureUrl_RequestNavigate"
+            <Hyperlink x:Name="hypPictureUrl" FontSize="14" FontFamily="Verdana"  
+                       RequestNavigate="hypPictureUrl_RequestNavigate"
                         Foreground="Yellow" >
                 <TextBlock x:Name="tbUrlText" Text="Nie ustawiono adresu url" />
                 </Hyperlink>
