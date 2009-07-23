@@ -22,11 +22,11 @@ namespace BlipFace.View
     public partial class VideoViewWindow : Window
     {
         private static string embededFormat =
-            @"<object><param name=""allowFullScreen"" value=""true""></param>
+            @"<object width=""99%"" height=""99%"">
+<param name=""allowFullScreen"" value=""true""></param>
 <param name=""allowscriptaccess"" value=""always""></param>
 <embed src=""http://www.youtube.com/v/{0}"" type=""application/x-shockwave-flash"" allowscriptaccess=""always"" allowfullscreen=""true"" width=""99%"" height=""99%"">
 </embed></object>";
-
 
         private static Regex youtubeWatchKey = new Regex(@"v=([\w|-]*)[&\s]?");
 
@@ -44,8 +44,9 @@ namespace BlipFace.View
 
             string content = string.Format(embededFormat, videoKey);
 
-           // wbVideoView.NavigateToString(content);
+            wbVideoView.NavigateToString(content);
 
+            hypVideoUrl.NavigateUri = new Uri(videoUrl);
             tbUrlText.Text = videoUrl;
         }
 
@@ -56,14 +57,14 @@ namespace BlipFace.View
 
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
         {
-           // wbVideoView.NavigateToString("auto:blank");
+            // wbVideoView.NavigateToString("auto:blank");
             Close();
         }
 
 
         private void hypVideoUrl_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Hyperlink hl = (Hyperlink)sender;
+            Hyperlink hl = (Hyperlink) sender;
             string navigateUri = hl.NavigateUri.ToString();
 
 

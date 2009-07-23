@@ -71,11 +71,13 @@ namespace BlipFace.Presenter
         /// <summary>
         /// co ile czasu mamy aktualizować 
         /// </summary>
-        private const int UpdateTime = 20;
+        private const int UpdateTime = 10;
 
         private static readonly Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
         private readonly object lockQueue = new object();
 
+
+        private AutoResetEvent queueResetEvent = new AutoResetEvent(false);
 
         /// <summary>
         /// Konstruktor główny
@@ -194,9 +196,7 @@ namespace BlipFace.Presenter
             //gdy upłynie czas to pobierz status główny 
             LoadUserMainStatus(blipfaceUser.UserName);
 
-
             LoadOrUpdateDashboard();
-
 
             //trzeba tu uruchomić na nowo czasomierz, nie ma sensu w zdarzeniach bo 
             //gdy nic nie ma do pobrania to nie są wywoływane
@@ -215,15 +215,16 @@ namespace BlipFace.Presenter
             {
                 IList<StatusViewModel> sts = ViewModelHelper.MapToViewStatus(e.Statuses, blipfaceUser.UserName);
 
-
                 lock (lockLastStatus)
                 {
+                    if (sts.Count < 1)
+                        return;
+
                     //jeżeli pobrało jakieś statusu i pierwszy(najnowszy) ma id większe 
                     //od dotychczaoswego to przypisz
-                    if (sts.Count > 0)
+                    if (newestStatus == null || (sts[0].StatusId > newestStatus.StatusId))
                     {
-                        if (newestStatus == null || (sts[0].StatusId > newestStatus.StatusId))
-                            newestStatus = sts[0];
+                        newestStatus = sts[0];
                     }
                     else
                     {
@@ -266,6 +267,9 @@ namespace BlipFace.Presenter
                     statusQueue.Enqueue(sts[i]);
                 }
             }
+
+            //dajemy sygnał że można
+            queueResetEvent.Set();
         }
 
         /// <summary>
@@ -329,6 +333,7 @@ namespace BlipFace.Presenter
                 //uruchamiamy wątek z przetważaniem statusów
 
                 consumeStatusesThread = new Thread(ConsumeStatuses);
+                consumeStatusesThread.IsBackground = true;
                 consumeStatusesThread.Start();
 
                 //uruchamiamy z normalnym czasem timer
@@ -459,25 +464,36 @@ namespace BlipFace.Presenter
 
             while (true)
             {
+
+                queueResetEvent.WaitOne();
+                
+                    
+                
                 try
                 {
-                    lock (lockQueue)
+                    while (statusQueue.Count > 0)
                     {
-                        if (statusQueue.Count > 0)
+                        lock (lockQueue)
                         {
                             status = statusQueue.Dequeue();
+
+                            //if (statusQueue.Count > 0)
+                            //{
+                            //    status = statusQueue.Dequeue();
+                            //}
                         }
-                    }
 
-                    if (status == null)
-                    {
-                        Thread.Sleep(5000);
-                        continue;
-                    }
+                        //if (status == null)
+                        //{
+                        //    //czekamy połowę czasu co jaki aktualizujemy
+                        //    // Thread.Sleep(UpdateTime*1000/2);
+                        //    continue;
+                        //}
 
-                    RetriveStatusHyperlinks(status);
-                    view.AddStatus(status, true);
-                    status = null;
+                        RetriveStatusHyperlinks(status);
+                        view.AddStatus(status, true);
+                        status = null;
+                    }
                 }
                 catch (Exception exp)
                 {
@@ -683,7 +699,7 @@ namespace BlipFace.Presenter
         /// <param name="status"></param>
         /// <param name="text"></param>
         /// <param name="position"></param>
-        public void MakeCitation(StatusViewModel status, string text, int position)
+        public int MakeCitation(StatusViewModel status, string text, int position)
         {
             StringBuilder blipLink = new StringBuilder("http://blip.pl", 26);
 
@@ -698,6 +714,8 @@ namespace BlipFace.Presenter
             blipLink.Append(status.StatusId);
 
             view.TextMessage = text.Insert(position, blipLink.ToString());
+
+            return position + blipLink.ToString().Length;
         }
 
 

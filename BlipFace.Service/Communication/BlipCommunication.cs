@@ -335,10 +335,12 @@ namespace BlipFace.Service.Communication
 
 
             HttpResponseMessage resp;
-            lock (httpClientLock)
-            {
+            //lock (httpClientLock)
+            //{
+                //to może długo trwać, a przebywanie w lock
+                //za duługo może spowodować zakleszczenie 
                 resp = blipHttpClient.Get(query);
-            }
+            //}
 
             //sprawdzamy czy komunikacja się powiodła
             //todo: trochę to niebezpieczne, na razie to zostawiam
@@ -766,10 +768,10 @@ namespace BlipFace.Service.Communication
             {
                 //gdy wystąpiły jakieś błędy w komunikacji
                 state = BlipCommunicationState.CommunicationError;
-                httpCode = resp.StatusCode;
-                
+                if (resp != null) 
+                    httpCode = resp.StatusCode;
             }
-            //catch (HttpStageProcessingException timeEx)
+                //catch (HttpStageProcessingException timeEx)
             //{
             //    //gdy wystąpiły jakieś błędy w komunikacji
             //    if (CommunicationError != null)
@@ -969,16 +971,24 @@ namespace BlipFace.Service.Communication
             t.Start();
         }
 
+
+        /// <summary>
+        /// Pobiera prawdziwego linka dla podanego skrótu
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public string GetShortLink(string code)
         {
             string query = string.Format("shortlinks/{0}", code);
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
 
             HttpResponseMessage resp;
-            lock (httpClientLock)
-            {
+            //lock (httpClientLock)
+            //{
+                //to może długo trwać, a przebywanie w lock
+                //za duługo może spowodować zakleszczenie
                 resp = blipHttpClient.Get(query);
-            }
+            //}
 
             //sprawdzamy czy komunikacja się powiodła
             //todo: trochę to niebezpiecznie, na razie zostawiam

@@ -388,8 +388,15 @@ namespace BlipFace.View
             StatusViewModel status = (StatusViewModel) e.Parameter;
             int position = tbMessage.SelectionStart;
 
-            presenter.MakeCitation(status, tbMessage.Text, position);
-            SetTextBoxFocus();
+            int currentPosition =presenter.MakeCitation(status, tbMessage.Text, position);
+
+            if (tbMessage.Text.Length > 0)
+            {
+                tbMessage.Select(currentPosition , 0);
+            }
+            tbMessage.Focus();
+
+           
         }
 
 

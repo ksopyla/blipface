@@ -10,7 +10,7 @@
     <Grid x:Name="grPicBackground">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
             <RowDefinition Height="40"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -64,14 +64,15 @@
             </Button>
         </Canvas>
         
-        <!--
+        
         <WebBrowser Grid.Row="1"  x:Name="wbVideoView" MinHeight="200" MinWidth="200"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch" 
                Margin="0"
                    
          />
-        -->
+       
+       
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Background="Black">
             <TextBlock  Margin="20,0,0,10" VerticalAlignment="Bottom">
