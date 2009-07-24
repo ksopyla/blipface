@@ -871,7 +871,8 @@ namespace BlipFace.Service.Communication
 
                 //deserializujemy z json
 
-               
+                //todo: do usunięcia testowo opóźniam przetworzenie żadania
+                //Thread.Sleep(10*1000);
 
                 if (resp.Content.GetLength() > 2)
                 {

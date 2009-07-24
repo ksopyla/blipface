@@ -464,11 +464,9 @@ namespace BlipFace.Presenter
 
             while (true)
             {
-
                 queueResetEvent.WaitOne();
-                
-                    
-                
+
+
                 try
                 {
                     while (statusQueue.Count > 0)
@@ -490,10 +488,14 @@ namespace BlipFace.Presenter
                         //    continue;
                         //}
 
-                        RetriveStatusHyperlinks(status);
+                        if (view.Statuses[0].StatusId < status.StatusId)
+                        {
+                            RetriveStatusHyperlinks(status);
 
-                        
-                        view.AddStatus(status, true);
+
+                            view.AddStatus(status, true);
+                        }
+
                         status = null;
                     }
                 }

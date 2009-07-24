@@ -316,6 +316,12 @@ namespace BlipFace.View
                         }), statuses);
         }
 
+
+        /// <summary>
+        /// Dodaje status do listy w widoku
+        /// </summary>
+        /// <param name="statusView">status</param>
+        /// <param name="insertAtBeginning">czy dodać na początek czy na koniec listy</param>
         public void AddStatus(StatusViewModel statusView, bool insertAtBeginning)
         {
             Dispatcher.Invoke(
@@ -328,10 +334,10 @@ namespace BlipFace.View
                             //jeśli zawiera już ten status to 
                             //go nie dodajemy ponownie, czasami pobierze podwójnie 
                             //ten sam wpis
-                            if(currentList.Contains(status))
-                            {
-                                return;
-                            }
+                            //if(currentList.Contains(status))
+                            //{
+                            //    return;
+                            //}
 
                             if (insertAtBeginning)
                             {
