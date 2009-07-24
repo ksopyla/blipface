@@ -26,7 +26,7 @@ namespace BlipFace.View
         private const int BlipSize = 160;
         private int charLeft = BlipSize;
 
-        object  statusListLock = new object();
+        private object statusListLock = new object();
 
         private string pictureFilePath = string.Empty;
 
@@ -210,13 +210,10 @@ namespace BlipFace.View
         //todo: to może powinno być jako StatusViewModel
 
         private StatusViewModel mainStatus;
+
         public StatusViewModel MainStatus
         {
-            get
-            {
-
-                return mainStatus;
-            }
+            get { return mainStatus; }
             set
             {
                 //status będzie ustawiany asynchronicznie przez prezetnera
@@ -302,19 +299,18 @@ namespace BlipFace.View
                 new Action<IList<StatusViewModel>>(
                     delegate(IList<StatusViewModel> statusesList)
                         {
-
-                               // var currentList = lstbStatusList.ItemsSource as ObservableCollection<StatusViewModel>;
+                            // var currentList = lstbStatusList.ItemsSource as ObservableCollection<StatusViewModel>;
                             var currentList = lstbStatusList.ItemsSource as IList<StatusViewModel>;
-                                for (int i = statusesList.Count - 1; i >= 0; i--)
-                                {
-                                    currentList.Insert(0, statusesList[i]);
-                                }
+                            for (int i = statusesList.Count - 1; i >= 0; i--)
+                            {
+                                currentList.Insert(0, statusesList[i]);
+                            }
 
-                                //for (int i =0 ; i <statusesList.Count; i++)
-                                //{
-                                //    currentList.Insert(0, statusesList[i]);
-                                //}
-                           
+                            //for (int i =0 ; i <statusesList.Count; i++)
+                            //{
+                            //    currentList.Insert(0, statusesList[i]);
+                            //}
+
                             //todo:to tak testowo
                             FlashMainWindow(Window.GetWindow(this.Parent), true);
                         }), statuses);
@@ -325,23 +321,29 @@ namespace BlipFace.View
             Dispatcher.Invoke(
                 new Action<StatusViewModel>(
                     delegate(StatusViewModel status)
-                    {
-
-                        var currentList = lstbStatusList.ItemsSource as IList<StatusViewModel>;
-                        //currentList.Insert(0, status);
-
-                        if(insertAtBeginning)
                         {
-                            currentList.Insert(0, status);
-                        }
-                        else
-                        {
+                            var currentList = lstbStatusList.ItemsSource as IList<StatusViewModel>;
+                            //currentList.Insert(0, status);
 
-                        currentList.Add(status);
-                        }
-                        //todo:to tak testowo
-                        FlashMainWindow(Window.GetWindow(this.Parent), true);
-                    }), statusView);
+                            //jeśli zawiera już ten status to 
+                            //go nie dodajemy ponownie, czasami pobierze podwójnie 
+                            //ten sam wpis
+                            if(currentList.Contains(status))
+                            {
+                                return;
+                            }
+
+                            if (insertAtBeginning)
+                            {
+                                currentList.Insert(0, status);
+                            }
+                            else
+                            {
+                                currentList.Add(status);
+                            }
+                            //todo:to tak testowo
+                            FlashMainWindow(Window.GetWindow(this.Parent), true);
+                        }), statusView);
         }
 
 
@@ -388,15 +390,13 @@ namespace BlipFace.View
             StatusViewModel status = (StatusViewModel) e.Parameter;
             int position = tbMessage.SelectionStart;
 
-            int currentPosition =presenter.MakeCitation(status, tbMessage.Text, position);
+            int currentPosition = presenter.MakeCitation(status, tbMessage.Text, position);
 
             if (tbMessage.Text.Length > 0)
             {
-                tbMessage.Select(currentPosition , 0);
+                tbMessage.Select(currentPosition, 0);
             }
             tbMessage.Focus();
-
-           
         }
 
 
@@ -435,12 +435,11 @@ namespace BlipFace.View
 
         private void ShowPicture_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
             BigPictureWindow w = new BigPictureWindow();
 
-           
-            w.PictureSource = ((Image)e.Parameter).Source;
-            w.PictureUrl = (string)((Image)e.Parameter).Tag;
+
+            w.PictureSource = ((Image) e.Parameter).Source;
+            w.PictureUrl = (string) ((Image) e.Parameter).Tag;
             w.Show();
         }
 
@@ -449,14 +448,12 @@ namespace BlipFace.View
             string videoUrl = (string) e.Parameter;
 
             VideoViewWindow vw = new VideoViewWindow(videoUrl);
-            
-            vw.Show();
 
+            vw.Show();
         }
 
         private void Navigate_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
             //Hyperlink hl = (Hyperlink)sender;
             //string navigateUri = hl.NavigateUri.ToString();
 
@@ -464,6 +461,7 @@ namespace BlipFace.View
             Process.Start(new ProcessStartInfo(navigateUri));
             e.Handled = true;
         }
+
         #endregion
 
         #region metody prywatne
@@ -494,12 +492,6 @@ namespace BlipFace.View
         }
 
         #endregion
-
-     
-
-       
-
-       
 
         #region IStatusesView Members
 

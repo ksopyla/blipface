@@ -871,6 +871,8 @@ namespace BlipFace.Service.Communication
 
                 //deserializujemy z json
 
+               
+
                 if (resp.Content.GetLength() > 2)
                 {
                     statuses = resp.Content.ReadAsJsonDataContract<StatusesList>();

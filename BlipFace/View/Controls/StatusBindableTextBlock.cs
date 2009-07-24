@@ -130,7 +130,7 @@ namespace BlipFace.View.Controls
                     Hyperlink h;
 
                     string linkUrl = linkMatches[k].Value;
-                    if (linkUrl.StartsWith("http://blip.pl"))
+                    if (linkUrl.Contains("blip.pl"))
                     {
                         //link do cytowania blipa
                         rlink = "[blip]";

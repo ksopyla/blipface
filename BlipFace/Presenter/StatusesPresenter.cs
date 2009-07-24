@@ -71,13 +71,13 @@ namespace BlipFace.Presenter
         /// <summary>
         /// co ile czasu mamy aktualizować 
         /// </summary>
-        private const int UpdateTime = 10;
+        private const int UpdateTime = 15;
 
         private static readonly Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
         private readonly object lockQueue = new object();
 
 
-        private AutoResetEvent queueResetEvent = new AutoResetEvent(false);
+        private readonly AutoResetEvent queueResetEvent = new AutoResetEvent(false);
 
         /// <summary>
         /// Konstruktor główny
@@ -491,6 +491,8 @@ namespace BlipFace.Presenter
                         //}
 
                         RetriveStatusHyperlinks(status);
+
+                        
                         view.AddStatus(status, true);
                         status = null;
                     }

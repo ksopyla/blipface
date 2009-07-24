@@ -41,32 +41,7 @@ namespace BlipFace.Model
 
         public string FirstPictureUrl { get; set; }
 
-        /*
-        private string recipientAvatar50;
-        public string RecipientAvatar50 { 
-            get
-            {
-                return recipientAvatar50;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    //jeśli RecipientAvatar50 jest ustawiony na łańcuch pusty 
-                    //to dodatkow ustawiamy właściwość czy ma odbirorcę na false
-                    //przydatne to jest przy bindowaniu do kontrolki wyświetlającej
-                    //listę statusów i Avatar drugiego użytkownika
-                    HasRecipient = false;
-                    
-                }
-                else
-                {
-                    HasRecipient = true;
-                }
-                recipientAvatar50 = value;
-            }
-        }*/
-
+        
         public string RecipientAvatar50 { get; set; }
 
         public bool HasRecipient { get; set; }
@@ -93,7 +68,20 @@ namespace BlipFace.Model
         /// Słownik cytowań innych użytkowników blipLing=>message
         /// </summary>
         public Dictionary<string, string> Cites { get; set; }
-        
+
+
+        public override bool Equals(object obj)
+        {
+            StatusViewModel other = (StatusViewModel) obj;
+
+            bool test = this.StatusId == other.StatusId;
+
+            return test;
+
             
+        }
+
+
+       
     }
 }
