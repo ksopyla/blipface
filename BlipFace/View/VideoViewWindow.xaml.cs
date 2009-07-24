@@ -57,7 +57,7 @@ namespace BlipFace.View
 
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
         {
-            // wbVideoView.NavigateToString("auto:blank");
+            wbVideoView.NavigateToString("auto:blank");
             Close();
         }
 
