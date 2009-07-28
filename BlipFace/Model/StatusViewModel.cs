@@ -13,7 +13,7 @@ namespace BlipFace.Model
         /// <summary>
         /// Identyfikator statusu
         /// </summary>
-        public int StatusId { get; set; }
+        public uint StatusId { get; set; }
 
         public string UserId { get; set; }
 

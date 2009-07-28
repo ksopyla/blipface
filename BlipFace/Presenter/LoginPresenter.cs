@@ -60,7 +60,8 @@ namespace BlipFace.Presenter
         void ComCantCommunicate(object sender, CommunicationErrorEventArgs e)
         {
             _view.Authorize = false;
-            _view.Error = e.Message;
+
+            _view.Error = "Nie mogę się połączyć z blipem, HttpCode="+e.Message;
         }
 
 
@@ -74,7 +75,15 @@ namespace BlipFace.Presenter
             _view.Authorize = false;
 
             //przekazujemy wyjątek dalej
-            throw e.Error;
+
+            string msg = e.Error.Message;
+
+            if(string.IsNullOrEmpty(msg))
+            {
+                msg = "Bład połączenia";
+            }
+            _view.Error = msg;
+            //throw e.Error;
 
         }
 
