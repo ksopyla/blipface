@@ -1,35 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?define ProductName = "BlipFace"?>
 <?define ProductVersion = "0.4.0.0"?>
-<?define UpgradeCode = "d08a32ee-27fd-420d-b047-8df62e4c23b1"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="65ab0f9d-cb87-48bb-bd13-42699f83a111" 
+<?define UpgradeCode = "966bfcd3-305f-4eef-8b19-a001b6bee2dc"?>
+<!--Guidy from http://www.guidgen.com/Index.aspx-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" 
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+     >
+  <Product Id="7c8fc5d0-7ed9-410d-9aab-4e059486f2e5" 
            Name="$(var.ProductName)" 
            Language="1045" 
            Version="$(var.ProductVersion)" 
            Manufacturer="BlipFace.pl" 
            UpgradeCode="$(var.UpgradeCode)"
            >
-		<Package InstallerVersion="200" Compressed="yes" />
+		<Package InstallerVersion="300" Compressed="yes" />
 
 		<Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
 
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLLOCATION" Name="$(var.ProductName)">
-					<Component Id="BlipFaceMainComponent" Guid="c50c995c-726e-4894-90d6-c8c82fc2c383">
-            <File Id="F_BlipFaceExe" Source="$(var.BlipFace.TargetDir)\BlipFace.exe"/>
-					</Component>
+					
 				</Directory>
 			</Directory>
+
+      <Directory Id="DesktopFolder"/>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="D_MenuStartProduct" Name="$(var.ProductName)"/>
+        <!--
+        <Directory Id="D_MenuStartManufacturer" Name="$(var.Manufacturer)">
+          <Directory Id="D_MenuStartProduct" Name="$(var.ProductName)"/>
+        </Directory>
+        -->
+      </Directory>
+      
 		</Directory>
 
-		<Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
+    <DirectoryRef Id="INSTALLLOCATION">
+      <Component Id="BlipFaceMainComponent" Guid="c50c995c-726e-4894-90d6-c8c82fc2c383">
+        <!-- lista zmiennych http://wix.sourceforge.net/manual-wix3/votive_project_references.htm-->
+        <File Id="F_BlipFaceExe" Source="$(var.BlipFace.TargetDir)\BlipFace.exe"/>
+        <File Id="F_BlipFaceExeCommunication" Source="$(var.BlipFace.TargetDir)\BlipFace.Service.dll"/>
+        <File Id="F_WcfRestHttp" Source="$(var.BlipFace.TargetDir)\Microsoft.Http.dll"/>
+        <File Id="F_WcfRestHttpExtension" Source="$(var.BlipFace.TargetDir)\Microsoft.Http.Extensions.dll"/>
+        <!-- File Id="F_BlipFaceIco" Source="$(var.SolutionDir)\BlipFace\Resource\Img\blipFace.ico"/ -->
+        <File Id="F_BlipFaceLicens" Source="$(var.SolutionDir)\BlipFace.WixInstall\License.rtf"/>
+        
+
+        <Shortcut Id="S_MenuStartShortcut" Name="BlipFace" Advertise="yes" 
+                  Directory="D_MenuStartProduct" 
+                  Icon="I_BlipFace.exe"/>
+
+        <RemoveFolder Id="R_MenuStartProduct" 
+                      Directory="D_MenuStartProduct" On="uninstall"/>
+        <Shortcut Id="S_DesktopShortcut" Name="BlipFace" Description="Klient do serwisu blip.pl" 
+                  Advertise="yes" Directory="DesktopFolder" 
+                  Icon="I_BlipFace.exe"/>
+        
+      </Component>
+      
+    </DirectoryRef>
+
+    <!-- ikona blipface'a-->
+    <Icon Id="I_BlipFace.exe" 
+          SourceFile="$(var.SolutionDir)BlipFace\bin\$(var.Configuration)\BlipFace.exe"/>
+
+       <!--ikona w dodaj usuń programy-->
+    <Property Id="ARPPRODUCTICON" Value="I_BlipFace.exe" />
+       <!--Instaluj dla wszystkich użytkowników-->
+    <Property Id="ALLUSERS"><![CDATA[2]]></Property>
+       
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" />
+    
+    <UIRef Id="WixUI_InstallDir" />
+    
+    <!-- UIRef Id="WixUI_Mondo"/ -->
+    
+    <!--moja licencja -->
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
+    
+    <PropertyRef Id="NETFRAMEWORK35"/>
+    <Condition Message=".NET Framework w wersji 3.5 Service Pack 1 musi być zainstalowany">
+      NETFRAMEWORK35
+
+      <!-- [CDATA[Installed OR (NETFRAMEWORK35_SP_LEVEL and NOT NETFRAMEWORK35_SP_LEVEL = "#0")]] -->
+    </Condition>
+       
+    <Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
 			<ComponentRef Id="BlipFaceMainComponent" />
 		</Feature>
 
-    <UIRef Id="WixUI_Mondo"/>
-    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
-    <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
+    
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion Language="1045"  Minimum="0.0.1"
+                      IncludeMinimum="yes"
+                      Maximum="$(var.ProductVersion)"
+                      IncludeMaximum="no"
+                      Property="OLDAPPFOUND" />
+     
+    </Upgrade>
+    
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize"/>
+    </InstallExecuteSequence>
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion Language="1045"  
+                      Minimum="$(var.ProductVersion)"
+                      OnlyDetect="yes"
+                      Property="NEWERVERSIONDETECTED" />
+    </Upgrade>
+    
+    <CustomAction Id="PreventDowngrading"
+                  Error="Najnowsza wersja jest już zainstalowana." />
+    
+    <InstallExecuteSequence>
+    <Custom Action="PreventDowngrading" 
+            After="FindRelatedProducts">NEWERVERSIONDETECTED</Custom>
+          </InstallExecuteSequence>
+    <InstallUISequence>
+      <Custom Action="PreventDowngrading"
+         After="FindRelatedProducts">NEWERVERSIONDETECTED</Custom>
+      
+    </InstallUISequence>
+    <!--CustomActionRef Id="WixExitEarlyWithSuccess"/ -->
+
   </Product>
 </Wix>
