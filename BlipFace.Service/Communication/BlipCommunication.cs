@@ -86,6 +86,8 @@ namespace BlipFace.Service.Communication
         /// </summary>
         private object httpClientLock = new object();
 
+        private TimeSpan WebGetTimout = TimeSpan.FromSeconds(10);
+
         /// <summary>
         /// Konstruktor, ustawia dane do autentykacji, oraz niezbędne
         /// nagłówki do komunikacji z blipem
@@ -138,7 +140,7 @@ namespace BlipFace.Service.Communication
             System.Net.ServicePointManager.Expect100Continue = false;
 
             blipHttpClient.TransportSettings.ConnectionTimeout = new TimeSpan(0, 30, 0);
-            blipHttpClient.TransportSettings.ReadWriteTimeout= new TimeSpan(0,15,0);
+            blipHttpClient.TransportSettings.ReadWriteTimeout = new TimeSpan(0, 15, 0);
 
 
             blipHttpClient.DefaultHeaders.Add("X-Blip-API", "0.02");
@@ -147,7 +149,7 @@ namespace BlipFace.Service.Communication
             blipHttpClient.DefaultHeaders.Accept.Add(
                 new Microsoft.Http.Headers.StringWithOptionalQuality("application/json"));
 
-            
+
             blipHttpClient.DefaultHeaders.Add("User-Agent", userAgent);
         }
 
@@ -242,13 +244,11 @@ namespace BlipFace.Service.Communication
 
                         validate = true;
                     }
-                    
                 }
             }
             catch (ArgumentOutOfRangeException aorEx)
             {
                 state = BlipCommunicationState.CommunicationError;
-                
             }
             catch (Exception ex)
             {
@@ -317,25 +317,105 @@ namespace BlipFace.Service.Communication
             string query = string.Format("updates/{0}?include=user", id);
 
 
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = null;
+            BlipStatus status = null;
 
+            EventWaitHandle waitHandle = new AutoResetEvent(false);
             try
             {
                 //lock (httpClientLock)
                 //{
                 //to może długo trwać, a przebywanie w lock
                 //za duługo może spowodować zakleszczenie 
-                resp = blipHttpClient.Get(query);
+
+                
+
+                ThreadPool.QueueUserWorkItem(
+                    c =>
+                        {
+                            resp = blipHttpClient.Get(query);
+                            waitHandle.Set();
+                        }
+                    );
+
+                waitHandle.WaitOne(WebGetTimout);
+               
+                
+                ////Register the timeout callback
+                //ThreadPool.RegisterWaitForSingleObject(
+                //    waitHandle,
+                //    delegate(object state, bool timeout)
+                //    {
+                //        if (timeout)
+                //        {
+                //            resp = null;
+                //            return;
+                //        }
+                //    },
+                //    null,
+                //    TimeSpan.FromSeconds(10), // 30 second timeout
+                //    true
+                //    );
+
+                if (resp != null && resp.StatusCode == HttpStatusCode.OK)
+                {
+                    status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
+                }
+             
+               
+                /*
+                 * 
+                IAsyncResult asyncResult;
+                lock (httpClientLock)
+                {
+                    //jako state przekazujemy cały obiekt,aby można było pobrać później z niego ResponseMessage
+                    asyncResult = blipHttpClient.BeginSend(
+                        new HttpRequestMessage("GET", query),
+                        delegate(IAsyncResult async)
+                            {
+                                lock (httpClientLock)
+                                {
+                                    resp = blipHttpClient.EndSend(async);
+                                }
+
+                                if (resp != null &&
+                                    resp.StatusCode == HttpStatusCode.OK)
+                                {
+                                    status =resp.Content.ReadAsJsonDataContract<BlipStatus>();
+                                }
+                            }
+                        , null);
+                }
+
+
+                //Register the timeout callback
+                ThreadPool.RegisterWaitForSingleObject(
+                    asyncResult.AsyncWaitHandle,
+                    delegate(object state, bool timeout)
+                        {
+                            if (timeout)
+                            {
+                                resp = null;
+                                return;
+                            }
+                        },
+                    asyncResult,
+                    TimeSpan.FromSeconds(15), // 30 second timeout
+                    true
+                    );
+                */
+
+                //resp = blipHttpClient.Get(query);
                 //}
 
                 //sprawdzamy czy komunikacja się powiodła
                 //todo: trochę to niebezpieczne, na razie to zostawiam
 
-                if (resp.StatusCode == HttpStatusCode.OK)
-                {
-                    var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
-                    return status;
-                }
+                //if (resp!=null && resp.StatusCode == HttpStatusCode.OK)
+                //{
+                //    var status = resp.Content.ReadAsJsonDataContract<BlipStatus>();
+                //    return status;
+                //}
             }
             catch (Exception)
             {
@@ -343,7 +423,8 @@ namespace BlipFace.Service.Communication
                 return null;
             }
 
-            return null;
+            
+            return status;
         }
 
 
@@ -497,7 +578,7 @@ namespace BlipFace.Service.Communication
             catch (ArgumentOutOfRangeException aorEx)
             {
                 state = BlipCommunicationState.CommunicationError;
-                
+
                 //gdy wystąpiły jakieś błędy w komunikacji
             }
                 //catch (HttpStageProcessingException timeEx)
@@ -791,7 +872,6 @@ namespace BlipFace.Service.Communication
             }
         }
 
-        
 
         /// <summary>
         /// Asynchronicznie pobiera pulpit użytkownika od zadanego updatu,
@@ -800,12 +880,12 @@ namespace BlipFace.Service.Communication
         /// <param name="user">login użytkownika</param>
         /// <param name="since">id statusu od którego należy pobrać nowsze wpisy</param>
         /// <param name="limit"></param>
-        public void GetUserDashboardSince(string user, uint since,int limit)
+        public void GetUserDashboardSince(string user, uint since, int limit)
         {
             Uri query = new Uri(
                 string.Format(
                     "/users/{0}/dashboard/since/{1}?include=user,user[avatar],recipient,recipient[avatar],pictures&amp;limit={2}",
-                    user, since,limit ), UriKind.Relative);
+                    user, since, limit), UriKind.Relative);
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
             //HttpQueryString query = new HttpQueryString();
 
@@ -952,23 +1032,34 @@ namespace BlipFace.Service.Communication
             string query = string.Format("shortlinks/{0}", code);
             //todo: zamiast query stringa w postaci stringa to lepiej zastosować klasę HttpQueryString
 
-            HttpResponseMessage resp;
-
+            HttpResponseMessage resp= null;
+            string link = null;
+            EventWaitHandle waitHandle = new AutoResetEvent(false);
             try
             {
                 //lock (httpClientLock)
                 //{
                 //to może długo trwać, a przebywanie w lock
                 //za duługo może spowodować zakleszczenie
-                resp = blipHttpClient.Get(query);
+               // resp = blipHttpClient.Get(query);
                 //}
+                ThreadPool.QueueUserWorkItem(
+                   c =>
+                   {
+                       resp = blipHttpClient.Get(query);
+                       waitHandle.Set();
+                   }
+                   );
+
+                waitHandle.WaitOne(WebGetTimout);
+
 
                 //sprawdzamy czy komunikacja się powiodła
                 //todo: trochę to niebezpiecznie, na razie zostawiam
-                if (resp.StatusCode == HttpStatusCode.OK)
+                if (resp!=null &&resp.StatusCode == HttpStatusCode.OK)
                 {
-                    var link = resp.Content.ReadAsJsonDataContract<BlipShortLink>();
-                    return link.OriginalLink;
+                   var blipLink = resp.Content.ReadAsJsonDataContract<BlipShortLink>();
+                    link = blipLink.OriginalLink;
                 }
             }
             catch (Exception)
@@ -978,9 +1069,11 @@ namespace BlipFace.Service.Communication
                 return null;
             }
 
-            //jeśli nie uda się pobrać linka to zwróć null
-            return null;
+            //zwróc link, nie ważcne czy będzie null czy miał ustawioną wartość
+            return link;
         }
+
+        
     }
 
     internal enum BlipCommunicationState

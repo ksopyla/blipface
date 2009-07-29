@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?define ProductName = "BlipFace"?>
-<?define ProductVersion = "1.0.0.0"?>
+<?define ProductVersion = "0.4.0.0"?>
 <?define UpgradeCode = "d08a32ee-27fd-420d-b047-8df62e4c23b1"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="65ab0f9d-cb87-48bb-bd13-42699f83a111" 
            Name="$(var.ProductName)" 
            Language="1045" 
            Version="$(var.ProductVersion)" 
-           Manufacturer="BlipFace.WixInstall" 
+           Manufacturer="BlipFace.pl" 
            UpgradeCode="$(var.UpgradeCode)"
            >
 		<Package InstallerVersion="200" Compressed="yes" />
@@ -29,5 +29,7 @@
 		</Feature>
 
     <UIRef Id="WixUI_Mondo"/>
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
   </Product>
 </Wix>
