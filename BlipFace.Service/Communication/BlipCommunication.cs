@@ -323,17 +323,23 @@ namespace BlipFace.Service.Communication
             EventWaitHandle waitHandle = new AutoResetEvent(false);
             try
             {
-                //lock (httpClientLock)
-                //{
-                //to może długo trwać, a przebywanie w lock
-                //za duługo może spowodować zakleszczenie 
-
-                
 
                 ThreadPool.QueueUserWorkItem(
                     c =>
                         {
+                            //po testach wydaje się że ten lock nie potrzebny
+
+                            //lock (httpClientLock)
+                            //{
+                            //    //to może długo trwać, a przebywanie w lock
+                            //    //za duługo może spowodować zakleszczenie 
+                            //    resp = blipHttpClient.Get(query);
+                            //}
+
+                            //to może długo trwać, a przebywanie w lock
+                            //za duługo może spowodować zakleszczenie 
                             resp = blipHttpClient.Get(query);
+                            
                             waitHandle.Set();
                         }
                     );
@@ -829,14 +835,6 @@ namespace BlipFace.Service.Communication
                 if (resp != null)
                     httpCode = resp.StatusCode;
             }
-                //catch (HttpStageProcessingException timeEx)
-                //{
-                //    //gdy wystąpiły jakieś błędy w komunikacji
-                //    if (CommunicationError != null)
-                //    {
-                //        CommunicationError(this, new CommunicationErrorEventArgs());
-                //    }
-                //}
             catch (Exception ex)
             {
                 state = BlipCommunicationState.Error;
@@ -1037,16 +1035,18 @@ namespace BlipFace.Service.Communication
             EventWaitHandle waitHandle = new AutoResetEvent(false);
             try
             {
-                //lock (httpClientLock)
-                //{
-                //to może długo trwać, a przebywanie w lock
-                //za duługo może spowodować zakleszczenie
-               // resp = blipHttpClient.Get(query);
-                //}
                 ThreadPool.QueueUserWorkItem(
                    c =>
                    {
-                       resp = blipHttpClient.Get(query);
+                       //po testach wydaje się że ten lock nie potrzebny
+                       //lock (httpClientLock)
+                       //{
+                       //    resp = blipHttpClient.Get(query);
+                       //}
+
+                       //to może długo trwać, a przebywanie w lock
+                       //za duługo może spowodować zakleszczenie
+                       // resp = blipHttpClient.Get(query);
                        waitHandle.Set();
                    }
                    );
