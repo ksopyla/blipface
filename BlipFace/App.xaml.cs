@@ -17,6 +17,8 @@ namespace BlipFace
         {
             base.OnStartup(e);
             Dispatcher.UnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Dispatcher_UnhandledException);
+
+
         }
 
         void Dispatcher_UnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

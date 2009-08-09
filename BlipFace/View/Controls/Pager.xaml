@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="BlipFace.View.Controls.Pager"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    >
+    <Grid  Margin="0" MinHeight="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="70"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" x:Name="lblPrevious"  Style="{StaticResource SmallWhite}"
+               DockPanel.Dock="Left"  Text="Poprzednia" 
+               HorizontalAlignment="Left" VerticalAlignment="Center"
+                   MouseLeftButtonUp="DecreasePageIndex" />
+
+
+        <StackPanel Grid.Column="1" Margin="9,0" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <TextBlock x:Name="tblCurrentPage" Style="{StaticResource SmallWhite}" Text="Strona: 1" />
+
+
+        </StackPanel>
+        <TextBlock Grid.Column="2" x:Name="lblNext" DockPanel.Dock="Right"  Style="{StaticResource SmallWhite}"
+               Text="Następna" HorizontalAlignment="Right" VerticalAlignment="Center"
+               MouseLeftButtonUp="IncPageIndex" />
+    </Grid>
+</UserControl>

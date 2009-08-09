@@ -4,7 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helper="clr-namespace:BlipFace.Helpers"
-    xmlns:Controls="clr-namespace:BlipFace.View.Controls"
+    xmlns:viewCtrl="clr-namespace:BlipFace.View.Controls"
 	mc:Ignorable="d"
 	x:Class="BlipFace.View.StatusListControl"
     
@@ -13,22 +13,24 @@
     x:Name="StatusList"
     Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto"
     >
-    
-    
+
+
     <UserControl.CommandBindings>
         <CommandBinding Command="helper:StatusesCommands.CiteUser" Executed="CiteUser_Executed" />
-        
+
         <CommandBinding Command="helper:StatusesCommands.DirectMessage" Executed="DirectMessage_Executed" />
-        
+
         <CommandBinding Command="helper:StatusesCommands.PrivateMessage" 
                         Executed="PrivateMessage_Executed" />
 
         <CommandBinding Command="helper:StatusesCommands.ShowPicture" 
                         Executed="ShowPicture_Executed" />
-        
+
         <CommandBinding Command="helper:StatusesCommands.ShowVideo"  Executed="ShowVideo_Executed" />
-            
-        <CommandBinding Command="helper:StatusesCommands.Navigate"  Executed="Navigate_Executed" />
+
+        <CommandBinding  Command="helper:StatusesCommands.Navigate"  Executed="Navigate_Executed" />
+        
+        <CommandBinding Command="helper:StatusesCommands.ToggleButtons" Executed="ToggleButtons_Executed"/>
     </UserControl.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -37,25 +39,27 @@
         <Grid.RowDefinitions>
             <!--Główny status użytkownika-->
             <RowDefinition Height="Auto" MinHeight="80"/>
-           <!--Lista statusów-->
+            <!--Lista statusów-->
             <RowDefinition Height="*" MinHeight="200"/>
+            <!--paginacja do listy-->
+            <RowDefinition Height="Auto"/>
             <!--Panel do dodawania statusów-->
             <RowDefinition  Height="Auto"/>
-            
+
             <!--Status online offline-->
-            <RowDefinition Height="25"/>
-            
+            <RowDefinition Height="20"/>
+
         </Grid.RowDefinitions>
-        
+
         <!--Blok z głównym statusem użytkownika-->
-       
+
         <Grid
             Grid.Column="0" 
             Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <!--Wiersz z menu-->
-                
+                <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="65"/>
@@ -76,47 +80,29 @@
                 <Image x:Name="imgUserAvatar" Height="50" Width="50" VerticalAlignment="Center" />
             </Border>
             <!--Główny status-->
-            <Controls:StatusBindableTextBlock x:Name="statusContent"
+            <viewCtrl:StatusBindableTextBlock x:Name="statusContent"
                 Grid.Column="1" 
                 Grid.Row="0"
                     TextWrapping="Wrap"
                     Margin="5,2,2,2"
                     FontFamily="Verdana"
                     Foreground="#FFFFFDFD"
-                    FontSize="15"
+                    FontSize="16"
                                            
                      />
 
-            <!-- RichTextBox
-                Grid.Column="1" 
-                Grid.Row="0"
-                BorderThickness="0"
-                Foreground="#FFFFFDFD"
-                Background="Transparent">
-                <FlowDocument>
-                    <Paragraph FontSize="16">
-                        <Run x:Name="lbUserLogin" FontWeight="SemiBold" Foreground="Orange" />
-                        <Run x:Name="lbContent" Foreground="#FFFFFDFD" />
-                    </Paragraph>
-                </FlowDocument>
-            </RichTextBox -->
-            <!--Menu z funkcjami: Kokpit-->
-            <!--<Menu
-                Background="Transparent"
-                Grid.Column="1" 
-                Grid.Row="1" >
-                <MenuItem 
-                    Header="Kokpit"
-                    Foreground="#FFFFFDFD" />
-            </Menu>-->
 
-            
+
+ <TextBlock x:Name="tbShowLoad" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+				       Visibility="Visible" 
+                       Foreground="Yellow" 
+                       FontSize="10" FontFamily="Verdana"
+                       HorizontalAlignment="Left" Margin="4,0,0,0" Text="Pobieram Statusy..."
+                   />
         </Grid>
 
-        
-        <ItemsControl 
-            Grid.Column="0" 
-            Grid.Row="1"
+       
+        <ItemsControl Grid.Row="1" Grid.Column="0"
 			x:Name="lstbStatusList" 
 			ItemTemplate="{StaticResource WrapItemTemplate}">
             <ItemsControl.Template>
@@ -128,20 +114,26 @@
             </ItemsControl.Template>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Orientation="Vertical"/>
+                    <VirtualizingStackPanel Orientation="Vertical" />
 
                     <!-- StackPanel Orientation="Vertical" / -->
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        
+       
+        <viewCtrl:Pager x:Name="ucPager" Visibility="Collapsed"  Grid.Row="2" Grid.Column="0" Height="20" FontSize="15" Foreground="White" HorizontalAlignment="Stretch" 
+                            CurrentPageIndexChanged="pagerControl_CurrentPageIndexChanged"/>
+
+
+
+
         <!--Panel do dodawania statusuów-->
-        <Grid Margin="5,5,5,0" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" >
+        <Grid Margin="5,5,5,0" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="12"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"/>
-               <!-- <RowDefinition Height="40"/> -->
+                <!-- <RowDefinition Height="40"/> -->
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -149,36 +141,48 @@
 
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="tbShowSave" Grid.Row="0" Grid.Column="0"
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,0">
+                
+                <ToggleButton x:Name="tgbDashboard" IsChecked="True" IsEnabled="False"  Content="Kokpit" Margin="1" Height="22" Width="80" Style="{StaticResource Flat3D}"
+                              Click="tgbDashboard_Click" Command="helper:StatusesCommands.ToggleButtons" ToolTip="Pokaż kokpit"
+                              />
+                <ToggleButton x:Name="tgbSecretary" Content="Sekretarka" Margin="1"  Height="22" Width="80" Style="{StaticResource Flat3D}"
+                              Click="tgbSecretary_Click" Command="helper:StatusesCommands.ToggleButtons" ToolTip="Sekretarka"
+                              />
+                <ToggleButton x:Name="tgbArchive" Content="Archiwum" Margin="1" Height="22" Width="80" Style="{StaticResource Flat3D}"
+                              Command="helper:StatusesCommands.ToggleButtons" Click="tgbArchive_Click"  ToolTip="Pokaż archiwum" />
+                
+                <TextBlock x:Name="tbShowSave" 
 				       Visibility="Hidden" 
                        Foreground="Yellow" 
-                       FontSize="11" FontFamily="Verdana"
+                       FontSize="10" FontFamily="Verdana"
                        VerticalAlignment="Bottom"
-				HorizontalAlignment="Left" Margin="4,0,0,0"
+				HorizontalAlignment="Right" Margin="4,0,0,0"
 				Text="Zapisuję..."
                    />
-            
+            </StackPanel>
             <TextBox x:Name="tbMessage" 
 				Grid.Row="1" Grid.Column="0" 
 				ClipToBounds="False" 
 				TextWrapping="Wrap"  
 				VerticalAlignment="Stretch" 
-                Style="{DynamicResource RoundedTextInput}"     
+                Style="{StaticResource RoundedTextInput}"     
                 FontSize="14" FontFamily="Verdana"
 				TextChanged="tbMessage_TextChanged" 
                      
-                                Height="105"     ><!--     PreviewKeyDown="TbMessage_OnPreviewKeyDown"
+                                Height="105"     >
+                <!--     PreviewKeyDown="TbMessage_OnPreviewKeyDown"
 				KeyDown="tbMessage_KeyDown" -->
-                             
+
             </TextBox>
-            
+
             <Button Name="btnDeletePic" Grid.Row="1" Grid.Column="0" Width="30"
                     VerticalAlignment="Bottom" Visibility="Collapsed"
                     Click="btnDeletePic_Click"
 				HorizontalAlignment="Left" Margin="10,0,3,10" ToolTip="Usuń obraz">
-            <Image Name="imgAttachPic"  MinHeight="20"/>
+                <Image Name="imgAttachPic"  MinHeight="20"/>
             </Button>
-                
+
             <TextBlock  Grid.Row="1" Grid.Column="0" 
 			x:Name="tblCharLeft" 
                         FontSize="26" 
@@ -188,49 +192,52 @@
                         FontWeight="Bold"  Foreground="#b0b0b0" 
 				Text="160" Margin="0,0,5,0" />
 
-            
+
 
             <StackPanel Grid.Row="1" Grid.Column="1">
-            <Button x:Name="btnSendBlip" 
+                <Button x:Name="btnSendBlip" 
 				Margin="3,3,3,3"  Content="Blip" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
 				Click="btnSendBlip_Click" Height="52"  Style="{StaticResource BlackButton}" 
                     ToolTip="Wyślij wiadomość"
 			/>
-           
-            <Button Grid.Row="1" Grid.Column="1"  VerticalAlignment="Bottom"
+
+                <Button Grid.Row="1" Grid.Column="1"  VerticalAlignment="Bottom"
                     Margin="3,3,3,3"
                     Name="btnAddPicture" 
                     Style="{StaticResource BlackButton}"
                     ToolTip="Załącz obraz do statusu"
                     Click="btnAddPicture_Click"
                     >
-                <Button.Content>
-                    <Image Source="pack://application:,,,/Resource/Img/picture_add.png"
+                    <Button.Content>
+                        <Image Source="pack://application:,,,/Resource/Img/picture_add.png"
                           Width="37"></Image>
-                </Button.Content>
+                    </Button.Content>
 
-            </Button>
-</StackPanel>
+                </Button>
+            </StackPanel>
         </Grid>
 
-        
-        <DockPanel Grid.Row="3">
-            
-        
-           <TextBlock DockPanel.Dock="Left" Name="tbOffline"  
-               Foreground="YellowGreen" FontFamily="Verdana" Margin="5"
+
+        <DockPanel Grid.Row="4">
+
+
+            <Label DockPanel.Dock="Left" Name="tbOffline"  
+               Foreground="YellowGreen" FontFamily="Verdana" Margin="5,0"
                       VerticalAlignment="Center"
-		       FontSize="10" Text="Offline" />
-            
-            <TextBlock DockPanel.Dock="Left" Name="tbError"  
-               Foreground="YellowGreen" FontFamily="Verdana" Margin="5"
+		       FontSize="9" Content="Offline" MouseLeftButtonUp="ShowMessage" />
+
+
+
+            <Label DockPanel.Dock="Left" Name="tbError"  
+               Foreground="YellowGreen" FontFamily="Verdana" Margin="5,0"
                       VerticalAlignment="Center" Visibility="Collapsed"
-		       FontSize="10" Text="Error" />
+		       FontSize="9" Content="Error"  MouseLeftButtonUp="ShowMessage"/>
 
 
 
-            <TextBlock DockPanel.Dock="Right" Margin="0,0,18,0" TextAlignment="Right" VerticalAlignment="Center">
-                           <Hyperlink FontSize="10" FontFamily="Verdana"  
+            <TextBlock DockPanel.Dock="Right" 
+                       Margin="0,0,18,0" TextAlignment="Right" VerticalAlignment="Center">
+                           <Hyperlink FontSize="9" FontFamily="Verdana"  
                                        Foreground="YellowGreen" 
                                          NavigateUri="http://blipface.wikidot.com"
                                       RequestNavigate="Hyperlink_RequestNavigate"

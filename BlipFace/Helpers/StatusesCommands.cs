@@ -20,5 +20,7 @@ namespace BlipFace.Helpers
         public static RoutedCommand ShowVideo = new RoutedCommand("ShowVideo", typeof(StatusListControl));
 
         public static RoutedCommand Navigate = new RoutedCommand("Navigate", typeof(StatusListControl));
+
+        public static RoutedCommand ToggleButtons = new RoutedCommand("ToggleButtons", typeof(StatusListControl));
     }
 }

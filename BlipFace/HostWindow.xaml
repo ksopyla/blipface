@@ -15,7 +15,7 @@
     Style="{StaticResource BlackWindowStyle}" 
     ResizeMode="CanResizeWithGrip"
     
-    MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown"
+   
 	Loaded="Window_Loaded"
      Closing="HostWindow_OnClosing"
     StateChanged="HostWindow_OnStateChanged"
@@ -34,11 +34,12 @@
         </Grid.RowDefinitions>
 
 
-        <Canvas Grid.Column="0" Grid.Row="0">
-            <Label Canvas.Top="5" Canvas.Left="10" 
-			Foreground="White" FontFamily="Verdana" 
+        
+        <Canvas Grid.Column="0" Grid.Row="0"  MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown">
+            <Label Canvas.Top="0" Canvas.Left="0" Padding="10,8" 
+			Foreground="White" FontFamily="Verdana" Width="2000" 
 			FontSize="14"
-			Content="BlipFace v0.4.0" >
+			Content="BlipFace v0.5.0" >
                 <Label.BitmapEffect>
                     <OuterGlowBitmapEffect GlowSize="7" Opacity="0.7" GlowColor="White" />
                 </Label.BitmapEffect>
@@ -78,9 +79,9 @@
 
 
             <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
-                    Canvas.Right="25" Canvas.Top="5"
+                    Canvas.Right="25" Canvas.Top="5" Style="{StaticResource RedCrossButton}" 
                     Click="btnCloseApp_Click">
-                
+               <!--
                 <Button.Template>
                     <ControlTemplate>
                         <Canvas>
@@ -111,6 +112,7 @@
                     </ControlTemplate>
 
                 </Button.Template>
+                -->
             </Button>
         </Canvas>
 

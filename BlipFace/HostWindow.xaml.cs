@@ -80,6 +80,7 @@ namespace BlipFace
         private void NonRectangularWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+            
         }
 
         #region IHost Members

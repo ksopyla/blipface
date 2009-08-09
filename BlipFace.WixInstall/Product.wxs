@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?define ProductName = "BlipFace"?>
-<?define ProductVersion = "0.4.0.0"?>
+<?define ProductVersion = "0.5.0.0"?>
 <?define UpgradeCode = "966bfcd3-305f-4eef-8b19-a001b6bee2dc"?>
-<!--Guidy from http://www.guidgen.com/Index.aspx-->
+<!--Guidy from http://www.guidgen.com/Index.aspx -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" 
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
      >
-  <Product Id="7c8fc5d0-7ed9-410d-9aab-4e059486f2e5" 
+  
+  <Product Id="db25d687-7e65-4438-b8af-06dc961222f5" 
            Name="$(var.ProductName)" 
            Language="1045" 
            Version="$(var.ProductVersion)" 
@@ -46,6 +47,7 @@
         <File Id="F_WcfRestHttpExtension" Source="$(var.BlipFace.TargetDir)\Microsoft.Http.Extensions.dll"/>
         <!-- File Id="F_BlipFaceIco" Source="$(var.SolutionDir)\BlipFace\Resource\Img\blipFace.ico"/ -->
         <File Id="F_BlipFaceLicens" Source="$(var.SolutionDir)\BlipFace.WixInstall\License.rtf"/>
+        <File Id="F_BlipFaceConfig" Source="$(var.BlipFace.TargetDir)\BlipFace.exe.config"/>
         
 
         <Shortcut Id="S_MenuStartShortcut" Name="BlipFace" Advertise="yes" 

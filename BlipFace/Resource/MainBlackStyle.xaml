@@ -17,8 +17,13 @@
         <Setter Property="Background" Value="{StaticResource blackRadialGradient}" />
         <Setter Property="Foreground" Value="white"/>
     </Style>
-    
-    
+
+    <!--Białe etykiety szczególnie do logowania-->
+    <Style x:Key="SmallWhite" TargetType="{x:Type TextBlock}" >
+        <Setter Property="Foreground" Value="#dddddddd"/>
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Margin" Value="7,1"/>
+    </Style>
 
     <!--Białe etykiety szczególnie do logowania-->
     <Style x:Key="LabelWhite" TargetType="{x:Type Label}" >
@@ -46,53 +51,155 @@
         </Setter>
     </Style>
 
+    <!--czerwony przycisk do zamykania okna-->
+    <Style x:Key="RedCrossButton" TargetType="{x:Type ButtonBase}">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Canvas>
+                        <Rectangle x:Name="recBackground" Width="20" Height="20" Stroke="Black" RadiusX="3" RadiusY="3">
+                            <Rectangle.Style>
+                                <Style>
+                                    <Style.Setters>
+                                        <Setter Property="Rectangle.Fill" Value="#ff4444" />
+                                    </Style.Setters>
+                                    <Style.Triggers>
+                                        <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsMouseOver}">
+                                            <Setter Property="Rectangle.Fill" Value="red" />
+                                        </DataTrigger>
+
+                                    </Style.Triggers>
+
+                                </Style>
+                            </Rectangle.Style>
+
+                        </Rectangle>
+
+                        <Line X1="5" Y1="5" X2="15" Y2="15" Stroke="White" StrokeThickness="2"/>
+                        <Line X1="15" Y1="5" X2="5" Y2="15" Stroke="White" StrokeThickness="2"/>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--czarny płaski przycisk-->
+    <Style x:Key="Flat3D" TargetType="{x:Type ToggleButton}">
+        
+        <Setter Property="Foreground" Value="#FFFFFFFF"/>
+        <Setter Property="FontFamily" Value="Verdana"/>
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Background" >
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF222222" Offset="0"/>
+                    <GradientStop Color="#D2444444" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid x:Name="mainGrid" Margin="0,0,1,1">
+                        <Grid x:Name="uncheckedState">
+                            <Border BorderBrush="#49FFFFFF" BorderThickness="1,1,0,0"/>
+                            <Border BorderBrush="#49666666" BorderThickness="0,0,1,1"/>
+                        </Grid>
+
+                        <Grid x:Name="checkedState" Visibility="Collapsed">
+                            <Border BorderBrush="#49666666" BorderThickness="1,1,0,0"/>
+                            <Border BorderBrush="#99FFFFFF" BorderThickness="0,0,1,1"/>
+                        </Grid>
+                        <!--
+            WPF needs a background to toggle IsChecked
+            if the ContentPresenter does not fill the whole area
+          -->
+                        <Border Margin="2" Background="{TemplateBinding Background}">
+                            <ContentPresenter  Margin="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+
+                    <!-- triggers toggle visual appearance -->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="checkedState" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="uncheckedState" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="mainGrid" Property="Margin" Value="1,1,0,0"/>
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF333333" Offset="0"/>
+                                        <GradientStop Color="#D2666666" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true" >
+                            <!--Setter TargetName="mainGrid" Property="Background" Value="#444444"/ -->
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF222222" Offset="0"/>
+                                        <GradientStop Color="#D2666666" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    
+    <!--czarny przycisk z chrome-->
     <Style x:Key="ButtonFocusVisual">
-		<Setter Property="Control.Template">
-			<Setter.Value>
-				<ControlTemplate>
-					<Rectangle SnapsToDevicePixels="true" Margin="2" Stroke="Black" StrokeDashArray="1 2" StrokeThickness="1"/>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	
-	 <LinearGradientBrush x:Key="ButtonNormalBackground" EndPoint="0,1" StartPoint="0,0">
-                        <GradientStop Color="#FF8C8C8C" Offset="0"/>
-                        <GradientStop Color="#FF787878" Offset="0.527"/>
-                        <GradientStop Color="#FF696969" Offset="1"/>
-                        <GradientStop Color="#FFBEBCBC" Offset="0.134"/>
-                    </LinearGradientBrush>
-	
-	<SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070"/>
-	<Style TargetType="{x:Type Button}" x:Key="BlackButton">
-		<Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
-		<Setter Property="Background" Value="{StaticResource ButtonNormalBackground}"/>
-		<Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}"/>
-		<Setter Property="BorderThickness" Value="1"/>
-		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-		<Setter Property="HorizontalContentAlignment" Value="Center"/>
-		<Setter Property="VerticalContentAlignment" Value="Center"/>
-		<Setter Property="Padding" Value="1"/>
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type Button}">
-					<Microsoft_Windows_Themes:ButtonChrome SnapsToDevicePixels="true" x:Name="Chrome" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" RenderDefaulted="{TemplateBinding IsDefaulted}" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}">
-						<ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
-					</Microsoft_Windows_Themes:ButtonChrome>
-					<ControlTemplate.Triggers>
-						<Trigger Property="IsKeyboardFocused" Value="true">
-							<Setter Property="RenderDefaulted" TargetName="Chrome" Value="true"/>
-						</Trigger>
-						<Trigger Property="ToggleButton.IsChecked" Value="true">
-							<Setter Property="RenderPressed" TargetName="Chrome" Value="true"/>
-						</Trigger>
-						<Trigger Property="IsEnabled" Value="false">
-							<Setter Property="Foreground" Value="#333333"/>
-						</Trigger>
-					</ControlTemplate.Triggers>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle SnapsToDevicePixels="true" Margin="2" Stroke="Black" StrokeDashArray="1 2" StrokeThickness="1"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <LinearGradientBrush x:Key="ButtonNormalBackground" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FF8C8C8C" Offset="0"/>
+        <GradientStop Color="#FF787878" Offset="0.527"/>
+        <GradientStop Color="#FF696969" Offset="1"/>
+        <GradientStop Color="#FFBEBCBC" Offset="0.134"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070"/>
+    <Style TargetType="{x:Type Button}" x:Key="BlackButton">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+        <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Microsoft_Windows_Themes:ButtonChrome SnapsToDevicePixels="true" x:Name="Chrome" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" RenderDefaulted="{TemplateBinding IsDefaulted}" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}">
+                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                    </Microsoft_Windows_Themes:ButtonChrome>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="true">
+                            <Setter Property="RenderDefaulted" TargetName="Chrome" Value="true"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="true">
+                            <Setter Property="RenderPressed" TargetName="Chrome" Value="true"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="#333333"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

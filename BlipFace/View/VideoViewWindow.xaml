@@ -28,40 +28,8 @@
             </Label>
 
             <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
-                    Canvas.Right="25" Canvas.Top="5"
-                    Click="btnCloseApp_Click">
-
-                <Button.Template>
-                    <ControlTemplate>
-                        <Canvas>
-                            <Rectangle x:Name="recBackground"
-                                           Width="20" Height="20" 
-                                           Stroke="Black" RadiusX="3" RadiusY="3">
-                                <Rectangle.Style>
-                                    <Style>
-                                        <Style.Setters>
-                                            <Setter Property="Rectangle.Fill" Value="#ff4444" />
-                                        </Style.Setters>
-
-                                        <Style.Triggers>
-                                            <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsMouseOver}">
-                                                <Setter Property="Rectangle.Fill" Value="red" />
-                                            </DataTrigger>
-
-                                        </Style.Triggers>
-
-                                    </Style>
-                                </Rectangle.Style>
-
-                            </Rectangle>
-
-                            <Line X1="5" Y1="5" X2="15" Y2="15" Stroke="White" StrokeThickness="2"/>
-                            <Line X1="15" Y1="5" X2="5" Y2="15" Stroke="White" StrokeThickness="2"/>
-                        </Canvas>
-                    </ControlTemplate>
-
-                </Button.Template>
-            </Button>
+                    Canvas.Right="25" Canvas.Top="5" Style="{StaticResource RedCrossButton}"
+                    Click="btnCloseApp_Click"> </Button>
         </Canvas>
         
         

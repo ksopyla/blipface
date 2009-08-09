@@ -143,6 +143,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Controls\Pager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Controls\UserControl1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\VideoViewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,12 +166,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Model\TitleMessageViewModel.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="View\BigPictureWindow.xaml.cs">
       <DependentUpon>BigPictureWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Controls\BindableRun.cs" />
     <Compile Include="Helpers\BooleanToVisibilityConverter.cs" />
+    <Compile Include="View\Controls\Pager.xaml.cs">
+      <DependentUpon>Pager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Controls\StatusBindableTextBlock.cs" />
     <Compile Include="Helpers\StatusesCommands.cs" />
     <Compile Include="Helpers\ProtectionHelper.cs" />
@@ -181,6 +198,9 @@
     </Compile>
     <Compile Include="Model\StatusViewModel.cs" />
     <Compile Include="ViewsManager.cs" />
+    <Compile Include="View\Controls\UserControl1.xaml.cs">
+      <DependentUpon>UserControl1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\IStatusesView.cs" />
     <Compile Include="View\ILoginView.cs" />
     <Compile Include="View\IView.cs" />
@@ -242,7 +262,12 @@
     <Resource Include="Resource\Img\privateMessage.gif" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AppMessages.resx">

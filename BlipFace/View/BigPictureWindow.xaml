@@ -10,7 +10,8 @@
     Style="{StaticResource BlackWindowStyle}" 
     ResizeMode="CanResizeWithGrip"
     Opacity="0.98"    
-                      ><!-- MouseLeftButtonDown="Window_MouseLeftButtonDown" -->
+                      >
+    <!-- MouseLeftButtonDown="Window_MouseLeftButtonDown" -->
 
     <Grid x:Name="grPicBackground">
         <Grid.RowDefinitions>
@@ -20,10 +21,10 @@
 
 
         </Grid.RowDefinitions>
-        
-       <!-- <TextBlock Grid.Row="0">Tytuł obrazka + może status</TextBlock> -->
+
+        <!-- <TextBlock Grid.Row="0">Tytuł obrazka + może status</TextBlock> -->
         <Canvas Grid.Row="0" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="Black">
-            
+
             <Label Canvas.Top="1" Canvas.Left="10" 
 			Foreground="White" FontFamily="Verdana" 
 			FontSize="14"
@@ -33,41 +34,10 @@
                 </Label.BitmapEffect>
 
             </Label>
-            
-        <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
-                    Canvas.Right="25" Canvas.Top="5"
+
+            <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
+                    Canvas.Right="25" Canvas.Top="5" Style="{StaticResource RedCrossButton}"
                     Click="btnCloseApp_Click">
-
-            <Button.Template>
-                <ControlTemplate>
-                    <Canvas>
-                        <Rectangle x:Name="recBackground"
-                                           Width="20" Height="20" 
-                                           Stroke="Black" RadiusX="3" RadiusY="3">
-                            <Rectangle.Style>
-                                <Style>
-                                    <Style.Setters>
-                                        <Setter Property="Rectangle.Fill" Value="#ff4444" />
-                                    </Style.Setters>
-
-                                    <Style.Triggers>
-                                        <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsMouseOver}">
-                                            <Setter Property="Rectangle.Fill" Value="red" />
-                                        </DataTrigger>
-
-                                    </Style.Triggers>
-
-                                </Style>
-                            </Rectangle.Style>
-
-                        </Rectangle>
-
-                        <Line X1="5" Y1="5" X2="15" Y2="15" Stroke="White" StrokeThickness="2"/>
-                        <Line X1="15" Y1="5" X2="5" Y2="15" Stroke="White" StrokeThickness="2"/>
-                    </Canvas>
-                </ControlTemplate>
-
-            </Button.Template>
             </Button>
         </Canvas>
         <Image  Grid.Row="1" x:Name="imgBigPicture" MouseLeftButtonUp="imgBigPicture_MouseUp"
@@ -76,23 +46,23 @@
                 ToolTip="Kliknij aby zamknąć"
                VerticalAlignment="Center"               
          />
-        
-       
-       
+
+
+
         <StackPanel Grid.Row="2" Orientation="Horizontal" MouseLeftButtonDown="Window_MouseLeftButtonDown"
                     Background="Black">
-        <TextBlock  Margin="20,0,0,10" VerticalAlignment="Bottom">
+            <TextBlock  Margin="20,0,0,10" VerticalAlignment="Bottom">
             <Hyperlink x:Name="hypPictureUrl" FontSize="14" FontFamily="Verdana"  
                        RequestNavigate="hypPictureUrl_RequestNavigate"
                         Foreground="Yellow" >
                 <TextBlock x:Name="tbUrlText" Text="Nie ustawiono adresu url" />
                 </Hyperlink>
          </TextBlock>
-            
+
             <TextBlock x:Name="tbPictureSize" Margin="5,0,0,10" 
                        FontFamily="Verdana" FontSize="14"
                        VerticalAlignment="Bottom"
                        Text="rozmiar zdjęcia"/>
-            </StackPanel>
-     </Grid>   
+        </StackPanel>
+    </Grid>
 </Window>
