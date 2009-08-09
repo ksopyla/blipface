@@ -147,10 +147,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Controls\UserControl1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\VideoViewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -198,9 +194,6 @@
     </Compile>
     <Compile Include="Model\StatusViewModel.cs" />
     <Compile Include="ViewsManager.cs" />
-    <Compile Include="View\Controls\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\IStatusesView.cs" />
     <Compile Include="View\ILoginView.cs" />
     <Compile Include="View\IView.cs" />
