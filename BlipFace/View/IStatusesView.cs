@@ -49,5 +49,6 @@ namespace BlipFace.View
         void UpdateStatuses(IList<StatusViewModel> collection);
 
         void AddStatus(StatusViewModel status,bool insertAtBeginning);
+        void ShowInfo(string message);
     }
 }

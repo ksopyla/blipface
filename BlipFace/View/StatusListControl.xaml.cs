@@ -370,6 +370,11 @@ namespace BlipFace.View
                         }), statusView);
         }
 
+        public void ShowInfo(string message)
+        {
+            MessageBox.Show(message);
+        }
+
 
         public string PicturePath
         {
