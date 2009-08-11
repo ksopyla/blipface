@@ -924,6 +924,11 @@ namespace BlipFace.Presenter
 
             StopConsuerThread();
 
+            if(consumeStatusesThread!=null)
+            {
+                consumeStatusesThread.Abort();
+            }
+
             statusesLoaded = false;
 
             LoadStatuses(blipfaceUser.UserName);

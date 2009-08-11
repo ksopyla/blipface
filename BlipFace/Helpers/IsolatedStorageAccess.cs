@@ -86,7 +86,12 @@ namespace BlipFace.Helpers
 
         public void DeleteFile()
         {
-            isoStore.DeleteFile(isoFileName);
+            string[] fileNames = isoStore.GetFileNames(isoFileName);
+
+            if (fileNames.Length > 0)
+            {
+                isoStore.DeleteFile(isoFileName);
+            }
         }
 
         #region IDisposable Members

@@ -23,6 +23,11 @@
         <Setter Property="Foreground" Value="#dddddddd"/>
         <Setter Property="FontSize" Value="10" />
         <Setter Property="Margin" Value="7,1"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="Yellow" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!--Białe etykiety szczególnie do logowania-->
