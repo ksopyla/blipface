@@ -203,7 +203,7 @@ namespace BlipFace.Presenter
             StartListeningForUpdates(240);
         }
 
-        public event EventHandler<ActionsEventArgs> WorkDone;
+        
 
         public void Close()
         {

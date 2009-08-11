@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
+using BlipFace.Model;
 using BlipFace.Presenter;
 
 namespace BlipFace.View
@@ -21,19 +22,69 @@ namespace BlipFace.View
         #region ILoginView propoerties
         public string UserName
         {
-            get { return tbUserName.Text; }
+            get
+            {
+                string usr = string.Empty;
+
+                Dispatcher.Invoke(new Action(delegate()
+                {
+                    usr = tbUserName.Text;
+                }), System.Windows.Threading.DispatcherPriority.Normal);
+
+                return usr;
+
+                
+            }
             set { tbUserName.Text = value; }
         }
 
         public string Password
         {
-            get { return pswPassword.Password; }
+            get
+            {
+                string pass = string.Empty;
+
+                Dispatcher.Invoke(new Action(delegate()
+                {
+                    pass = pswPassword.Password;
+                }), System.Windows.Threading.DispatcherPriority.Normal);
+
+                return pass;
+            }
             set { pswPassword.Password = value; }
         }
 
         private bool authorize;
-        
-        /// <summary>
+
+        public bool RememberCredencial
+        {
+            get
+            {
+                //return chbRememberPassword.IsChecked.HasValue
+                //                               ? chbRememberPassword.IsChecked.Value
+                //                               : false;
+                bool rem=false;
+
+                Dispatcher.Invoke(new Action(delegate()
+                {
+                  rem=    chbRememberPassword.IsChecked.HasValue
+                                               ? chbRememberPassword.IsChecked.Value
+                                               : false;
+                }), System.Windows.Threading.DispatcherPriority.Normal);
+
+                return rem;
+            }
+            set
+            {
+                Dispatcher.Invoke(new Action<bool>(delegate(bool remember)
+                                                       {
+                                                           chbRememberPassword.IsChecked = remember;
+                                                       })
+                                  , System.Windows.Threading.DispatcherPriority.Normal, value);
+            }
+        }
+
+            /// <summary>
         /// Czy poprwanie się zautoryzowano
         /// </summary>
         public  bool Authorize
@@ -53,18 +104,18 @@ namespace BlipFace.View
                         authorize = auth;
 
                         //jeśli poprawnie się zautoryzowno w blipie
-                        if(auth)
-                        {
-                            //czy należy zapamiętać 
-                            bool remember = chbRememberPassword.IsChecked.HasValue
-                                                ? chbRememberPassword.IsChecked.Value
-                                                : false;
-                            //powiadamiamy prezentera że nastąpiła poprawna autoryzacja
-                            //widok wyświetlił wszystko co miał
-                            //i więc teraz należy zachować albo nie dane do logowania
-                            //w zależności co użytkownik zaznaczył w checkBoxie
-                            _presenter.AuthorizationDone(remember);
-                        }
+                        //if(auth)
+                        //{
+                        //    //czy należy zapamiętać 
+                        //    bool remember = chbRememberPassword.IsChecked.HasValue
+                        //                        ? chbRememberPassword.IsChecked.Value
+                        //                        : false;
+                        //    //powiadamiamy prezentera że nastąpiła poprawna autoryzacja
+                        //    //widok wyświetlił wszystko co miał
+                        //    //i więc teraz należy zachować albo nie dane do logowania
+                        //    //w zależności co użytkownik zaznaczył w checkBoxie
+                        //    _presenter.AuthorizationDone(remember);
+                        //}
                         
                     }), System.Windows.Threading.DispatcherPriority.Normal,value);
             }
@@ -147,6 +198,19 @@ namespace BlipFace.View
             tbUserName.Focus();
         }
 
-       
+        #region Implementation of IView
+
+        public void WorkDone()
+        {
+            Dispatcher.Invoke(new Action(delegate()
+            {
+                UserViewModel usr = new UserViewModel() {UserName = this.UserName, Password = this.Password};
+                ChangeView(this,new ActionsEventArgs(Actions.Statuses,usr));
+            }),System.Windows.Threading.DispatcherPriority.Normal);
+        }
+
+        public event EventHandler<ActionsEventArgs> ChangeView;
+
+        #endregion
     }
 }

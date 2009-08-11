@@ -10,6 +10,7 @@ namespace BlipFace.View
         string UserName { get; set; }
         string Password { get; set; }
         string Error { get; set; }
+        bool RememberCredencial { get; set; }
        bool Authorize { get; set; }
         
     }

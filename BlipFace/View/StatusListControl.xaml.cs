@@ -598,5 +598,16 @@ namespace BlipFace.View
             PagerVisibility(System.Windows.Visibility.Collapsed);
             presenter.SetMode(UpdateMode.Secretary);
         }
+
+        #region Implementation of IView
+
+        public void WorkDone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public event EventHandler<ActionsEventArgs> ChangeView;
+
+        #endregion
     }
 }

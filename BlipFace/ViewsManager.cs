@@ -38,20 +38,21 @@ namespace BlipFace
 
             //dołączamy do niego widok, jednocześnie przkazując mu referencję 
             var loginView = new LoginViewControl(loginPresenter);
+            loginView.ChangeView += new EventHandler<ActionsEventArgs>(ViewWorkDone);
             loginPresenter.SetView(loginView);
 
-            loginPresenter.WorkDone += new EventHandler<ActionsEventArgs>(PresenterWorkDone);
+            //loginPresenter.WorkDone += new EventHandler<ActionsEventArgs>(ViewWorkDone);
 
             loginPresenter.Init();
             _hostWindow.AttachView(loginView);
         }
 
-        private void PresenterWorkDone(object sender, ActionsEventArgs e)
+        private void ViewWorkDone(object sender, ActionsEventArgs e)
         {
             switch (e.NextAction)
             {
                 case Actions.Login:
-                    currentPresenter = CreateLoginPresenter();
+                    currentPresenter = CreateLoginView();
                     break;
                 case Actions.Statuses:
 
@@ -59,7 +60,7 @@ namespace BlipFace
 
                     if (usr != null)
                     {
-                        currentPresenter = CreateStatusesPresenter(usr);
+                        currentPresenter = CreateStatusesView(usr);
                     }
                     else
                     {
@@ -77,13 +78,15 @@ namespace BlipFace
         }
 
 
-        private IPresenter CreateStatusesPresenter(UserViewModel user)
+        private IPresenter CreateStatusesView(UserViewModel user)
         {
             var statusPresenter = new StatusesPresenter(user);
             //dołączamy do niego widok, jednocześnie przkazując mu referencję 
             var statusView = new StatusListControl(statusPresenter);
+            statusView.ChangeView += new EventHandler<ActionsEventArgs>(ViewWorkDone);
+            
             statusPresenter.SetView(statusView);
-            statusPresenter.WorkDone += new EventHandler<ActionsEventArgs>(PresenterWorkDone);
+            //statusPresenter.WorkDone += new EventHandler<ActionsEventArgs>(PresenterWorkDone);
 
             statusPresenter.Init();
 
@@ -92,13 +95,15 @@ namespace BlipFace
             return statusPresenter;
         }
 
-        private IPresenter CreateLoginPresenter()
+        private IPresenter CreateLoginView()
         {
             var loginPresenter = new LoginPresenter();
             //dołączamy do niego widok, jednocześnie przkazując mu referencję 
             var loginView = new LoginViewControl(loginPresenter);
+            loginView.ChangeView +=new EventHandler<ActionsEventArgs>(ViewWorkDone);
             loginPresenter.SetView(loginView);
-            loginPresenter.WorkDone += new EventHandler<ActionsEventArgs>(PresenterWorkDone);
+           
+           
 
             loginPresenter.Init();
             _hostWindow.SwitchView(loginView);
