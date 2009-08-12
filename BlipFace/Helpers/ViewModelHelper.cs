@@ -25,8 +25,7 @@ namespace BlipFace.Helpers
 
 
             //IList<StatusViewModel> sts = new List<StatusViewModel>(statusesList.Count);
-            try
-            {
+           
                 foreach (BlipStatus status in statusesList)
                 {
                     //todo: trzeba uważać bo gdy nie ma recipient to 
@@ -36,6 +35,11 @@ namespace BlipFace.Helpers
                     bool hasRecipient = false;
                     bool directedMessage = false;
                     bool privateMessage = false;
+
+                    if (status.Type==null)
+                    {
+                        int a = 5;
+                    }
 
                     if (status.Type == "DirectedMessage")
                     {
@@ -81,16 +85,12 @@ namespace BlipFace.Helpers
                                     PrivateMessage = privateMessage,
                                     CreationDate = creationDate,
                                     UserLogin = status.User.Login,
-                                    Type = status.Type,
+                                    StatusType = status.Type,
                                     BlipFaceUser = ownerLogin,
                                     FirstPictureUrl= pictureUrl
                                 });
                 }
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+           
 
 
             return statuses;
@@ -117,6 +117,12 @@ namespace BlipFace.Helpers
                                        ? "http://static1.blip.pl/images/nn_nano.png?1240395130"
                                        : status.User.Avatar.Url50;
 
+                string pictureUrl = string.Empty;
+                if (status.Pictures != null && status.Pictures.Count > 0)
+                {
+                    pictureUrl = status.Pictures[0].Url;
+                }
+
                 st.StatusId = status.Id;
                 st.UserId = status.User.Id;
                 st.Content = status.Content;
@@ -125,6 +131,8 @@ namespace BlipFace.Helpers
                 st.RecipientLogin = reciptientLogin;
                 st.CreationDate = creationDate;
                 st.UserLogin = status.User.Login;
+                st.StatusType = status.Type;
+                st.FirstPictureUrl = pictureUrl;
             }
             catch (Exception e)
             {

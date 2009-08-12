@@ -101,6 +101,7 @@ namespace BlipFace.Presenter
 
 
         private static readonly Regex LinkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
+        private static readonly Regex SayOrCiteRegex = new Regex(@"^\^\w*\s(mówi\so\stobie|cię\scytuje)",RegexOptions.IgnoreCase);
         private int currentPage = 0;
 
 
@@ -476,6 +477,12 @@ namespace BlipFace.Presenter
 
                     if (url.Contains("blip.pl"))
                     {
+
+                        if (status.StatusType.ToLower() == "notice" && SayOrCiteRegex.IsMatch(status.Content))
+                        {
+                            status.StatusId = Convert.ToUInt32(code);
+                        }
+
                         //gdy mamy do czynienia z blipnięciem cytowaniem
                         //http://blip.pl/s/11552391
                         BlipStatus blpStat = blpCom.GetUpdate(code);
@@ -485,6 +492,8 @@ namespace BlipFace.Presenter
                             {
                                 status.Cites = new Dictionary<string, string>();
                             }
+
+                           
 
                             string blipContent = blpStat.User.Login + ": " + blpStat.Content;
                             status.Cites.Add(url, blipContent);
@@ -819,7 +828,7 @@ namespace BlipFace.Presenter
         {
             StringBuilder blipLink = new StringBuilder("http://blip.pl", 26);
 
-            if (status.Type == "DirectedMessage")
+            if (status.StatusType == "DirectedMessage")
             {
                 blipLink.Append("/dm/");
             }

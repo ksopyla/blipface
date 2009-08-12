@@ -3,12 +3,12 @@
 
     <Style TargetType="{x:Type ToolTip}" x:Key="YellowToolTipStyle">
         <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="VerticalOffset" Value="-2" />
-        <Setter Property="HorizontalOffset" Value="10" />
-        <Setter Property="Placement" Value="Top" />
-        <Setter Property="Opacity" Value=".8" />
-        <Setter Property="ToolTipService.ShowDuration" Value="30000" />
-        <Setter Property="ToolTipService.InitialShowDelay" Value="10000" />
+        <Setter Property="VerticalOffset" Value="0" />
+        <!--Setter Property="HorizontalOffset" Value="10" /-->
+        <!--Setter Property="Placement" Value="Top" / -->
+        <Setter Property="Opacity" Value=".9" />
+        <Setter Property="ToolTipService.ShowDuration" Value="9000" />
+        <Setter Property="ToolTipService.InitialShowDelay" Value="1500" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToolTip}">
@@ -27,9 +27,7 @@
                                           HorizontalAlignment="Center" 
                                           VerticalAlignment="Center" 
                                           TextBlock.Foreground="Black" 
-                                          TextBlock.FontSize="12"
-                                          
-                                          >
+                                          TextBlock.FontSize="12" >
                             <ContentPresenter.Content>
                                 <TextBlock TextWrapping="Wrap" Text="{TemplateBinding Content}"></TextBlock>
                             </ContentPresenter.Content>
@@ -38,7 +36,20 @@
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
+            
         </Setter>
+        <Style.Triggers>
+           <!-- <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="StaysOpen" Value="true" />
+                <Setter Property="Background" Value="AliceBlue"/>
+            </Trigger>
+            -->
+            <!--
+            <Trigger Property="IsMouseOver" Value="false" >
+                <Setter Property="StaysOpen" Value="false" />
+            </Trigger>
+            -->
+        </Style.Triggers>
     </Style>
 
 

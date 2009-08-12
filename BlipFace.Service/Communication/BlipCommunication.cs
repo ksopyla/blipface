@@ -929,7 +929,7 @@ namespace BlipFace.Service.Communication
                 //sprawdź czy odpowiedź jest poprawna
                 //resp.EnsureStatusIsSuccessful();
 
-                resp.EnsureStatusIs(200, new int[] {201, 204});
+                resp.EnsureStatusIs(201, new int[] {200, 204});
 
                 //jeżeli status ok to znaczy że dodano status
                 httpCode = resp.StatusCode;

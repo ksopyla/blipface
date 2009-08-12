@@ -42,9 +42,17 @@ namespace BlipFace.View.Controls
 
         private static Regex userReg = new Regex(@"^\^\w*");
 
-        private static Regex tagReg = new Regex(@"^\#\w*");
+        /// <summary>
+        /// dopasuj tekst zaczynający się od #po którym występuje litera,cyfra lub myślnik
+        /// </summary>
+        private static Regex tagReg = new Regex(@"^\#[\w\-]*"); //  ^\#\w*
 
+        /// <summary>
+        /// 
+        /// 
+        /// </summary>
         private static Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
+        
 
         #endregion
 
@@ -84,6 +92,7 @@ namespace BlipFace.View.Controls
 
             StatusBindableTextBlock mainTextBlock = (StatusBindableTextBlock) d;
 
+            
 
             StatusViewModel s = (StatusViewModel) e.NewValue;
             if (s == null || s.Content == null)
@@ -283,9 +292,9 @@ namespace BlipFace.View.Controls
             mainTextBlock.Inlines.Add(hypUserLogin);
 
             //tworzymy link odbiorcy wiadomośći
-            if ((s.Type == "DirectedMessage") || (s.Type == "PrivateMessage"))
+            if ((s.StatusType == "DirectedMessage") || (s.StatusType == "PrivateMessage"))
             {
-                string mark = (s.Type == "DirectedMessage") ? " > " : " >> ";
+                string mark = (s.StatusType == "DirectedMessage") ? " > " : " >> ";
                 //Run r = CreateRun(mark);
 
                 mainTextBlock.Inlines.Add(mark);
@@ -342,6 +351,7 @@ namespace BlipFace.View.Controls
         {
             System.Windows.Controls.ToolTip tip = new ToolTip();
             tip.Content = toolTip;
+            tip.StaysOpen = true;
 
             tip.Style = (Style) Application.Current.FindResource("YellowToolTipStyle");
 
@@ -359,6 +369,8 @@ namespace BlipFace.View.Controls
             hyperlink.Command = command;
             hyperlink.CommandParameter = linkAdress;
 
+            ToolTipService.SetInitialShowDelay(hyperlink,700);
+            ToolTipService.SetShowDuration(hyperlink,15000);
 
             //hyperlink.AddHandler(Hyperlink.RequestNavigateEvent,
             //                        new RequestNavigateEventHandler(HyperLinkRequestNavigate));

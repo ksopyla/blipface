@@ -99,8 +99,10 @@
                     FontFamily="Verdana"
                     Foreground="#FFFFFDFD"
                     FontSize="12"
-                    BoundStatus="{Binding}"
-                    />
+                    BoundStatus="{Binding}" />
+                    <!--
+                    ToolTipService.InitialShowDelay="1000"
+                    ToolTipService.ShowDuration="15000" -->
                 
                   <TextBlock>
                     <Hyperlink TextDecorations="None"
