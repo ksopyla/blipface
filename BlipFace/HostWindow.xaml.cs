@@ -22,17 +22,19 @@ namespace BlipFace
     {
         private ViewsManager mgr;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Drawing.Icon normalNotifyIcon;
+        private System.Drawing.Icon statusAddedNotifyIcon;
 
         private bool showBallon = true;
 
         public HostWindow()
         {
             InitializeComponent();
-            
+
             //położenie okna 
             this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width - 20;
-            
-            
+
+
             //ikona dla aplikacji, pozakuje się na pasku
             //blipFace_logo_round.png"
             Uri iconUri = new Uri("pack://application:,,,/Resource/Img/blipFace.ico",
@@ -49,23 +51,20 @@ namespace BlipFace
                                  Text = "Kliknij aby pokazał się BlipFace"
                              };
 
-            Stream iconStream = Application.GetResourceStream(iconUri).Stream;
-            notifyIcon.Icon = new System.Drawing.Icon(iconStream);
-            
-            
-            
+            normalNotifyIcon = IconFromResource(iconUri.ToString());
+            notifyIcon.Icon = normalNotifyIcon;
+
+            statusAddedNotifyIcon = IconFromResource("pack://application:,,,/Resource/Img/blipFaceAddStatus.ico");
+
             notifyIcon.Click += new EventHandler(NotifyIconClick);
 
 
             mgr = new ViewsManager(this);
         }
 
-        
-
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
             mgr.Run();
         }
 
@@ -80,7 +79,7 @@ namespace BlipFace
         private void NonRectangularWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
-            
+
         }
 
         #region IHost Members
@@ -120,7 +119,7 @@ namespace BlipFace
 
         private void btnMinimalizeApp_Click(object sender, RoutedEventArgs e)
         {
-           // WindowState = System.Windows.WindowState.Minimized;
+            //WindowState = System.Windows.WindowState.Minimized;
 
             this.Hide();
             if (notifyIcon != null && showBallon)
@@ -138,18 +137,18 @@ namespace BlipFace
 
         //implementacja howania okna zaczerpnięta z 
         //http://possemeeg.wordpress.com/2007/09/06/minimize-to-tray-icon-in-wpf/
-        #region chowanie okna 
+        #region chowanie okna
 
         void NotifyIconClick(object sender, EventArgs e)
         {
-            
+
             Show();
-        //if(WindowState== System.Windows.WindowState.Maximized)
-        //{
-        //    this.WindowState = System.Windows.WindowState.Normal;
-        //}
-        //else
-             this.WindowState = storedWindowState;
+            //if(WindowState== System.Windows.WindowState.Maximized)
+            //{
+            //    this.WindowState = System.Windows.WindowState.Normal;
+            //}
+            //else
+            this.WindowState = storedWindowState;
         }
 
         /// <summary>
@@ -165,11 +164,11 @@ namespace BlipFace
         }
 
         private WindowState storedWindowState = WindowState.Normal;
-        
+
         /// <summary>
         /// Czas pokazywania podpowiedzi po zminimalizowaniu aplikacji
         /// </summary>
-        private const int BallonTipTime=1;
+        private const int BallonTipTime = 1;
 
         /// <summary>
         /// Gdy zmieni się stan okna np. z normalnego do minmalizowanego
@@ -188,8 +187,10 @@ namespace BlipFace
                 }
             }
             else
+            {
                 storedWindowState = WindowState.Normal;
-                    //WindowState;
+            }
+            //WindowState;
         }
 
         /// <summary>
@@ -200,7 +201,11 @@ namespace BlipFace
         private void HostWindow_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             CheckTrayIcon();
-
+            if (notifyIcon != null && notifyIcon.Visible == false)
+            {
+                //zamian ikony w tray na domyślną
+                notifyIcon.Icon = normalNotifyIcon;
+            }
         }
 
         private void CheckTrayIcon()
@@ -217,5 +222,23 @@ namespace BlipFace
         }
 
         #endregion
+
+        public void StatusAdded()
+        {
+            if (notifyIcon != null && notifyIcon.Visible)
+            {
+                notifyIcon.Icon = statusAddedNotifyIcon;
+
+                System.Media.SystemSound sound = System.Media.SystemSounds.Beep;
+                sound.Play();
+            }
+        }
+
+        private System.Drawing.Icon IconFromResource(string path)
+        {
+            Uri iconUri = new Uri(path, UriKind.RelativeOrAbsolute);
+            Stream iconStream = Application.GetResourceStream(iconUri).Stream;
+            return new System.Drawing.Icon(iconStream);
+        }
     }
 }

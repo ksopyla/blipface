@@ -214,6 +214,7 @@ namespace BlipFace.View
                                 {
                                     tbShowLoad.Visibility = System.Windows.Visibility.Visible;
                                 }
+                                
                                 //todo:to tak testowo
                                 FlashMainWindow(Window.GetWindow(this.Parent), true);
                             }), value);
@@ -325,7 +326,7 @@ namespace BlipFace.View
                             //{
                             //    currentList.Insert(0, statusesList[i]);
                             //}
-
+                            
                             //todo:to tak testowo
                             FlashMainWindow(Window.GetWindow(this.Parent), true);
                         }), statuses);
@@ -365,6 +366,13 @@ namespace BlipFace.View
                                     currentList.Add(status);
                                 }
                             }
+                            //todo:testowo zmiana ikony w tray'u
+                            var parentWindows = Window.GetWindow(this.Parent);
+                            if (parentWindows is HostWindow)
+                            {
+                                ((HostWindow)parentWindows).StatusAdded();
+                            }
+
                             //todo:to tak testowo
                             FlashMainWindow(Window.GetWindow(this.Parent), true);
                         }), statusView);
