@@ -162,6 +162,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BlipFaceNotifyUse.cs" />
     <Compile Include="Helpers\IsolatedStorageAccess.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Model\TitleMessageViewModel.cs" />

@@ -47,6 +47,9 @@
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.ServiceModel.Web">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -61,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\BlipCommunication.cs" />
+    <Compile Include="Communication\BlipFaceWebServicesCommunication.cs" />
     <Compile Include="Entities\BlipAvatar.cs" />
     <Compile Include="Entities\BlipPicture.cs" />
     <Compile Include="Entities\BlipPictureList.cs" />
@@ -69,6 +73,35 @@
     <Compile Include="Entities\BlipUser.cs" />
     <Compile Include="Entities\StatusesList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\BlipFaceWebServices\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Service References\BlipFaceWebServices\CountUseBlipFace.wsdl" />
+    <None Include="Service References\BlipFaceWebServices\CountUseBlipFace.xsd" />
+    <None Include="Service References\BlipFaceWebServices\CountUseBlipFace1.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\BlipFaceWebServices\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\BlipFaceWebServices\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\BlipFaceWebServices\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\BlipFaceWebServices\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="cd8e7f15-4421-4ed8-8d65-ef72e8ee3e01" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:49987/CountUseBlipFace.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CountUseBlipFace.wsdl" MetadataType="Wsdl" ID="7cc05dce-ac8f-461c-8a9c-beaa86f27edd" SourceId="1" SourceUrl="http://localhost:49987/CountUseBlipFace.svc?wsdl" />
+    <MetadataFile FileName="CountUseBlipFace.xsd" MetadataType="Schema" ID="8642baea-dda7-4c31-b4ef-a8e419423069" SourceId="1" SourceUrl="http://localhost:49987/CountUseBlipFace.svc?xsd=xsd0" />
+    <MetadataFile FileName="CountUseBlipFace1.xsd" MetadataType="Schema" ID="159dc141-b5fa-4207-8ad8-8d92114b1b57" SourceId="1" SourceUrl="http://localhost:49987/CountUseBlipFace.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

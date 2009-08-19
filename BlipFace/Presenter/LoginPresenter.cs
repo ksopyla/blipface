@@ -95,6 +95,10 @@ namespace BlipFace.Presenter
             {
                 SaveCredenctial(_view.RememberCredencial);
 
+                //wysłanie informacji o użyciu BlipFace
+                BlipFaceNotifyUse notifyUse = new BlipFaceNotifyUse();
+                notifyUse.Notyfi();
+
                 _view.WorkDone();
                
             }
