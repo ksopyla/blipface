@@ -1,0 +1,49 @@
+﻿<Window x:Class="BlipFace.View.SettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="SettingsWindow" Height="300" Width="300"
+        BorderBrush="#FF686868" BorderThickness="1,1,1,1" 
+    WindowStyle="None" 
+    AllowsTransparency="True"
+    WindowStartupLocation="CenterScreen"
+    Style="{StaticResource BlackWindowStyle}" 
+    ResizeMode="CanResizeWithGrip"
+    Opacity="0.98" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Canvas Grid.Row="0" Background="Black">
+
+            <Label Canvas.Top="1" Canvas.Left="10" 
+			Foreground="White" FontFamily="Verdana" 
+			FontSize="14"
+			Content="Ustawienia BlipFace" >
+                <Label.BitmapEffect>
+                    <OuterGlowBitmapEffect GlowSize="7" Opacity="0.7" GlowColor="White" />
+                </Label.BitmapEffect>
+
+            </Label>
+
+            <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
+                    Canvas.Right="25" Canvas.Top="5" Style="{StaticResource RedCrossButton}"
+                    Click="btnCloseApp_Click">
+            </Button>
+        </Canvas>
+        <StackPanel Grid.Row="1" x:Name="LayoutRoot" Orientation="Vertical" VerticalAlignment="Stretch" Margin="0,20,0,0">
+                <CheckBox x:Name="chbAutoLogon" Width="220" Height="25" 
+                      Content="Automatycznie loguj" Foreground="#FFFFFFFF" FontSize="14" />
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2" x:Name="LayoutRoota" Orientation="Vertical" VerticalAlignment="Stretch">
+            <Button Height="35"  x:Name="btnSave"  Click="btnSave_Click"
+                     Style="{StaticResource BlackButton}" 
+					 Content="Zapisz" Width="160" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </StackPanel>
+        
+    </Grid>
+</Window>

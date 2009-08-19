@@ -95,6 +95,8 @@ namespace BlipFace.Presenter
             {
                 SaveCredenctial(_view.RememberCredencial);
 
+                SaveAutoLogon(_view.AutoLogon);
+
                 //wysłanie informacji o użyciu BlipFace
                 UseageStatistics notifyUse = new UseageStatistics();
                 notifyUse.Notyfi();
@@ -139,6 +141,9 @@ namespace BlipFace.Presenter
                     _view.Password = pass;
 
                     _view.RememberCredencial = true;
+
+                    if (Properties.Settings.Default.AutoLogon)
+                        ValidateCredential(user, pass);
                 }
             }
 
@@ -176,7 +181,7 @@ namespace BlipFace.Presenter
             //w celu aby wyglądało że się szybciej loguje,
             com.ConnectAsync();
 
-
+            _view.AutoLogon = Properties.Settings.Default.AutoLogon;
 
         }
 
@@ -250,6 +255,16 @@ namespace BlipFace.Presenter
 
             }
 
+        }
+
+        /// <summary>
+        /// Metoda wywoływana gdy autorycajca zakończy się sukcesem
+        /// </summary>
+        /// <param name="autoLogon"></param>
+        public void SaveAutoLogon(bool autoLogon)
+        {
+            Properties.Settings.Default.AutoLogon = autoLogon;
+            Properties.Settings.Default.Save();
         }
     }
 }

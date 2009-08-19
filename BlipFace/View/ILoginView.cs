@@ -11,7 +11,7 @@ namespace BlipFace.View
         string Password { get; set; }
         string Error { get; set; }
         bool RememberCredencial { get; set; }
-       bool Authorize { get; set; }
-        
+        bool Authorize { get; set; }
+        bool AutoLogon { get; set; }
     }
 }

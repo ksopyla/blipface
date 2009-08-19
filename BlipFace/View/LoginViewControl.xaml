@@ -48,6 +48,8 @@
                 FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,10" />
             <CheckBox x:Name="chbRememberPassword" Width="220" Height="25" 
                       Content="Zapamiętaj hasło" Foreground="#FFFFFFFF" FontSize="14"/>
+            <CheckBox x:Name="chbAutoLogon" Width="220" Height="25" 
+                      Content="Automatycznie loguj" Foreground="#FFFFFFFF" FontSize="14" />
 
             <Button Height="35"  x:Name="btnLogin"  Click="btnLogin_Click"
                      Style="{StaticResource BlackButton}" 

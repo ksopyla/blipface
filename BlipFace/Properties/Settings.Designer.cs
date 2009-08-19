@@ -49,5 +49,17 @@ namespace BlipFace.Properties {
                 return ((int)(this["RefreshTimeSec"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoLogon {
+            get {
+                return ((bool)(this["AutoLogon"]));
+            }
+            set {
+                this["AutoLogon"] = value;
+            }
+        }
     }
 }

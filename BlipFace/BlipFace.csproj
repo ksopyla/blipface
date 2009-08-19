@@ -147,6 +147,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\VideoViewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -201,6 +205,9 @@
     <Compile Include="View\IStatusesView.cs" />
     <Compile Include="View\ILoginView.cs" />
     <Compile Include="View\IView.cs" />
+    <Compile Include="View\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\VideoViewWindow.xaml.cs">
       <DependentUpon>VideoViewWindow.xaml</DependentUpon>
     </Compile>

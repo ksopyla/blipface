@@ -226,7 +226,10 @@
                       VerticalAlignment="Center"
 		       FontSize="9" Content="Offline" MouseLeftButtonUp="ShowMessage" />
 
-
+            <Label DockPanel.Dock="Left" Name="tbSettings"  
+               Foreground="YellowGreen" FontFamily="Verdana" Margin="5,0"
+                      VerticalAlignment="Center"
+		       FontSize="9" Content="Ustawienia" MouseLeftButtonUp="ShowSettingsWindows" />
 
             <Label DockPanel.Dock="Left" Name="tbError"  
                Foreground="YellowGreen" FontFamily="Verdana" Margin="5,0"

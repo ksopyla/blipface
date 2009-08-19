@@ -13,11 +13,11 @@ using BlipFace.Presenter;
 
 namespace BlipFace.View
 {
-    public partial class LoginViewControl :ILoginView
+    public partial class LoginViewControl : ILoginView
     {
 
         readonly LoginPresenter _presenter;
-        
+
 
         #region ILoginView propoerties
         public string UserName
@@ -33,7 +33,7 @@ namespace BlipFace.View
 
                 return usr;
 
-                
+
             }
             set { tbUserName.Text = value; }
         }
@@ -63,13 +63,13 @@ namespace BlipFace.View
                 //return chbRememberPassword.IsChecked.HasValue
                 //                               ? chbRememberPassword.IsChecked.Value
                 //                               : false;
-                bool rem=false;
+                bool rem = false;
 
                 Dispatcher.Invoke(new Action(delegate()
                 {
-                  rem=    chbRememberPassword.IsChecked.HasValue
-                                               ? chbRememberPassword.IsChecked.Value
-                                               : false;
+                    rem = chbRememberPassword.IsChecked.HasValue
+                                                 ? chbRememberPassword.IsChecked.Value
+                                                 : false;
                 }), System.Windows.Threading.DispatcherPriority.Normal);
 
                 return rem;
@@ -84,10 +84,10 @@ namespace BlipFace.View
             }
         }
 
-            /// <summary>
+        /// <summary>
         /// Czy poprwanie się zautoryzowano
         /// </summary>
-        public  bool Authorize
+        public bool Authorize
         {
             get
             {
@@ -116,8 +116,8 @@ namespace BlipFace.View
                         //    //w zależności co użytkownik zaznaczył w checkBoxie
                         //    _presenter.AuthorizationDone(remember);
                         //}
-                        
-                    }), System.Windows.Threading.DispatcherPriority.Normal,value);
+
+                    }), System.Windows.Threading.DispatcherPriority.Normal, value);
             }
         }
 
@@ -125,18 +125,42 @@ namespace BlipFace.View
         {
             get
             {
-                return (string) tblError.Text;
+                return (string)tblError.Text;
             }
             set
             {
-                
+
 
                 Dispatcher.Invoke(
                     new Action<string>(delegate(string _err)
                     {
-                       tblError.Visibility = System.Windows.Visibility.Visible;
+                        tblError.Visibility = System.Windows.Visibility.Visible;
                         tblError.Text = _err;
-                    }), System.Windows.Threading.DispatcherPriority.Normal,value);
+                    }), System.Windows.Threading.DispatcherPriority.Normal, value);
+            }
+        }
+
+        public bool AutoLogon
+        {
+            get
+            {
+                bool auto = false;
+
+                Dispatcher.Invoke(new Action(delegate()
+                {
+                    auto = chbAutoLogon.IsChecked.HasValue
+                                                 ? chbAutoLogon.IsChecked.Value
+                                                 : false;
+                }), System.Windows.Threading.DispatcherPriority.Normal);
+
+                return auto;
+            }
+            set
+            {
+                Dispatcher.Invoke(new Action<bool>(delegate(bool auto)
+                {
+                    chbAutoLogon.IsChecked = auto;
+                }), System.Windows.Threading.DispatcherPriority.Normal, value);
             }
         }
         #endregion
@@ -156,9 +180,9 @@ namespace BlipFace.View
             _presenter.ValidateCredential(UserName, Password);
         }
 
-      
 
-       
+
+
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
@@ -174,7 +198,7 @@ namespace BlipFace.View
                                    {
 
                                        lblLoginAnimation.Visibility = Visibility.Visible;
-                                       Storyboard sbdHideLoading = (Storyboard) FindResource("AnimatedDotLabel");
+                                       Storyboard sbdHideLoading = (Storyboard)FindResource("AnimatedDotLabel");
                                        sbdHideLoading.Begin();
 
                                        //lblLoginAnimation.
@@ -189,7 +213,7 @@ namespace BlipFace.View
             {
                 //gdy naciśnięto enter to wysyłamy tekst
                 ValidateCredential();
-             
+
             }
         }
 
@@ -204,9 +228,9 @@ namespace BlipFace.View
         {
             Dispatcher.Invoke(new Action(delegate()
             {
-                UserViewModel usr = new UserViewModel() {UserName = this.UserName, Password = this.Password};
-                ChangeView(this,new ActionsEventArgs(Actions.Statuses,usr));
-            }),System.Windows.Threading.DispatcherPriority.Normal);
+                UserViewModel usr = new UserViewModel() { UserName = this.UserName, Password = this.Password };
+                ChangeView(this, new ActionsEventArgs(Actions.Statuses, usr));
+            }), System.Windows.Threading.DispatcherPriority.Normal);
         }
 
         public event EventHandler<ActionsEventArgs> ChangeView;
