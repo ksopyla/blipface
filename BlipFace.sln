@@ -12,6 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{BE6B08B1-E
 	ProjectSection(SolutionItems) = preProject
 		Libs\Microsoft.Http.dll = Libs\Microsoft.Http.dll
 		Libs\Microsoft.Http.Extensions.dll = Libs\Microsoft.Http.Extensions.dll
+		Libs\obout_Calendar2_Net.dll = Libs\obout_Calendar2_Net.dll
+		Libs\System.Web.DataVisualization.Design.dll = Libs\System.Web.DataVisualization.Design.dll
+		Libs\System.Web.DataVisualization.dll = Libs\System.Web.DataVisualization.dll
 	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "BlipFace.Install", "BlipFace.Install\BlipFace.Install.vdproj", "{D7793391-3950-4DE7-ACB4-9AE043703396}"

@@ -67,14 +67,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CountUseBlipFace.svc" />
+    <Content Include="BlipFaceServices.svc" />
     <Content Include="Default.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CountUseBlipFace.svc.cs">
-      <DependentUpon>CountUseBlipFace.svc</DependentUpon>
+    <Compile Include="BlipFaceServices.svc.cs">
+      <DependentUpon>BlipFaceServices.svc</DependentUpon>
     </Compile>
+    <Compile Include="BlipFaceVersion.cs" />
     <Compile Include="DataClasses.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -87,8 +88,13 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ICountUseBlipFace.cs" />
+    <Compile Include="IBlipFaceServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DataClasses.dbml">
@@ -103,6 +109,10 @@
   <ItemGroup>
     <None Include="DataClasses.dbml.layout">
       <DependentUpon>DataClasses.dbml</DependentUpon>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="a7e050b7-58c7-4341-9978-468da5d3e109" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:49987/BlipFaceServices.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="BlipFaceServices2.xsd" MetadataType="Schema" ID="099a4573-5735-4c7d-9431-0ab0427ffd97" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="BlipFaceServices.xsd" MetadataType="Schema" ID="bd91e6e1-300d-4d56-8eca-e653b005e87b" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?xsd=xsd0" />
+    <MetadataFile FileName="BlipFaceServices.wsdl" MetadataType="Wsdl" ID="486b77f7-bd7b-40d0-99b2-adcd1d94b614" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?wsdl" />
+    <MetadataFile FileName="BlipFaceServices21.xsd" MetadataType="Schema" ID="d34607b4-2070-40c2-b381-1dbf7394b19e" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="BlipFaceServices1.xsd" MetadataType="Schema" ID="33d526d7-a3df-4074-bec2-8ce10a78f5f1" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

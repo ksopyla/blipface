@@ -50,7 +50,7 @@ namespace BlipFace.Helpers
                 }
             }
 
-            BlipFaceWebServicesCommunication communication = new BlipFaceWebServicesCommunication();
+            BlipFaceServicesCommunication communication = new BlipFaceServicesCommunication();
             communication.NotifyUseBlipFace(blipFaceGuid, version.ToString());
         }
     }

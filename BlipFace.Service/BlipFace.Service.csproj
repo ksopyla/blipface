@@ -73,7 +73,7 @@
     <Compile Include="Entities\BlipUser.cs" />
     <Compile Include="Entities\StatusesList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\BlipFaceWebServices\Reference.cs">
+    <Compile Include="Service References\BlipFaceServices\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -84,21 +84,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Service References\BlipFaceWebServices\CountUseBlipFace.wsdl" />
-    <None Include="Service References\BlipFaceWebServices\CountUseBlipFace.xsd" />
-    <None Include="Service References\BlipFaceWebServices\CountUseBlipFace1.xsd" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices.wsdl" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices.xsd" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices1.xsd" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\BlipFaceWebServices\" />
+    <WCFMetadataStorage Include="Service References\BlipFaceServices\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\BlipFaceWebServices\configuration91.svcinfo" />
+    <None Include="Service References\BlipFaceServices\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\BlipFaceWebServices\configuration.svcinfo" />
+    <None Include="Service References\BlipFaceServices\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\BlipFaceWebServices\Reference.svcmap">
+    <None Include="Service References\BlipFaceServices\BlipFace.Service.BlipFaceServices.BlipFaceVersion.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\BlipFaceServices\BlipFaceServices2.xsd" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices21.xsd" />
+    <None Include="Service References\BlipFaceServices\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

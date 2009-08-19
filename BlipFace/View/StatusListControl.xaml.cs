@@ -309,6 +309,23 @@ namespace BlipFace.View
             }
         }
 
+        public LatestVersionViewModel LatestVersion
+        {
+            get { throw new NotImplementedException(); }
+            set
+            {
+                Dispatcher.Invoke(
+                    new Action<LatestVersionViewModel>(delegate(LatestVersionViewModel latestVersion)
+                    {
+                        //chowamy błędy 
+                        newVersion.Visibility = Visibility.Visible;
+
+                        newVersionLink.NavigateUri = latestVersion.DownloadLink;
+                        newVersionTextBox.ToolTip += " (" + latestVersion.Version.ToString() + ")";
+                    }), value);
+            }
+        }
+
         public void UpdateStatuses(IList<StatusViewModel> statuses)
         {
             Dispatcher.Invoke(

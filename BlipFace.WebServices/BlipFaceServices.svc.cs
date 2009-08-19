@@ -7,13 +7,13 @@ using System.Text;
 
 namespace BlipFace.WebServices
 {
-    // NOTE: If you change the class name "CountUseBlipFace" here, you must also update the reference to "CountUseBlipFace" in Web.config.
-    public class CountUseBlipFace : ICountUseBlipFace
+    // NOTE: If you change the class name "BlipFaceServices" here, you must also update the reference to "BlipFaceServices" in Web.config.
+    public class BlipFaceServices : IBlipFaceServices
     {
 
-        #region ICountUseBlipFace Members
+        #region IBlipFaceServices Members
 
-        public void Notify(string guid, string version)
+        public void NotifyUseBlipFace(string guid, string version)
         {
             using (DataClassesDataContext db = new DataClassesDataContext())
             {
@@ -25,6 +25,11 @@ namespace BlipFace.WebServices
                 db.CountUses.InsertOnSubmit(countUse);
                 db.SubmitChanges();
             }
+        }
+
+        public BlipFaceVersion GetLatestVersion()
+        {
+            return new BlipFaceVersion() { Version = new Version(Properties.Settings.Default.LatestVersion), DownloadLink = Properties.Settings.Default.DownloadLink };
         }
 
         #endregion

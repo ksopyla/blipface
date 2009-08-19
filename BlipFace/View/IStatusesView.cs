@@ -45,6 +45,8 @@ namespace BlipFace.View
         /// </summary>
         Exception Error { get; set; }
 
+        LatestVersionViewModel LatestVersion { get; set; }
+
         TitleMessageViewModel ConnectivityStatus { get; set; }
         void UpdateStatuses(IList<StatusViewModel> collection);
 

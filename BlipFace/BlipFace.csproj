@@ -162,9 +162,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CheckNewVersion.cs" />
     <Compile Include="Helpers\UseageStatistics.cs" />
     <Compile Include="Helpers\IsolatedStorageAccess.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
+    <Compile Include="Model\LatestVersionViewModel.cs" />
     <Compile Include="Model\TitleMessageViewModel.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

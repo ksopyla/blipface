@@ -144,6 +144,9 @@ namespace BlipFace.Presenter
 
             blpCom.CommunicationError += new EventHandler<CommunicationErrorEventArgs>(BlpComCommunicationError);
 
+            CheckLatestVersion checkLatestVersion = new CheckLatestVersion();
+            checkLatestVersion.LatestVersionChecked += new EventHandler<BlipFaceVersionEventArgs>(CheckVersion);
+            checkLatestVersion.Check();
 
             updateStatusTimer = new Timer(refreshTimeSec*1000); //time in milisconds
             updateStatusTimer.Enabled = false;
@@ -635,6 +638,20 @@ namespace BlipFace.Presenter
                 view.MainStatus = sts;
             }
             view.ConnectivityStatus = SetConnectivityStatus(ConnectivityStatus.Online);
+        }
+
+        /// <summary>
+        /// Callback do zdarzenie gdy nastąpi sprawdzenie nowej wersji BlipFace
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CheckVersion(object sender, BlipFaceVersionEventArgs e)
+        {
+            LatestVersionViewModel latestVersion = new LatestVersionViewModel() { Version = e.Version, DownloadLink = e.DownloadLink };
+
+            Version currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            if(currentVersion.CompareTo(e.Version) < 0)
+                view.LatestVersion = latestVersion;
         }
 
         #endregion

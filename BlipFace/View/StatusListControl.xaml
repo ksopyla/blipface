@@ -29,7 +29,7 @@
         <CommandBinding Command="helper:StatusesCommands.ShowVideo"  Executed="ShowVideo_Executed" />
 
         <CommandBinding  Command="helper:StatusesCommands.Navigate"  Executed="Navigate_Executed" />
-        
+
         <CommandBinding Command="helper:StatusesCommands.ToggleButtons" Executed="ToggleButtons_Executed"/>
     </UserControl.CommandBindings>
     <Grid>
@@ -93,7 +93,7 @@
 
 
 
- <TextBlock x:Name="tbShowLoad" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+            <TextBlock x:Name="tbShowLoad" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
 				       Visibility="Visible" 
                        Foreground="Yellow" 
                        FontSize="10" FontFamily="Verdana"
@@ -101,7 +101,7 @@
                    />
         </Grid>
 
-       
+
         <ItemsControl Grid.Row="1" Grid.Column="0"
 			x:Name="lstbStatusList" 
 			ItemTemplate="{StaticResource WrapItemTemplate}">
@@ -121,7 +121,7 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-       
+
         <viewCtrl:Pager x:Name="ucPager" Visibility="Collapsed"  Grid.Row="2" Grid.Column="0" Height="20" FontSize="15" Foreground="White" HorizontalAlignment="Stretch" 
                             CurrentPageIndexChanged="pagerControl_CurrentPageIndexChanged"/>
 
@@ -142,7 +142,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,0">
-                
+
                 <ToggleButton x:Name="tgbDashboard" IsChecked="True" IsEnabled="False"  Content="Kokpit" Margin="1" Height="22" Width="80" Style="{StaticResource Flat3D}"
                               Click="tgbDashboard_Click" Command="helper:StatusesCommands.ToggleButtons" ToolTip="Pokaż kokpit"
                               />
@@ -151,7 +151,7 @@
                               />
                 <ToggleButton x:Name="tgbArchive" Content="Archiwum" Margin="1" Height="22" Width="80" Style="{StaticResource Flat3D}"
                               Command="helper:StatusesCommands.ToggleButtons" Click="tgbArchive_Click"  ToolTip="Pokaż archiwum" />
-                
+
                 <TextBlock x:Name="tbShowSave" 
 				       Visibility="Hidden" 
                        Foreground="Yellow" 
@@ -233,8 +233,6 @@
                       VerticalAlignment="Center" Visibility="Collapsed"
 		       FontSize="9" Content="Error"  MouseLeftButtonUp="ShowMessage"/>
 
-
-
             <TextBlock DockPanel.Dock="Right" 
                        Margin="0,0,18,0" TextAlignment="Right" VerticalAlignment="Center">
                            <Hyperlink FontSize="9" FontFamily="Verdana"  
@@ -245,6 +243,17 @@
                                  <TextBlock Text="Zgłoś uwagę"  ToolTip="Zgłoś błąd lub uwagę"/>
                                      
                                  
+                            </Hyperlink>
+                        </TextBlock>
+
+            <TextBlock DockPanel.Dock="Right" Name="newVersion"
+                       Margin="0,0,18,0" TextAlignment="Right" VerticalAlignment="Center" Visibility="Hidden">
+                           <Hyperlink FontSize="9" FontFamily="Verdana" Name="newVersionLink"  
+                                       Foreground="Red" 
+                                         NavigateUri="http://blipface.wikidot.com"
+                                      RequestNavigate="Hyperlink_RequestNavigate"
+                                       >
+                                 <TextBlock Name="newVersionTextBox" Text="Nowa wersja BlipFace"  ToolTip="Pobierz najnowszą wersję"/>
                             </Hyperlink>
                         </TextBlock>
         </DockPanel>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:tns="http://tempuri.org/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" name="CountUseBlipFace" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsp:Policy wsu:Id="WSHttpBinding_ICountUseBlipFace_policy">
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:tns="http://tempuri.org/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" name="BlipFaceServices" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="WSHttpBinding_IBlipFaceServices_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -106,7 +106,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSHttpBinding_ICountUseBlipFace_Notify_Input_policy">
+  <wsp:Policy wsu:Id="WSHttpBinding_IBlipFaceServices_NotifyUseBlipFace_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -125,7 +125,45 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSHttpBinding_ICountUseBlipFace_Notify_output_policy">
+  <wsp:Policy wsu:Id="WSHttpBinding_IBlipFaceServices_NotifyUseBlipFace_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IBlipFaceServices_GetLatestVersion_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IBlipFaceServices_GetLatestVersion_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -146,42 +184,65 @@
   </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
-      <xsd:import schemaLocation="http://localhost:49987/CountUseBlipFace.svc?xsd=xsd0" namespace="http://tempuri.org/" />
-      <xsd:import schemaLocation="http://localhost:49987/CountUseBlipFace.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:49987/BlipFaceServices.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:49987/BlipFaceServices.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:49987/BlipFaceServices.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/BlipFace.WebServices" />
+      <xsd:import schemaLocation="http://localhost:49987/BlipFaceServices.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="ICountUseBlipFace_Notify_InputMessage">
-    <wsdl:part name="parameters" element="tns:Notify" />
+  <wsdl:message name="IBlipFaceServices_NotifyUseBlipFace_InputMessage">
+    <wsdl:part name="parameters" element="tns:NotifyUseBlipFace" />
   </wsdl:message>
-  <wsdl:message name="ICountUseBlipFace_Notify_OutputMessage">
-    <wsdl:part name="parameters" element="tns:NotifyResponse" />
+  <wsdl:message name="IBlipFaceServices_NotifyUseBlipFace_OutputMessage">
+    <wsdl:part name="parameters" element="tns:NotifyUseBlipFaceResponse" />
   </wsdl:message>
-  <wsdl:portType name="ICountUseBlipFace">
-    <wsdl:operation name="Notify">
-      <wsdl:input wsaw:Action="http://tempuri.org/ICountUseBlipFace/Notify" message="tns:ICountUseBlipFace_Notify_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/ICountUseBlipFace/NotifyResponse" message="tns:ICountUseBlipFace_Notify_OutputMessage" />
+  <wsdl:message name="IBlipFaceServices_GetLatestVersion_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLatestVersion" />
+  </wsdl:message>
+  <wsdl:message name="IBlipFaceServices_GetLatestVersion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLatestVersionResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IBlipFaceServices">
+    <wsdl:operation name="NotifyUseBlipFace">
+      <wsdl:input wsaw:Action="http://tempuri.org/IBlipFaceServices/NotifyUseBlipFace" message="tns:IBlipFaceServices_NotifyUseBlipFace_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IBlipFaceServices/NotifyUseBlipFaceResponse" message="tns:IBlipFaceServices_NotifyUseBlipFace_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLatestVersion">
+      <wsdl:input wsaw:Action="http://tempuri.org/IBlipFaceServices/GetLatestVersion" message="tns:IBlipFaceServices_GetLatestVersion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IBlipFaceServices/GetLatestVersionResponse" message="tns:IBlipFaceServices_GetLatestVersion_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="WSHttpBinding_ICountUseBlipFace" type="tns:ICountUseBlipFace">
-    <wsp:PolicyReference URI="#WSHttpBinding_ICountUseBlipFace_policy" />
+  <wsdl:binding name="WSHttpBinding_IBlipFaceServices" type="tns:IBlipFaceServices">
+    <wsp:PolicyReference URI="#WSHttpBinding_IBlipFaceServices_policy" />
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="Notify">
-      <soap12:operation soapAction="http://tempuri.org/ICountUseBlipFace/Notify" style="document" />
+    <wsdl:operation name="NotifyUseBlipFace">
+      <soap12:operation soapAction="http://tempuri.org/IBlipFaceServices/NotifyUseBlipFace" style="document" />
       <wsdl:input>
-        <wsp:PolicyReference URI="#WSHttpBinding_ICountUseBlipFace_Notify_Input_policy" />
+        <wsp:PolicyReference URI="#WSHttpBinding_IBlipFaceServices_NotifyUseBlipFace_Input_policy" />
         <soap12:body use="literal" />
       </wsdl:input>
       <wsdl:output>
-        <wsp:PolicyReference URI="#WSHttpBinding_ICountUseBlipFace_Notify_output_policy" />
+        <wsp:PolicyReference URI="#WSHttpBinding_IBlipFaceServices_NotifyUseBlipFace_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLatestVersion">
+      <soap12:operation soapAction="http://tempuri.org/IBlipFaceServices/GetLatestVersion" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSHttpBinding_IBlipFaceServices_GetLatestVersion_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSHttpBinding_IBlipFaceServices_GetLatestVersion_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:service name="CountUseBlipFace">
-    <wsdl:port name="WSHttpBinding_ICountUseBlipFace" binding="tns:WSHttpBinding_ICountUseBlipFace">
-      <soap12:address location="http://localhost:49987/CountUseBlipFace.svc" />
+  <wsdl:service name="BlipFaceServices">
+    <wsdl:port name="WSHttpBinding_IBlipFaceServices" binding="tns:WSHttpBinding_IBlipFaceServices">
+      <soap12:address location="http://localhost:49987/BlipFaceServices.svc" />
       <wsa10:EndpointReference>
-        <wsa10:Address>http://localhost:49987/CountUseBlipFace.svc</wsa10:Address>
+        <wsa10:Address>http://localhost:49987/BlipFaceServices.svc</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
           <Dns>localhost</Dns>
         </Identity>
