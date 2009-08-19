@@ -8,7 +8,7 @@ using BlipFace.Service.Communication;
 
 namespace BlipFace.Helpers
 {
-    public class BlipFaceNotifyUse
+    public class UseageStatistics
     {
         private const string FileBlipFaceGuid = "BlipFaceGuid.bup";
 
