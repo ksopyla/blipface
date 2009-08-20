@@ -15,6 +15,7 @@ namespace BlipFace.Helpers
         public void Notyfi()
         {
             Thread thread = new Thread(new ThreadStart(NotyfiInNewThread));
+            thread.IsBackground = true;
             thread.Start();
         }
 

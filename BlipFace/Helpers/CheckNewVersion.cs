@@ -12,6 +12,7 @@ namespace BlipFace.Helpers
         public void Check()
         {
             Thread thread = new Thread(new ThreadStart(CheckInNewThread));
+            thread.IsBackground = true;
             thread.Start();
         }
 
