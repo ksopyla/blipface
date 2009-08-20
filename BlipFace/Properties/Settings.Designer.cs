@@ -85,5 +85,17 @@ namespace BlipFace.Properties {
                 this["AlwaysInTray"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MinimalizeToTray {
+            get {
+                return ((bool)(this["MinimalizeToTray"]));
+            }
+            set {
+                this["MinimalizeToTray"] = value;
+            }
+        }
     }
 }

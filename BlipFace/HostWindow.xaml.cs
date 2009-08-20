@@ -24,6 +24,7 @@ namespace BlipFace
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Drawing.Icon normalNotifyIcon;
         private System.Drawing.Icon statusAddedNotifyIcon;
+        private BlipFaceWindowsState currentState;
 
         private bool showBallon = true;
 
@@ -52,28 +53,32 @@ namespace BlipFace
                              };
 
             normalNotifyIcon = IconFromResource(iconUri.ToString());
-            notifyIcon.Icon = normalNotifyIcon;
 
             statusAddedNotifyIcon = IconFromResource("pack://application:,,,/Resource/Img/blipFaceAddStatus.ico");
 
             notifyIcon.Click += new EventHandler(NotifyIconClick);
 
             //ustawienie ikony w tray'u kiedy jest ustawiona opcja aby była ona tam ciągle
-            if (notifyIcon != null && Properties.Settings.Default.AlwaysInTray)
-                notifyIcon.Visible = true;
+            if (Properties.Settings.Default.AlwaysInTray)
+                ChangeIconInTray(IconInTrayState.Normal);
 
             mgr = new ViewsManager(this);
 
             //gdy zmienią się ustawienia aplikacji trzeba ustawić odpowiednie elementy okna
             //todo:trzeba pomyśleć jak to zrobić inaczej
             Properties.Settings.Default.PropertyChanged += new PropertyChangedEventHandler(Default_PropertyChanged);
+
+            currentState = BlipFaceWindowsState.Normal;
         }
 
         void Default_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "AlwaysInTray")
             {
-                notifyIcon.Visible = Properties.Settings.Default.AlwaysInTray;
+                if (Properties.Settings.Default.AlwaysInTray)
+                    ChangeIconInTray(IconInTrayState.Normal);
+                else
+                    ChangeIconInTray(IconInTrayState.None);
             }
         }
 
@@ -134,15 +139,7 @@ namespace BlipFace
 
         private void btnMinimalizeApp_Click(object sender, RoutedEventArgs e)
         {
-            //WindowState = System.Windows.WindowState.Minimized;
-
-            this.Hide();
-            if (notifyIcon != null && showBallon)
-            {
-                notifyIcon.ShowBalloonTip(BallonTipTime);
-
-                showBallon = false;
-            }
+            MinimalizeBlipFaceWindows();
         }
 
         #region IHost Members
@@ -156,13 +153,10 @@ namespace BlipFace
 
         void NotifyIconClick(object sender, EventArgs e)
         {
-            Show();
-            //if(WindowState== System.Windows.WindowState.Maximized)
-            //{
-            //    this.WindowState = System.Windows.WindowState.Normal;
-            //}
-            //else
-            this.WindowState = storedWindowState;
+            if (currentState == BlipFaceWindowsState.InTray || currentState == BlipFaceWindowsState.MinimalizeAndInTray)
+            {
+                ToNormalBlipFaceWindows();
+            }
         }
 
         /// <summary>
@@ -177,8 +171,6 @@ namespace BlipFace
             notifyIcon = null;
         }
 
-        private WindowState storedWindowState = WindowState.Normal;
-
         /// <summary>
         /// Czas pokazywania podpowiedzi po zminimalizowaniu aplikacji
         /// </summary>
@@ -191,50 +183,62 @@ namespace BlipFace
         /// <param name="e"></param>
         private void HostWindow_OnStateChanged(object sender, EventArgs e)
         {
-            if (WindowState == WindowState.Minimized)
+            if (currentState == BlipFaceWindowsState.Normal)
             {
-                this.Hide();
-                if (notifyIcon != null && showBallon)
-                {
-                    notifyIcon.ShowBalloonTip(BallonTipTime);
-                    showBallon = false;
-                }
+                MinimalizeBlipFaceWindows();
             }
             else
             {
-                storedWindowState = WindowState.Normal;
+                ToNormalBlipFaceWindows();
             }
-            //WindowState;
         }
 
         /// <summary>
-        /// Kiedy zmieni się widoczność okna
+        /// Logika minimalizowania BlipFace
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HostWindow_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void MinimalizeBlipFaceWindows()
         {
-            CheckTrayIcon();
-            if (notifyIcon != null && notifyIcon.Visible == false)
+            if (Properties.Settings.Default.MinimalizeToTray)
             {
-                //zamian ikony w tray na domyślną
-                notifyIcon.Icon = normalNotifyIcon;
+                this.Hide();
+                if (notifyIcon != null)
+                {
+                    ChangeIconInTray(IconInTrayState.Normal);
+                    if (showBallon)
+                    {
+                        notifyIcon.ShowBalloonTip(BallonTipTime);
+                        showBallon = false;
+                    }
+                }
+                currentState = BlipFaceWindowsState.InTray;
             }
-            //sprawdzenie czy czas nie ma ustawionego aby ikona w tray'u była ciągle tam
+            else
+            {
+                WindowState = WindowState.Minimized;
+                currentState = BlipFaceWindowsState.Minimalize;
+                if (Properties.Settings.Default.AlwaysInTray)
+                    currentState = BlipFaceWindowsState.MinimalizeAndInTray;
+            }
+        }
+
+        /// <summary>
+        /// Logika przywracania BlipFace do normalnego wyglądu
+        /// </summary>
+        private void ToNormalBlipFaceWindows()
+        {
+            if (!IsVisible)
+                Show();
+            WindowState = WindowState.Normal;
+            currentState = BlipFaceWindowsState.Normal;
+
             if (Properties.Settings.Default.AlwaysInTray)
-                notifyIcon.Visible = true;
-        }
-
-        private void CheckTrayIcon()
-        {
-                ShowTrayIcon(!IsVisible);
-        }
-
-        private void ShowTrayIcon(bool show)
-        {
-
-            if (notifyIcon != null)
-                notifyIcon.Visible = show;
+            {
+                ChangeIconInTray(IconInTrayState.Normal);
+            }
+            else
+            {
+                ChangeIconInTray(IconInTrayState.None);
+            }
         }
 
         #endregion
@@ -243,7 +247,7 @@ namespace BlipFace
         {
             if (notifyIcon != null && notifyIcon.Visible)
             {
-                notifyIcon.Icon = statusAddedNotifyIcon;
+                ChangeIconInTray(IconInTrayState.NewStatus);
 
                 System.Media.SystemSound sound = System.Media.SystemSounds.Beep;
                 sound.Play();
@@ -256,5 +260,55 @@ namespace BlipFace
             Stream iconStream = Application.GetResourceStream(iconUri).Stream;
             return new System.Drawing.Icon(iconStream);
         }
+
+        private IconInTrayState currentIconState = IconInTrayState.None;
+
+        private void ChangeIconInTray(IconInTrayState state)
+        {
+            if (currentIconState == IconInTrayState.None && state != IconInTrayState.None)
+            {
+                notifyIcon.Visible = true;
+            }
+            else if (state == IconInTrayState.None)
+            {
+                notifyIcon.Visible = false;
+                currentIconState = IconInTrayState.None;
+            }
+
+            if (currentIconState != IconInTrayState.Normal && state == IconInTrayState.Normal)
+            {
+                notifyIcon.Icon = normalNotifyIcon;
+                currentIconState = IconInTrayState.Normal;
+            }
+
+            if (currentIconState != IconInTrayState.NewStatus && state == IconInTrayState.NewStatus)
+            {
+                notifyIcon.Icon = statusAddedNotifyIcon;
+                currentIconState = IconInTrayState.NewStatus;
+            }
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (currentIconState == IconInTrayState.NewStatus)
+                ChangeIconInTray(IconInTrayState.Normal);
+        }
+
+
+    }
+
+    enum BlipFaceWindowsState
+    {
+        Normal,
+        Minimalize,
+        InTray,
+        MinimalizeAndInTray
+    }
+
+    enum IconInTrayState
+    {
+        None,
+        Normal,
+        NewStatus
     }
 }

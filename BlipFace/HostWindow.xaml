@@ -18,9 +18,7 @@
    
 	Loaded="Window_Loaded"
      Closing="HostWindow_OnClosing"
-    StateChanged="HostWindow_OnStateChanged"
-    IsVisibleChanged="HostWindow_OnIsVisibleChanged"
-        >
+    StateChanged="HostWindow_OnStateChanged" MouseLeftButtonDown="Window_MouseLeftButtonDown">
     
     <Grid>
         <Grid.ColumnDefinitions>

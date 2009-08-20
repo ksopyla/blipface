@@ -27,6 +27,7 @@ namespace BlipFace.View
             chbAutoLogon.IsChecked = Settings.Default.AutoLogon;
             chbAutoStart.IsChecked = Settings.Default.AutoStart;
             chbAlwaysInTray.IsChecked = Settings.Default.AlwaysInTray;
+            chbMinimalizeToTray.IsChecked = Settings.Default.MinimalizeToTray;
         }
 
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
@@ -50,6 +51,11 @@ namespace BlipFace.View
             if (chbAlwaysInTray.IsChecked.HasValue)
             {
                 Settings.Default.AlwaysInTray = chbAlwaysInTray.IsChecked.Value;
+            }
+
+            if (chbMinimalizeToTray.IsChecked.HasValue)
+            {
+                Settings.Default.MinimalizeToTray = chbMinimalizeToTray.IsChecked.Value;
             }
 
             Settings.Default.Save();
