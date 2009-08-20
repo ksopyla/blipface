@@ -43,7 +43,7 @@ namespace BlipFace.WebServices
                 // Draw as 3D Cylinder
                 UsersUseBlipFaceChart.Series["Series1"]["DrawingStyle"] = "Cylinder";
 
-                UsersUseBlipFaceChart.DataSource = UsersUseBlipFaceInDay.ToList(); ;
+                UsersUseBlipFaceChart.DataSource = UsersUseBlipFaceInDay.ToList();
                 UsersUseBlipFaceChart.Series["Series1"].XValueMember = "Date";
                 UsersUseBlipFaceChart.Series["Series1"].YValueMembers = "CountUse";
                 UsersUseBlipFaceChart.Titles.Add("Ilość użytkowników BlipFace w poszczególnych dniach");
