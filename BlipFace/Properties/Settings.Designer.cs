@@ -73,5 +73,17 @@ namespace BlipFace.Properties {
                 this["AutoStart"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AlwaysInTray {
+            get {
+                return ((bool)(this["AlwaysInTray"]));
+            }
+            set {
+                this["AlwaysInTray"] = value;
+            }
+        }
     }
 }

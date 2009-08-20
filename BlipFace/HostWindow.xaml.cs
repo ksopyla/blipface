@@ -58,8 +58,23 @@ namespace BlipFace
 
             notifyIcon.Click += new EventHandler(NotifyIconClick);
 
+            //ustawienie ikony w tray'u kiedy jest ustawiona opcja aby była ona tam ciągle
+            if (notifyIcon != null && Properties.Settings.Default.AlwaysInTray)
+                notifyIcon.Visible = true;
 
             mgr = new ViewsManager(this);
+
+            //gdy zmienią się ustawienia aplikacji trzeba ustawić odpowiednie elementy okna
+            //todo:trzeba pomyśleć jak to zrobić inaczej
+            Properties.Settings.Default.PropertyChanged += new PropertyChangedEventHandler(Default_PropertyChanged);
+        }
+
+        void Default_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "AlwaysInTray")
+            {
+                notifyIcon.Visible = Properties.Settings.Default.AlwaysInTray;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -141,7 +156,6 @@ namespace BlipFace
 
         void NotifyIconClick(object sender, EventArgs e)
         {
-
             Show();
             //if(WindowState== System.Windows.WindowState.Maximized)
             //{
@@ -206,12 +220,14 @@ namespace BlipFace
                 //zamian ikony w tray na domyślną
                 notifyIcon.Icon = normalNotifyIcon;
             }
+            //sprawdzenie czy czas nie ma ustawionego aby ikona w tray'u była ciągle tam
+            if (Properties.Settings.Default.AlwaysInTray)
+                notifyIcon.Visible = true;
         }
 
         private void CheckTrayIcon()
         {
-
-            ShowTrayIcon(!IsVisible);
+                ShowTrayIcon(!IsVisible);
         }
 
         private void ShowTrayIcon(bool show)

@@ -38,6 +38,8 @@
                       Content="Automatycznie loguj" Foreground="#FFFFFFFF" FontSize="14" />
             <CheckBox x:Name="chbAutoStart" Width="300" Height="25" 
                       Content="Uruchamiaj wraz z startem systemu" Foreground="#FFFFFFFF" FontSize="14" />
+            <CheckBox x:Name="chbAlwaysInTray" Width="300" Height="25" 
+                      Content="Zawsze w tray'u" Foreground="#FFFFFFFF" FontSize="14" />
         </StackPanel>
         
         <StackPanel Grid.Row="2" x:Name="LayoutRoota" Orientation="Vertical" VerticalAlignment="Stretch">
