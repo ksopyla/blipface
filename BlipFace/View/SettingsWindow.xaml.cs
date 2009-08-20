@@ -28,6 +28,7 @@ namespace BlipFace.View
             chbAutoStart.IsChecked = Settings.Default.AutoStart;
             chbAlwaysInTray.IsChecked = Settings.Default.AlwaysInTray;
             chbMinimalizeToTray.IsChecked = Settings.Default.MinimalizeToTray;
+            chbPlaySoundWhenNewStatus.IsChecked = Settings.Default.PlaySoundWhenNewStatus;
         }
 
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
@@ -56,6 +57,11 @@ namespace BlipFace.View
             if (chbMinimalizeToTray.IsChecked.HasValue)
             {
                 Settings.Default.MinimalizeToTray = chbMinimalizeToTray.IsChecked.Value;
+            }
+
+            if (chbPlaySoundWhenNewStatus.IsChecked.HasValue)
+            {
+                Settings.Default.PlaySoundWhenNewStatus = chbPlaySoundWhenNewStatus.IsChecked.Value;
             }
 
             Settings.Default.Save();

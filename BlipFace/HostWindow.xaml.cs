@@ -245,10 +245,12 @@ namespace BlipFace
 
         public void StatusAdded()
         {
-            if (notifyIcon != null && notifyIcon.Visible)
+            if (currentIconState == IconInTrayState.Normal)
             {
-                ChangeIconInTray(IconInTrayState.NewStatus);
-
+                ChangeIconInTray(IconInTrayState.NewStatus);                
+            }
+            if (Properties.Settings.Default.PlaySoundWhenNewStatus)
+            {
                 System.Media.SystemSound sound = System.Media.SystemSounds.Beep;
                 sound.Play();
             }

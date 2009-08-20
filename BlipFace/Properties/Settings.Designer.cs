@@ -97,5 +97,17 @@ namespace BlipFace.Properties {
                 this["MinimalizeToTray"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PlaySoundWhenNewStatus {
+            get {
+                return ((bool)(this["PlaySoundWhenNewStatus"]));
+            }
+            set {
+                this["PlaySoundWhenNewStatus"] = value;
+            }
+        }
     }
 }
