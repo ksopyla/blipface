@@ -79,7 +79,6 @@ Global
 		{76423AED-B8AC-467F-B932-C281F21641F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76423AED-B8AC-467F-B932-C281F21641F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{76423AED-B8AC-467F-B932-C281F21641F9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{76423AED-B8AC-467F-B932-C281F21641F9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{76423AED-B8AC-467F-B932-C281F21641F9}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
