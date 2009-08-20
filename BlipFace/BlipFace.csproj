@@ -166,6 +166,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AutoStart.cs" />
     <Compile Include="Helpers\CheckNewVersion.cs" />
     <Compile Include="Helpers\UseageStatistics.cs" />
     <Compile Include="Helpers\IsolatedStorageAccess.cs" />

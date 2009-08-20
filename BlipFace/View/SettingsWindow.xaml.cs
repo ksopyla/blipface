@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BlipFace.Helpers;
 
 namespace BlipFace.View
 {
@@ -23,6 +24,7 @@ namespace BlipFace.View
             InitializeComponent();
 
             chbAutoLogon.IsChecked = Properties.Settings.Default.AutoLogon;
+            chbAutoStart.IsChecked = Properties.Settings.Default.AutoStart;
         }
 
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
@@ -34,9 +36,16 @@ namespace BlipFace.View
         {
             if (chbAutoLogon.IsChecked.HasValue)
             {
-                Properties.Settings.Default.AutoLogon = chbAutoLogon.IsChecked.Value;
-                Properties.Settings.Default.Save();
+                Properties.Settings.Default.AutoLogon = chbAutoLogon.IsChecked.Value;                
             }
+
+            if (chbAutoStart.IsChecked.HasValue)
+            {
+                Properties.Settings.Default.AutoStart = chbAutoStart.IsChecked.Value;
+                AutoStart.Current.EnabledThroughStartupMenu = chbAutoStart.IsChecked.Value;
+            }
+
+            Properties.Settings.Default.Save();
             Close();
         }
     }
