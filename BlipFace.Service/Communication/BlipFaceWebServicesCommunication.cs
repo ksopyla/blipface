@@ -41,7 +41,8 @@ namespace BlipFace.Service.Communication
             }
             catch (Exception ex)
             {
-                throw new Exception("Problem z połączeniem z BlipFaceWebservices");
+                //trzeba tylko logować zdarzenie bo w przypadku wyrzucenia wyjątku do BlipFace się zwiesza
+                //throw new Exception("Problem z połączeniem z BlipFaceWebservices");
             }
         }
 
