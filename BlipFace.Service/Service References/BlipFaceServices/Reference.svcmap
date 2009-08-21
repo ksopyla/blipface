@@ -17,14 +17,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:49987/BlipFaceServices.svc?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://eastgroup.man.olsztyn.pl/BlipFaceWebServices/BlipFaceServices.svc?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="BlipFaceServices2.xsd" MetadataType="Schema" ID="099a4573-5735-4c7d-9431-0ab0427ffd97" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?xsd=xsd3" />
-    <MetadataFile FileName="BlipFaceServices.xsd" MetadataType="Schema" ID="bd91e6e1-300d-4d56-8eca-e653b005e87b" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?xsd=xsd0" />
-    <MetadataFile FileName="BlipFaceServices.wsdl" MetadataType="Wsdl" ID="486b77f7-bd7b-40d0-99b2-adcd1d94b614" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?wsdl" />
-    <MetadataFile FileName="BlipFaceServices21.xsd" MetadataType="Schema" ID="d34607b4-2070-40c2-b381-1dbf7394b19e" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?xsd=xsd2" />
-    <MetadataFile FileName="BlipFaceServices1.xsd" MetadataType="Schema" ID="33d526d7-a3df-4074-bec2-8ce10a78f5f1" SourceId="1" SourceUrl="http://localhost:49987/BlipFaceServices.svc?xsd=xsd1" />
+    <MetadataFile FileName="BlipFaceServices3.xsd" MetadataType="Schema" ID="5cb0d7ff-9582-40de-88a2-92bb01cfc39d" SourceId="1" SourceUrl="http://eastgroup.man.olsztyn.pl/BlipFaceWebServices/BlipFaceServices.svc?xsd=xsd3" />
+    <MetadataFile FileName="BlipFaceServices31.xsd" MetadataType="Schema" ID="358df9ce-7f37-482f-9668-0b6e2451f477" SourceId="1" SourceUrl="http://eastgroup.man.olsztyn.pl/BlipFaceWebServices/BlipFaceServices.svc?xsd=xsd2" />
+    <MetadataFile FileName="BlipFaceServices32.xsd" MetadataType="Schema" ID="5bf5d088-4378-4883-b836-081a116b7213" SourceId="1" SourceUrl="http://eastgroup.man.olsztyn.pl/BlipFaceWebServices/BlipFaceServices.svc?xsd=xsd1" />
+    <MetadataFile FileName="BlipFaceServices33.xsd" MetadataType="Schema" ID="1abe7aa4-3c04-4f2a-84ff-6b34a19509a2" SourceId="1" SourceUrl="http://eastgroup.man.olsztyn.pl/BlipFaceWebServices/BlipFaceServices.svc?xsd=xsd0" />
+    <MetadataFile FileName="BlipFaceServices1.wsdl" MetadataType="Wsdl" ID="8891d746-072e-4f50-af26-4569709dd996" SourceId="1" SourceUrl="http://eastgroup.man.olsztyn.pl/BlipFaceWebServices/BlipFaceServices.svc?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

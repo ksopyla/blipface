@@ -14,13 +14,13 @@
         Początek okresu:
         <asp:TextBox ID="StartTimeTextBox" runat="server" Enabled="False" Width="80px"></asp:TextBox>
         <obout:Calendar ID="StartCalendar" runat="server" DatePickerMode="True" TextBoxId="StartTimeTextBox"
-            TitleText="Wybierz datę" CultureName="pl-PL" DatePickerImagePath="/Img/dateselect.gif"
+            TitleText="Wybierz datę" CultureName="pl-PL" DatePickerImagePath="~/Img/dateselect.gif"
             DatePickerImageTooltip="Wybierz datę" AutoPostBack="True">
         </obout:Calendar>
         Koniec okresu:
         <asp:TextBox ID="EndTimeTextBox" runat="server" Enabled="False" Width="80px"></asp:TextBox>
         <obout:Calendar ID="EndCalendar" runat="server" DatePickerMode="True" TextBoxId="EndTimeTextBox"
-            TitleText="Wybierz datę" CultureName="pl-PL" DatePickerImagePath="/Img/dateselect.gif"
+            TitleText="Wybierz datę" CultureName="pl-PL" DatePickerImagePath="~/Img/dateselect.gif"
             DatePickerImageTooltip="Wybierz datę" AutoPostBack="True">
         </obout:Calendar>
         <br />
