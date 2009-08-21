@@ -32,6 +32,8 @@ namespace BlipFace.Service.Communication
 
         private void GetBlipFaceVersion()
         {
+            blipFaceVersion = new BlipFaceVersion() { Version = new Version("0.0.0.0"), DownloadLink = "http://blipface.pl" };
+
             try
             {
                 BlipFaceServicesClient client = new BlipFaceServicesClient();

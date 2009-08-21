@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace BlipFace
 {
@@ -21,7 +22,6 @@ namespace BlipFace
     public partial class HostWindow : Window, IHostView
     {
         private ViewsManager mgr;
-        private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Drawing.Icon normalNotifyIcon;
         private System.Drawing.Icon statusAddedNotifyIcon;
         private BlipFaceWindowsState currentState;
@@ -42,21 +42,11 @@ namespace BlipFace
                                   UriKind.RelativeOrAbsolute);
             this.Icon = BitmapFrame.Create(iconUri);
 
-
-            //ikona w sys tray'u po zminimalizowaniu
-            notifyIcon = new System.Windows.Forms.NotifyIcon
-                             {
-                                 BalloonTipText =
-                                     "BlipFace został zminimzlizowany, jeżeli chcesz go zobaczyć jeszcze raz kliknij na ikonę.",
-                                 BalloonTipTitle = "BlipFace",
-                                 Text = "Kliknij aby pokazał się BlipFace"
-                             };
-
             normalNotifyIcon = IconFromResource(iconUri.ToString());
 
             statusAddedNotifyIcon = IconFromResource("pack://application:,,,/Resource/Img/blipFaceAddStatus.ico");
 
-            notifyIcon.Click += new EventHandler(NotifyIconClick);
+            taskbarIcon.Icon = normalNotifyIcon;
 
             //ustawienie ikony w tray'u kiedy jest ustawiona opcja aby była ona tam ciągle
             if (Properties.Settings.Default.AlwaysInTray)
@@ -151,14 +141,6 @@ namespace BlipFace
         //http://possemeeg.wordpress.com/2007/09/06/minimize-to-tray-icon-in-wpf/
         #region chowanie okna
 
-        void NotifyIconClick(object sender, EventArgs e)
-        {
-            if (currentState == BlipFaceWindowsState.InTray || currentState == BlipFaceWindowsState.MinimalizeAndInTray)
-            {
-                ToNormalBlipFaceWindows();
-            }
-        }
-
         /// <summary>
         /// wywoływana przed zamknęciem
         /// </summary>
@@ -166,9 +148,8 @@ namespace BlipFace
         /// <param name="e"></param>
         private void HostWindow_OnClosing(object sender, CancelEventArgs e)
         {
-            //upewniamy się że ikona zostanie usunięta
-            notifyIcon.Dispose();
-            notifyIcon = null;
+            taskbarIcon.Dispose();
+            taskbarIcon = null;
         }
 
         /// <summary>
@@ -201,14 +182,11 @@ namespace BlipFace
             if (Properties.Settings.Default.MinimalizeToTray)
             {
                 this.Hide();
-                if (notifyIcon != null)
+                ChangeIconInTray(IconInTrayState.Normal);
+                if (showBallon)
                 {
-                    ChangeIconInTray(IconInTrayState.Normal);
-                    if (showBallon)
-                    {
-                        notifyIcon.ShowBalloonTip(BallonTipTime);
-                        showBallon = false;
-                    }
+                    taskbarIcon.ShowBalloonTip("BlipFace", "BlipFace został zminimzlizowany, jeżeli chcesz go zobaczyć jeszcze raz kliknij na ikonę.", BalloonIcon.Info);
+                    showBallon = false;
                 }
                 currentState = BlipFaceWindowsState.InTray;
             }
@@ -247,7 +225,7 @@ namespace BlipFace
         {
             if (currentIconState == IconInTrayState.Normal)
             {
-                ChangeIconInTray(IconInTrayState.NewStatus);                
+                ChangeIconInTray(IconInTrayState.NewStatus);
             }
             if (Properties.Settings.Default.PlaySoundWhenNewStatus)
             {
@@ -269,23 +247,24 @@ namespace BlipFace
         {
             if (currentIconState == IconInTrayState.None && state != IconInTrayState.None)
             {
-                notifyIcon.Visible = true;
+                currentIconState = state;
+                taskbarIcon.Visibility = Visibility.Visible;
             }
             else if (state == IconInTrayState.None)
             {
-                notifyIcon.Visible = false;
+                taskbarIcon.Visibility = Visibility.Hidden;
                 currentIconState = IconInTrayState.None;
             }
 
             if (currentIconState != IconInTrayState.Normal && state == IconInTrayState.Normal)
             {
-                notifyIcon.Icon = normalNotifyIcon;
+                taskbarIcon.Icon = normalNotifyIcon;
                 currentIconState = IconInTrayState.Normal;
             }
 
             if (currentIconState != IconInTrayState.NewStatus && state == IconInTrayState.NewStatus)
             {
-                notifyIcon.Icon = statusAddedNotifyIcon;
+                taskbarIcon.Icon = statusAddedNotifyIcon;
                 currentIconState = IconInTrayState.NewStatus;
             }
         }
@@ -296,7 +275,34 @@ namespace BlipFace
                 ChangeIconInTray(IconInTrayState.Normal);
         }
 
+        private void taskbarIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
+        {
+            ToNormalBlipFaceWindows();
+            this.Activate();
+        }
 
+        private void ShowBlipFaceWindowsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ToNormalBlipFaceWindows();
+            this.Activate();
+        }
+
+        private void ShowSettingsWindowsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            View.SettingsWindow settingsWindows = new BlipFace.View.SettingsWindow();
+            settingsWindows.Show();
+        }
+
+        private void CloseBlipFaceMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void ShowAboutBlipFaceWindowsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            View.AboutBlipFace aboutBlipFaceWindows = new BlipFace.View.AboutBlipFace();
+            aboutBlipFaceWindows.Show();
+        }
     }
 
     enum BlipFaceWindowsState
