@@ -84,9 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices.wsdl" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices.xsd" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices1.xsd" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\BlipFaceServices\" />
@@ -101,8 +98,11 @@
     <None Include="Service References\BlipFaceServices\BlipFace.Service.BlipFaceServices.BlipFaceVersion.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\BlipFaceServices\BlipFaceServices2.xsd" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices21.xsd" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices1.wsdl" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices3.xsd" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices31.xsd" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices32.xsd" />
+    <None Include="Service References\BlipFaceServices\BlipFaceServices33.xsd" />
     <None Include="Service References\BlipFaceServices\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

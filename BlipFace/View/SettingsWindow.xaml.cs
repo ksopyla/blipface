@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BlipFace.Helpers;
+using BlipFace.Properties;
 
 namespace BlipFace.View
 {
@@ -23,8 +24,11 @@ namespace BlipFace.View
         {
             InitializeComponent();
 
-            chbAutoLogon.IsChecked = Properties.Settings.Default.AutoLogon;
-            chbAutoStart.IsChecked = Properties.Settings.Default.AutoStart;
+            chbAutoLogon.IsChecked = Settings.Default.AutoLogon;
+            chbAutoStart.IsChecked = Settings.Default.AutoStart;
+            chbAlwaysInTray.IsChecked = Settings.Default.AlwaysInTray;
+            chbMinimalizeToTray.IsChecked = Settings.Default.MinimalizeToTray;
+            chbPlaySoundWhenNewStatus.IsChecked = Settings.Default.PlaySoundWhenNewStatus;
         }
 
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
@@ -36,16 +40,31 @@ namespace BlipFace.View
         {
             if (chbAutoLogon.IsChecked.HasValue)
             {
-                Properties.Settings.Default.AutoLogon = chbAutoLogon.IsChecked.Value;                
+                Settings.Default.AutoLogon = chbAutoLogon.IsChecked.Value;                
             }
 
             if (chbAutoStart.IsChecked.HasValue)
             {
-                Properties.Settings.Default.AutoStart = chbAutoStart.IsChecked.Value;
+                Settings.Default.AutoStart = chbAutoStart.IsChecked.Value;
                 AutoStart.Current.EnabledThroughStartupMenu = chbAutoStart.IsChecked.Value;
             }
 
-            Properties.Settings.Default.Save();
+            if (chbAlwaysInTray.IsChecked.HasValue)
+            {
+                Settings.Default.AlwaysInTray = chbAlwaysInTray.IsChecked.Value;
+            }
+
+            if (chbMinimalizeToTray.IsChecked.HasValue)
+            {
+                Settings.Default.MinimalizeToTray = chbMinimalizeToTray.IsChecked.Value;
+            }
+
+            if (chbPlaySoundWhenNewStatus.IsChecked.HasValue)
+            {
+                Settings.Default.PlaySoundWhenNewStatus = chbPlaySoundWhenNewStatus.IsChecked.Value;
+            }
+
+            Settings.Default.Save();
             Close();
         }
     }

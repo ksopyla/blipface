@@ -73,5 +73,41 @@ namespace BlipFace.Properties {
                 this["AutoStart"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AlwaysInTray {
+            get {
+                return ((bool)(this["AlwaysInTray"]));
+            }
+            set {
+                this["AlwaysInTray"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MinimalizeToTray {
+            get {
+                return ((bool)(this["MinimalizeToTray"]));
+            }
+            set {
+                this["MinimalizeToTray"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PlaySoundWhenNewStatus {
+            get {
+                return ((bool)(this["PlaySoundWhenNewStatus"]));
+            }
+            set {
+                this["PlaySoundWhenNewStatus"] = value;
+            }
+        }
     }
 }
