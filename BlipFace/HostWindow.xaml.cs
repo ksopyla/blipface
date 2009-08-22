@@ -277,7 +277,7 @@ namespace BlipFace
 
         private void taskbarIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
         {
-            ToNormalBlipFaceWindows();
+           ToNormalBlipFaceWindows();
             this.Activate();
         }
 

@@ -123,7 +123,7 @@
         <Grid>
             <tb:TaskbarIcon
                 Name="taskbarIcon"
-            ToolTipText="hello world Kliknij aby pokazał się BlipFace" 
+            ToolTipText="Kliknij aby pokazał się BlipFace" 
                 TrayLeftMouseUp="taskbarIcon_TrayLeftMouseUp"
                 >
                 <tb:TaskbarIcon.ContextMenu>
