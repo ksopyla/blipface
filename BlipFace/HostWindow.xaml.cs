@@ -303,6 +303,12 @@ namespace BlipFace
             View.AboutBlipFace aboutBlipFaceWindows = new BlipFace.View.AboutBlipFace();
             aboutBlipFaceWindows.Show();
         }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            if (currentIconState == IconInTrayState.NewStatus && Properties.Settings.Default.AlwaysInTray == true)
+                ChangeIconInTray(IconInTrayState.Normal);
+        }
     }
 
     enum BlipFaceWindowsState
