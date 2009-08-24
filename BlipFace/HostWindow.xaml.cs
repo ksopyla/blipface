@@ -68,7 +68,15 @@ namespace BlipFace
                 if (Properties.Settings.Default.AlwaysInTray)
                     ChangeIconInTray(IconInTrayState.Normal);
                 else
-                    ChangeIconInTray(IconInTrayState.None);
+                {
+                    if (currentState == BlipFaceWindowsState.InTray && Properties.Settings.Default.MinimalizeToTray == false)
+                    {
+                        ChangeIconInTray(IconInTrayState.None);
+                        currentState = BlipFaceWindowsState.Minimalize;
+                        WindowState = WindowState.Minimized;
+                    }
+
+                }
             }
         }
 
@@ -277,7 +285,7 @@ namespace BlipFace
 
         private void taskbarIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
         {
-           ToNormalBlipFaceWindows();
+            ToNormalBlipFaceWindows();
             this.Activate();
         }
 
