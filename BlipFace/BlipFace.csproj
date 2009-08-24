@@ -15,7 +15,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <ApplicationIcon>blipFace.ico</ApplicationIcon>
+    <ApplicationIcon>blipFace128.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>A9C4927AD240DF844F20F5A6670043248EDA08D2</ManifestCertificateThumbprint>
     <ManifestKeyFile>BlipFace_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>false</GenerateManifests>
@@ -309,6 +309,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="blipFace.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="blipFace128.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
