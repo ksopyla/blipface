@@ -44,7 +44,7 @@ namespace BlipFace
 
             normalNotifyIcon = IconFromResource(iconUri.ToString());
 
-            statusAddedNotifyIcon = IconFromResource("pack://application:,,,/Resource/Img/blipFaceAddStatus.ico");
+            statusAddedNotifyIcon = IconFromResource("pack://application:,,,/Resource/Img/blipFaceNewStatus.ico");
 
             taskbarIcon.Icon = normalNotifyIcon;
 
@@ -287,7 +287,7 @@ namespace BlipFace
             this.Activate();
         }
 
-        private void ShowSettingsWindowsMenuItem_Click(object sender, RoutedEventArgs e)
+        private void ShowSettingsWindows_Click(object sender, RoutedEventArgs e)
         {
             View.SettingsWindow settingsWindows = new BlipFace.View.SettingsWindow();
             settingsWindows.Show();

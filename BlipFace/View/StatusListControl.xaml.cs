@@ -566,11 +566,13 @@ namespace BlipFace.View
             e.Handled = true;
         }
 
+        /*
         private void ShowSettingsWindows(object sender, MouseButtonEventArgs e)
         {
             SettingsWindow s = new SettingsWindow();
             s.Show();
         }
+         */ 
 
         private void pagerControl_CurrentPageIndexChanged(object sender, EventArgs e)
         {

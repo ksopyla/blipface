@@ -15,7 +15,8 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <ApplicationIcon>Resource\Img\blipFace.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
     <ManifestCertificateThumbprint>A9C4927AD240DF844F20F5A6670043248EDA08D2</ManifestCertificateThumbprint>
     <ManifestKeyFile>BlipFace_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>false</GenerateManifests>
@@ -235,14 +236,6 @@
     <Resource Include="Resource\Img\directedMessage.gif" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resource\Img\blipFace_logo_round.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resource\Img\blipFace.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework Client Profile</ProductName>
@@ -297,6 +290,23 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\Img\blipFaceAddStatus.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Img\settings.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Img\blipFace.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Img\blipFaceNewStatus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Img\blipFace.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Img\blipFaceNewStatus.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -226,11 +226,12 @@
                       VerticalAlignment="Center"
 		       FontSize="9" Content="Offline" MouseLeftButtonUp="ShowMessage" />
 
+            <!--
             <Label DockPanel.Dock="Left" Name="tbSettings"  
                Foreground="YellowGreen" FontFamily="Verdana" Margin="5,0"
                       VerticalAlignment="Center"
 		       FontSize="9" Content="Ustawienia" MouseLeftButtonUp="ShowSettingsWindows" />
-
+-->
             <Label DockPanel.Dock="Left" Name="tbError"  
                Foreground="YellowGreen" FontFamily="Verdana" Margin="5,0"
                       VerticalAlignment="Center" Visibility="Collapsed"
@@ -253,7 +254,7 @@
                        Margin="0,0,18,0" TextAlignment="Right" VerticalAlignment="Center" Visibility="Hidden">
                            <Hyperlink FontSize="9" FontFamily="Verdana" Name="newVersionLink"  
                                        Foreground="Red" 
-                                         NavigateUri="http://blipface.wikidot.com"
+                                         NavigateUri="http://blipface.pl"
                                       RequestNavigate="Hyperlink_RequestNavigate"
                                        >
                                  <TextBlock Name="newVersionTextBox" Text="Nowa wersja BlipFace"  ToolTip="Pobierz najnowszą wersję"/>

@@ -30,26 +30,53 @@
             <RowDefinition Height="35"/>
             <!--Tytuł aplikacji-->
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" MaxHeight="35"/>
         </Grid.RowDefinitions>
 
         <Canvas Grid.Column="0" Grid.Row="0"  MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown">
             <Label Canvas.Top="0" Canvas.Left="0" Padding="10,8" 
 			Foreground="White" FontFamily="Verdana" Width="2000" 
 			FontSize="14"
-			Content="BlipFace v0.5.0" >
+			Content="BlipFace v0.6.0" >
                 <Label.BitmapEffect>
                     <OuterGlowBitmapEffect GlowSize="7" Opacity="0.7" GlowColor="White" />
                 </Label.BitmapEffect>
 
             </Label>
-
-
-            <Button x:Name="btnMinimalizeApp" ToolTip="Minimalizuj"
-                    Canvas.Right="53" Canvas.Top="5" Click="btnMinimalizeApp_Click">
+            <Button x:Name="btnConfiguration" ToolTip="Ustawienia"
+                    Canvas.Right="76" Canvas.Top="5" Click="ShowSettingsWindows_Click">
                 <Button.Template>
                     <ControlTemplate>
                         <Canvas>
-                            <Rectangle Width="25" Height="20" Stroke="Black" RadiusX="3" RadiusY="3">
+                            <Image Canvas.Left="5" Canvas.Top="1" Source="pack://application:,,,/Resource/Img/settings.png"
+                          Width="19">
+                                <Image.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <Trigger Property="Canvas.IsMouseOver" Value="true">
+                                                <Setter Property="Border.BorderBrush" Value="Yellow" />
+                                            </Trigger>
+
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+
+                            </Image>
+
+                        </Canvas>
+
+                    </ControlTemplate>
+
+                </Button.Template>
+            </Button>
+
+
+            <Button x:Name="btnMinimalizeApp" ToolTip="Minimalizuj"
+                    Canvas.Right="52" Canvas.Top="5" Click="btnMinimalizeApp_Click">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Canvas>
+                            <Rectangle Width="24" Height="20" Stroke="Black" RadiusX="3" RadiusY="3">
                                 <Rectangle.Style>
                                     <Style>
                                         <Style.Setters>
@@ -66,7 +93,7 @@
                                     </Style>
                                 </Rectangle.Style>
                             </Rectangle>
-                            <Line X1="7" Y1="14" X2="20" Y2="14" Stroke="White" StrokeThickness="3"/>
+                            <Line X1="7" Y1="14" X2="19" Y2="14" Stroke="White" StrokeThickness="3"/>
 
                         </Canvas>
                     </ControlTemplate>
@@ -78,38 +105,7 @@
             <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
                     Canvas.Right="25" Canvas.Top="5" Style="{StaticResource RedCrossButton}" 
                     Click="btnCloseApp_Click">
-                <!--
-                <Button.Template>
-                    <ControlTemplate>
-                        <Canvas>
-                            <Rectangle x:Name="recBackground"
-                                           Width="20" Height="20" 
-                                           Stroke="Black" RadiusX="3" RadiusY="3">
-                                <Rectangle.Style>
-                                    <Style>
-                                        <Style.Setters>
-                                            <Setter Property="Rectangle.Fill" Value="#ff4444" />
-                                        </Style.Setters>
 
-                                        <Style.Triggers>
-                                            <DataTrigger Value="True" Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsMouseOver}">
-                                                <Setter Property="Rectangle.Fill" Value="red" />
-                                            </DataTrigger>
-                                           
-                                        </Style.Triggers>
-
-                                    </Style>
-                                </Rectangle.Style>
-
-                            </Rectangle>
-
-                            <Line X1="5" Y1="5" X2="15" Y2="15" Stroke="White" StrokeThickness="2"/>
-                            <Line X1="15" Y1="5" X2="5" Y2="15" Stroke="White" StrokeThickness="2"/>
-                        </Canvas>
-                    </ControlTemplate>
-
-                </Button.Template>
-                -->
             </Button>
         </Canvas>
 
@@ -120,22 +116,22 @@
              Name="PlaceHolder">
 
         </Grid>
-        <Grid>
-            <tb:TaskbarIcon
+
+        <tb:TaskbarIcon Grid.Row="2"
                 Name="taskbarIcon"
             ToolTipText="Kliknij aby pokazał się BlipFace" 
                 TrayLeftMouseUp="taskbarIcon_TrayLeftMouseUp"
                 >
-                <tb:TaskbarIcon.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Name="ShowBlipFaceWindowsMenuItem" Header="Pokaż" Click="ShowBlipFaceWindowsMenuItem_Click"/>
-                        <MenuItem Name="ShowSettingsWindowsMenuItem" Header="Ustawienia" Click="ShowSettingsWindowsMenuItem_Click"/>
-                        <MenuItem Name="ShowAboutBlipFaceWindowsMenuItem" Header="O BlipFace" Click="ShowAboutBlipFaceWindowsMenuItem_Click"/>
-                        <MenuItem Name="CloseBlipFaceMenuItem" Header="Zamknij" Click="CloseBlipFaceMenuItem_Click"/>
-                    </ContextMenu>
-                </tb:TaskbarIcon.ContextMenu>
-            </tb:TaskbarIcon>
-        </Grid>
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Name="ShowBlipFaceWindowsMenuItem" Header="Pokaż" Click="ShowBlipFaceWindowsMenuItem_Click"/>
+                    <MenuItem Name="ShowSettingsWindowsMenuItem" Header="Ustawienia" Click="ShowSettingsWindows_Click"/>
+                    <MenuItem Name="ShowAboutBlipFaceWindowsMenuItem" Header="O BlipFace" Click="ShowAboutBlipFaceWindowsMenuItem_Click"/>
+                    <MenuItem Name="CloseBlipFaceMenuItem" Header="Zamknij" Click="CloseBlipFaceMenuItem_Click"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+
     </Grid>
 
 </Window>
