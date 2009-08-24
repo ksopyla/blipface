@@ -1,6 +1,7 @@
 ﻿<Window x:Class="BlipFace.HostWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:tb="http://www.hardcodet.net/taskbar"
     
         Title="BlipFace" 
         Height="630" Width="360" 
@@ -19,7 +20,7 @@
 	Loaded="Window_Loaded"
      Closing="HostWindow_OnClosing"
     StateChanged="HostWindow_OnStateChanged" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -31,8 +32,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-
-        
         <Canvas Grid.Column="0" Grid.Row="0"  MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown">
             <Label Canvas.Top="0" Canvas.Left="0" Padding="10,8" 
 			Foreground="White" FontFamily="Verdana" Width="2000" 
@@ -79,7 +78,7 @@
             <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
                     Canvas.Right="25" Canvas.Top="5" Style="{StaticResource RedCrossButton}" 
                     Click="btnCloseApp_Click">
-               <!--
+                <!--
                 <Button.Template>
                     <ControlTemplate>
                         <Canvas>
@@ -121,6 +120,22 @@
              Name="PlaceHolder">
 
         </Grid>
-
+        <Grid>
+            <tb:TaskbarIcon
+                Name="taskbarIcon"
+            ToolTipText="Kliknij aby pokazał się BlipFace" 
+                TrayLeftMouseUp="taskbarIcon_TrayLeftMouseUp"
+                >
+                <tb:TaskbarIcon.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Name="ShowBlipFaceWindowsMenuItem" Header="Pokaż" Click="ShowBlipFaceWindowsMenuItem_Click"/>
+                        <MenuItem Name="ShowSettingsWindowsMenuItem" Header="Ustawienia" Click="ShowSettingsWindowsMenuItem_Click"/>
+                        <MenuItem Name="ShowAboutBlipFaceWindowsMenuItem" Header="O BlipFace" Click="ShowAboutBlipFaceWindowsMenuItem_Click"/>
+                        <MenuItem Name="CloseBlipFaceMenuItem" Header="Zamknij" Click="CloseBlipFaceMenuItem_Click"/>
+                    </ContextMenu>
+                </tb:TaskbarIcon.ContextMenu>
+            </tb:TaskbarIcon>
+        </Grid>
     </Grid>
+
 </Window>

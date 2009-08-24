@@ -32,6 +32,8 @@ namespace BlipFace.Service.Communication
 
         private void GetBlipFaceVersion()
         {
+            blipFaceVersion = new BlipFaceVersion() { Version = new Version("0.0.0.0"), DownloadLink = "http://blipface.pl" };
+
             try
             {
                 BlipFaceServicesClient client = new BlipFaceServicesClient();
@@ -39,7 +41,8 @@ namespace BlipFace.Service.Communication
             }
             catch (Exception ex)
             {
-                throw new Exception("Problem z połączeniem z BlipFaceWebservices");
+                //trzeba tylko logować zdarzenie bo w przypadku wyrzucenia wyjątku do BlipFace się zwiesza
+                //throw new Exception("Problem z połączeniem z BlipFaceWebservices");
             }
         }
 

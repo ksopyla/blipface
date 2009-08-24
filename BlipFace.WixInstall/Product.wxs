@@ -44,6 +44,7 @@
         <File Id="F_BlipFaceExe" Source="$(var.BlipFace.TargetDir)\BlipFace.exe"/>
         <File Id="F_BlipFaceExeCommunication" Source="$(var.BlipFace.TargetDir)\BlipFace.Service.dll"/>
         <File Id="F_WcfRestHttp" Source="$(var.BlipFace.TargetDir)\Microsoft.Http.dll"/>
+        <File Id="F_TaskbarNotification" Source="$(var.BlipFace.TargetDir)\Hardcodet.Wpf.TaskbarNotification.dll"/>
         <File Id="F_WcfRestHttpExtension" Source="$(var.BlipFace.TargetDir)\Microsoft.Http.Extensions.dll"/>
         <!-- File Id="F_BlipFaceIco" Source="$(var.SolutionDir)\BlipFace\Resource\Img\blipFace.ico"/ -->
         <File Id="F_BlipFaceLicens" Source="$(var.SolutionDir)\BlipFace.WixInstall\License.rtf"/>
