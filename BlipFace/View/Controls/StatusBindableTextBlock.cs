@@ -35,29 +35,10 @@ namespace BlipFace.View.Controls
             }
         }
 
-        
-        #region Regex
-
-        private static Regex textReg = new Regex(@"^[^\#\^]*");
-
-        private static Regex userReg = new Regex(@"^\^\w*");
-
-        /// <summary>
-        /// dopasuj tekst zaczynający się od #po którym występuje litera,cyfra lub myślnik
-        /// </summary>
-        private static Regex tagReg = new Regex(@"^\#[\w\-]*"); //  ^\#\w*
-
-        /// <summary>
-        /// 
-        /// 
-        /// </summary>
-        private static Regex linkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
-        
-
-        #endregion
 
         #region StringFormats
 
+        //todo: przenieśc do zasobów
         private static string userLinkFormat = "http://blip.pl/users/{0}/dashboard";
         private static string tagLinkFormat = "http://blip.pl/tags/{0}";
         private static string userProfileFormat = "Profil {0}";
@@ -109,7 +90,7 @@ namespace BlipFace.View.Controls
 
 
             string blipStatus = s.Content;
-            var linkMatches = linkRegex.Matches(blipStatus);
+            var linkMatches = BlipRegExp.Link.Matches(blipStatus);
 
             //jeśli nie ma linka,  to od razu dodajmy całą treść
             if (linkMatches.Count < 1)
@@ -231,7 +212,7 @@ namespace BlipFace.View.Controls
             while (!string.IsNullOrEmpty(statusFragment))
             {
                 //dopasuj sam tekst, do rozpoczęcia tagu lub nazyw użytkonika
-                match = textReg.Match(statusFragment);
+                match = BlipRegExp.NormalText.Match(statusFragment);
                 matchText = match.Value;
                 if (!string.IsNullOrEmpty(matchText))
                 {
@@ -245,7 +226,7 @@ namespace BlipFace.View.Controls
                 }
 
                 //dopasuj nazwę użytkownika
-                match = userReg.Match(statusFragment);
+                match = BlipRegExp.User.Match(statusFragment);
                 matchText = match.Value;
                 if (!string.IsNullOrEmpty(matchText))
                 {
@@ -261,7 +242,7 @@ namespace BlipFace.View.Controls
                 }
 
 
-                match = tagReg.Match(statusFragment);
+                match = BlipRegExp.Tag.Match(statusFragment);
                 matchText = match.Value;
                 if (!string.IsNullOrEmpty(matchText))
                 {

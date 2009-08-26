@@ -1,50 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 using BlipFace.Model;
 using BlipFace.Presenter;
-using System.Text;
-using BlipFace.Helpers;
-using System.Windows.Controls.Primitives;
-
+using KeyEventArgs=System.Windows.Input.KeyEventArgs;
+using Label=System.Windows.Controls.Label;
+using MessageBox=System.Windows.MessageBox;
 
 namespace BlipFace.View
 {
-    
-
     public partial class StatusListControl : IStatusesView
     {
-        private const int BlipSize = 160;
-        private int charLeft = BlipSize;
-
-        private object statusListLock = new object();
+       
+        private readonly StatusesPresenter presenter;
+        
 
         private string pictureFilePath = string.Empty;
-
-        private readonly StatusesPresenter presenter;
+        private object statusListLock = new object();
 
         public StatusListControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public StatusListControl(StatusesPresenter _presenter)
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             // Insert code required on object creation below this point.
 
@@ -62,7 +56,9 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void tbMessage_TextChanged(object sender, TextChangedEventArgs e)
         {
-            charLeft = BlipSize - tbMessage.Text.Length;
+            int charLeft = presenter.CountChars(tbMessage.Text);
+
+
             if (charLeft < 0)
             {
                 tblCharLeft.Foreground = new SolidColorBrush(Color.FromRgb(200, 100, 100));
@@ -111,7 +107,8 @@ namespace BlipFace.View
 
         private void SendStatus()
         {
-            if (!string.IsNullOrEmpty(tbMessage.Text) && (tbMessage.Text.Length <= 160))
+            int statusLenght = presenter.CountChars(tbMessage.Text);
+            if (!string.IsNullOrEmpty(tbMessage.Text) && (statusLenght <= 160))
             {
                 EnableContrlsForSendMessage(false);
 
@@ -124,7 +121,7 @@ namespace BlipFace.View
                     presenter.AddStatus(tbMessage.Text);
                 }
             }
-            else if (tbMessage.Text.Length > 160)
+            else if (statusLenght > 160)
             {
                 MessageBox.Show("Status jest za długi");
                 EnableContrlsForSendMessage(true);
@@ -149,7 +146,7 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Hyperlink hl = (Hyperlink) sender;
+            var hl = (Hyperlink) sender;
             string navigateUri = hl.NavigateUri.ToString();
             Process.Start(new ProcessStartInfo(navigateUri));
             e.Handled = true;
@@ -157,14 +154,14 @@ namespace BlipFace.View
 
         private void btnAddPicture_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.OpenFileDialog opf = new System.Windows.Forms.OpenFileDialog();
+            var opf = new OpenFileDialog();
             opf.Filter = "Obrazy (*.bmp, *.jpg, *.gif, *.png)|*.bmp; *.jpg; *.gif; *.png|All Files|*.*";
             opf.Title = "Wybierz obraz do załączenia do statusu";
-            opf.InitialDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            opf.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             opf.AutoUpgradeEnabled = true;
 
 
-            if (opf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (opf.ShowDialog() == DialogResult.OK)
             {
                 //todo: ustaw obrazek
                 //opf.FileName
@@ -191,7 +188,104 @@ namespace BlipFace.View
             FlashWindow(handle, invert);
         }
 
+        private void ShowMessage(object sender, MouseButtonEventArgs e)
+        {
+            var lb = (Label) sender;
+
+            string msg = (string) lb.Content + (string) lb.ToolTip;
+            var message = new StringBuilder(msg);
+
+            if (lb.Tag != null)
+            {
+                var s = (string) lb.Tag;
+                message.Append(Environment.NewLine);
+                message.Append(s);
+            }
+
+            MessageBox.Show(message.ToString(), "Blip Info", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            e.Handled = true;
+        }
+
+        /*
+        private void ShowSettingsWindows(object sender, MouseButtonEventArgs e)
+        {
+            SettingsWindow s = new SettingsWindow();
+            s.Show();
+        }
+         */
+
+        private void pagerControl_CurrentPageIndexChanged(object sender, EventArgs e)
+        {
+            presenter.ShowArchiv(ucPager.CurrentPageIndex - 1);
+        }
+
+        private void tgbArchive_Click(object sender, RoutedEventArgs e)
+        {
+            ucPager.CurrentPageIndex = 1;
+            PagerVisibility(Visibility.Visible);
+
+            presenter.SetMode(UpdateMode.Archive);
+        }
+
+        private void PagerVisibility(Visibility visibility)
+        {
+            ucPager.Visibility = visibility;
+        }
+
+        private void ToggleButtons_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            var tgb = (ToggleButton) e.OriginalSource;
+
+            tgb.IsEnabled = false;
+
+            IList<ToggleButton> tgbList = new List<ToggleButton>
+                                              {
+                                                  tgbArchive,
+                                                  tgbDashboard,
+                                                  tgbSecretary
+                                              };
+
+            foreach (ToggleButton button in tgbList)
+            {
+                if (button != tgb && button.IsChecked.Value)
+                {
+                    button.IsChecked = false;
+                    button.IsEnabled = true;
+                }
+            }
+        }
+
+        private void tgbDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            PagerVisibility(Visibility.Collapsed);
+
+            presenter.SetMode(UpdateMode.Dashboard);
+        }
+
+
+        private void tgbSecretary_Click(object sender, RoutedEventArgs e)
+        {
+            PagerVisibility(Visibility.Collapsed);
+            presenter.SetMode(UpdateMode.Secretary);
+        }
+
+        #region Implementation of IView
+
+        public void WorkDone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public event EventHandler<ActionsEventArgs> ChangeView;
+
+        #endregion
+
         #region IStatusesView
+
+        //todo: to może powinno być jako StatusViewModel
+
+        private StatusViewModel mainStatus;
 
         public IList<StatusViewModel> Statuses
         {
@@ -206,24 +300,20 @@ namespace BlipFace.View
                             {
                                 lstbStatusList.ItemsSource = statusesCollection;
 
-                                if(statusesCollection!=null)
+                                if (statusesCollection != null)
                                 {
-                                    tbShowLoad.Visibility = System.Windows.Visibility.Collapsed;
+                                    tbShowLoad.Visibility = Visibility.Collapsed;
                                 }
                                 else
                                 {
-                                    tbShowLoad.Visibility = System.Windows.Visibility.Visible;
+                                    tbShowLoad.Visibility = Visibility.Visible;
                                 }
-                                
+
                                 //todo:to tak testowo
-                                FlashMainWindow(Window.GetWindow(this.Parent), true);
+                                FlashMainWindow(Window.GetWindow(Parent), true);
                             }), value);
             }
         }
-
-        //todo: to może powinno być jako StatusViewModel
-
-        private StatusViewModel mainStatus;
 
         public StatusViewModel MainStatus
         {
@@ -244,7 +334,7 @@ namespace BlipFace.View
 
                                                                       if (imgUserAvatar.Source == null)
                                                                       {
-                                                                          BitmapImage imgAvatar = new BitmapImage();
+                                                                          var imgAvatar = new BitmapImage();
                                                                           imgAvatar.BeginInit();
                                                                           imgAvatar.UriSource =
                                                                               new Uri(status.UserAvatar50);
@@ -284,9 +374,10 @@ namespace BlipFace.View
                                               {
                                                   tbError.Visibility = Visibility.Visible;
                                                   tbError.ToolTip = err.Message;
-                                                  tbError.Tag = "Szczegóły błędu: "+Environment.NewLine+ err.StackTrace;
+                                                  tbError.Tag = "Szczegóły błędu: " + Environment.NewLine +
+                                                                err.StackTrace;
                                                   EnableContrlsForSendMessage(true);
-                                              }), System.Windows.Threading.DispatcherPriority.Normal, value);
+                                              }), DispatcherPriority.Normal, value);
             }
         }
 
@@ -303,7 +394,7 @@ namespace BlipFace.View
 
                                                               tbOffline.Content = status.Title;
                                                               tbOffline.ToolTip = status.Message;
-                                                              
+
                                                               EnableContrlsForSendMessage(true);
                                                           }), value);
             }
@@ -316,13 +407,15 @@ namespace BlipFace.View
             {
                 Dispatcher.Invoke(
                     new Action<LatestVersionViewModel>(delegate(LatestVersionViewModel latestVersion)
-                    {
-                        //chowamy błędy 
-                        newVersion.Visibility = Visibility.Visible;
+                                                           {
+                                                               //chowamy błędy 
+                                                               newVersion.Visibility = Visibility.Visible;
 
-                        newVersionLink.NavigateUri = latestVersion.DownloadLink;
-                        newVersionTextBox.ToolTip += " (" + latestVersion.Version.ToString() + ")";
-                    }), value);
+                                                               newVersionLink.NavigateUri = latestVersion.DownloadLink;
+                                                               newVersionTextBox.ToolTip += " (" +
+                                                                                            latestVersion.Version.
+                                                                                                ToString() + ")";
+                                                           }), value);
             }
         }
 
@@ -343,9 +436,9 @@ namespace BlipFace.View
                             //{
                             //    currentList.Insert(0, statusesList[i]);
                             //}
-                            
+
                             //todo:to tak testowo
-                            FlashMainWindow(Window.GetWindow(this.Parent), true);
+                            FlashMainWindow(Window.GetWindow(Parent), true);
                         }), statuses);
         }
 
@@ -384,14 +477,14 @@ namespace BlipFace.View
                                 }
                             }
                             //todo:testowo zmiana ikony w tray'u
-                            var parentWindows = Window.GetWindow(this.Parent);
+                            Window parentWindows = Window.GetWindow(Parent);
                             if (parentWindows is HostWindow)
                             {
-                                ((HostWindow)parentWindows).StatusAdded();
+                                ((HostWindow) parentWindows).StatusAdded();
                             }
 
                             //todo:to tak testowo
-                            FlashMainWindow(Window.GetWindow(this.Parent), true);
+                            FlashMainWindow(Window.GetWindow(Parent), true);
                         }), statusView);
         }
 
@@ -418,7 +511,7 @@ namespace BlipFace.View
                                                              {
                                                                  pictureFilePath = picturePath;
 
-                                                                 Uri iconUri = new Uri(picturePath,
+                                                                 var iconUri = new Uri(picturePath,
                                                                                        UriKind.RelativeOrAbsolute);
 
                                                                  imgAttachPic.Source = BitmapFrame.Create(iconUri);
@@ -441,7 +534,7 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void CiteUser_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            StatusViewModel status = (StatusViewModel) e.Parameter;
+            var status = (StatusViewModel) e.Parameter;
             int position = tbMessage.SelectionStart;
 
             int currentPosition = presenter.MakeCitation(status, tbMessage.Text, position);
@@ -462,7 +555,7 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void DirectMessage_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            StatusViewModel status = (StatusViewModel) e.Parameter;
+            var status = (StatusViewModel) e.Parameter;
 
 
             presenter.MakeDirectMessage(status, tbMessage.Text);
@@ -479,7 +572,7 @@ namespace BlipFace.View
         /// <param name="e"></param>
         private void PrivateMessage_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            StatusViewModel status = (StatusViewModel) e.Parameter;
+            var status = (StatusViewModel) e.Parameter;
 
 
             presenter.MakePrivateMessage(status, tbMessage.Text);
@@ -489,7 +582,7 @@ namespace BlipFace.View
 
         private void ShowPicture_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            BigPictureWindow w = new BigPictureWindow();
+            var w = new BigPictureWindow();
 
 
             w.PictureSource = ((Image) e.Parameter).Source;
@@ -499,9 +592,9 @@ namespace BlipFace.View
 
         private void ShowVideo_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            string videoUrl = (string) e.Parameter;
+            var videoUrl = (string) e.Parameter;
 
-            VideoViewWindow vw = new VideoViewWindow(videoUrl);
+            var vw = new VideoViewWindow(videoUrl);
 
             vw.Show();
         }
@@ -511,7 +604,7 @@ namespace BlipFace.View
             //Hyperlink hl = (Hyperlink)sender;
             //string navigateUri = hl.NavigateUri.ToString();
 
-            string navigateUri = (string) e.Parameter;
+            var navigateUri = (string) e.Parameter;
             Process.Start(new ProcessStartInfo(navigateUri));
             e.Handled = true;
         }
@@ -544,102 +637,6 @@ namespace BlipFace.View
             }
             tbMessage.Focus();
         }
-
-        #endregion
-
-        private void ShowMessage(object sender, MouseButtonEventArgs e)
-        {
-            Label lb = (Label) sender;
-
-            string msg = (string)lb.Content+ (string) lb.ToolTip;
-            StringBuilder message = new StringBuilder(msg);
-
-            if(lb.Tag!=null)
-            {
-                string s = (string) lb.Tag;
-                message.Append(Environment.NewLine);
-                message.Append(s);
-            }
-
-            MessageBox.Show(message.ToString(), "Blip Info", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            e.Handled = true;
-        }
-
-        /*
-        private void ShowSettingsWindows(object sender, MouseButtonEventArgs e)
-        {
-            SettingsWindow s = new SettingsWindow();
-            s.Show();
-        }
-         */ 
-
-        private void pagerControl_CurrentPageIndexChanged(object sender, EventArgs e)
-        {
-            presenter.ShowArchiv(ucPager.CurrentPageIndex - 1);
-        }
-
-        private void tgbArchive_Click(object sender, RoutedEventArgs e)
-        {
-            ucPager.CurrentPageIndex = 1; 
-            PagerVisibility(Visibility.Visible);
-
-            presenter.SetMode(UpdateMode.Archive);
-        }
-
-        private void PagerVisibility(Visibility visibility)
-        {
-
-            ucPager.Visibility = visibility;
-            
-        }
-
-        private void ToggleButtons_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            ToggleButton tgb = (ToggleButton) e.OriginalSource;
-            
-            tgb.IsEnabled = false;
-
-            IList<ToggleButton> tgbList = new List<ToggleButton>
-                                              {
-                                                  tgbArchive,
-                                                  tgbDashboard,
-                                                  tgbSecretary
-                                              };
-
-            foreach (var button in tgbList)
-            {
-                if(button!=tgb && button.IsChecked.Value)
-                {
-                    button.IsChecked = false;
-                    button.IsEnabled = true;
-                }
-            }
-
-        }
-
-        private void tgbDashboard_Click(object sender, RoutedEventArgs e)
-        {
-            PagerVisibility(System.Windows.Visibility.Collapsed);
-
-            presenter.SetMode(UpdateMode.Dashboard);
-        }
-
-       
-        private void tgbSecretary_Click(object sender, RoutedEventArgs e)
-        {
-            PagerVisibility(System.Windows.Visibility.Collapsed);
-            presenter.SetMode(UpdateMode.Secretary);
-        }
-
-        #region Implementation of IView
-
-        public void WorkDone()
-        {
-            throw new NotImplementedException();
-        }
-
-        public event EventHandler<ActionsEventArgs> ChangeView;
 
         #endregion
     }

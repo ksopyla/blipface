@@ -55,6 +55,8 @@ namespace BlipFace.Presenter
 
         #region const section
 
+
+        private const int BlipSize = 160;
         /// <summary>
         /// Limity pobierania statusów
         /// </summary>
@@ -100,8 +102,8 @@ namespace BlipFace.Presenter
         private bool statusesLoaded = false;
 
 
-        private static readonly Regex LinkRegex = new Regex(@"(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}\S*");
-        private static readonly Regex SayOrCiteRegex = new Regex(@"^\^\w*\s(mówi\so\stobie|cię\scytuje)",RegexOptions.IgnoreCase);
+       
+        
         private int currentPage = 0;
 
 
@@ -454,7 +456,7 @@ namespace BlipFace.Presenter
 
         private void RetriveStatusHyperlinks(StatusViewModel status)
         {
-            var linkMatches = LinkRegex.Matches(status.Content);
+            var linkMatches = BlipRegExp.Link.Matches(status.Content);
 
             if (linkMatches.Count > 0)
             {
@@ -481,7 +483,7 @@ namespace BlipFace.Presenter
                     if (url.Contains("blip.pl"))
                     {
 
-                        if (status.StatusType.ToLower() == "notice" && SayOrCiteRegex.IsMatch(status.Content))
+                        if (status.StatusType.ToLower() == "notice" && BlipRegExp.SayOrCite.IsMatch(status.Content))
                         {
                             status.StatusId = Convert.ToUInt32(code);
                         }
@@ -811,7 +813,7 @@ namespace BlipFace.Presenter
 
 
             // updateStatusTimer.Stop();
-
+            content = content.Trim();
             blpCom.AddUpdateAsync(content);
         }
 
@@ -831,6 +833,7 @@ namespace BlipFace.Presenter
             //zatrzymujemy licznik czasu
             //updateStatusTimer.Enabled = false;
 
+            content = content.Trim();
             //updateStatusTimer.Stop();
             blpCom.AddUpdateAsync(content, pictureFileName);
         }
@@ -868,28 +871,24 @@ namespace BlipFace.Presenter
         /// <param name="messageText">dotychczasowa treść wiadomości</param>
         public void MakeDirectMessage(StatusViewModel status, string messageText)
         {
+            //todo: przenieść do zasobów, format
             //format wiadomości dla zwykłej odpowiedzia
             string userFormat = string.Format(">{0}:", status.UserLogin);
 
 
-            //regex wyszukujące czy wiadomość nie rozpoczyna się jak prywatana
-            Regex regexPrivateMessage = new Regex(@"^>>.*?:");
-
-            //regex wyszukujące czy wiadomośc nie rozpoczyna się jak skierowana
-            Regex regexDirectMessage = new Regex(@"^>.*:?");
-
+            
             string blipMessage;
-            if (regexPrivateMessage.IsMatch(messageText))
+            if (BlipRegExp.PrivateStart.IsMatch(messageText))
             {
                 //jesli rozpoczyna się jak prywatna to zamień na kierowaną
-                blipMessage = regexPrivateMessage.Replace(messageText, userFormat);
+                blipMessage = BlipRegExp.PrivateStart.Replace(messageText, userFormat);
             }
-            else if (regexDirectMessage.IsMatch(messageText))
+            else if (BlipRegExp.DirectStart.IsMatch(messageText))
             {
                 //jeśli ropoczyna się jak kierowana to zamień z powrotem na kierowaną
                 //może się wydawać bez sensu, lecz przydaje się gdy bedziemy chcieli 
                 //wysłać do innej osoby niż jest już ustawione
-                blipMessage = regexDirectMessage.Replace(messageText, userFormat);
+                blipMessage = BlipRegExp.DirectStart.Replace(messageText, userFormat);
             }
             else
             {
@@ -913,6 +912,8 @@ namespace BlipFace.Presenter
         /// <param name="messageText">dotychczasowa treść wiadomości</param>
         public void MakePrivateMessage(StatusViewModel status, string messageText)
         {
+
+            //todo: do zasobów przenieść
             string userFormat = string.Format(">>{0}:", status.UserLogin);
 
             //uwaga to wyrażenie łapie dwa typy tekstu
@@ -920,19 +921,15 @@ namespace BlipFace.Presenter
             //oraz z dwoma znakami >>
             //dlatego dobrze działa i zamienia gdy drugi raz klikniemy wiadomość prywatna
             //a dotychczasowa wiadomość jest już prywatna
-            Regex regex = new Regex(@"^>.*?:");
-
             string blipMessage;
-            if (regex.IsMatch(messageText))
+            if (BlipRegExp.DirectStart.IsMatch(messageText))
             {
-                blipMessage = regex.Replace(messageText, userFormat);
+                blipMessage = BlipRegExp.DirectStart.Replace(messageText, userFormat);
             }
             else
             {
                 blipMessage = messageText.Insert(0, userFormat);
             }
-
-            //string blipMessage = Regex.Replace(messageText, @"^>.*:", userFormat, RegexOptions.IgnoreCase);
 
             view.TextMessage = blipMessage;
         }
@@ -978,6 +975,65 @@ namespace BlipFace.Presenter
                 statusUpdateQueue.Enqueue(null);
                 Monitor.Pulse(lockUpdateQueue);
             }
+        }
+
+        public int CountChars(string message)
+        {
+         /*
+          * Aby obliczyć iloś znaków, 
+          * - nie liczymy początku wiadomości gdy jest prywatna lub skierowana
+          * - każdy link jest przez blip'a skracany do postaci http://rdir.pl/1234 wobec czego zajmuje tylko
+          *     19 znaków, 
+          * - cytowanie (blipnięcie) jest liczone normalnie
+          * - link do youtube też jest liczony normalnie
+          */ 
+
+            int messageSize = BlipSize-message.Length;
+
+            string matchText;
+
+            if(BlipRegExp.PrivateStart.IsMatch(message))
+            {
+                matchText = BlipRegExp.PrivateStart.Match(message).Value;
+                messageSize += matchText.Length;
+            } else if (BlipRegExp.DirectStart.IsMatch(message))
+            {
+                matchText = BlipRegExp.DirectStart.Match(message).Value;
+                messageSize += matchText.Length;
+            }
+
+
+            var linkMatches = BlipRegExp.Link.Matches(message);
+
+            if (linkMatches.Count<1)
+            {
+                return messageSize;
+            }
+
+            for (int k = 0; k < linkMatches.Count; k++)
+            {
+                string linkUrl = linkMatches[k].Value;
+                if (linkUrl.Contains("blip.pl"))
+                {
+                    //link do cytowania blipa                  
+                }
+                else if (linkUrl.Contains("youtube."))
+                {
+                }
+                else
+                {
+                    //zwykły link i jego długość jest większa niż 19 
+                    int linkSize = linkUrl.Length - 19;
+                    if(linkSize>0)
+                    {
+                        messageSize += linkSize;
+                    }
+                }
+
+            }
+
+            return messageSize;
+
         }
     }
 }
