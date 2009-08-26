@@ -38,6 +38,10 @@
         </asp:Chart>
         <br />
         <asp:Chart ID="UsesVersionBlipFaceChart" runat="server" Height="500px" Width="600px">
+            <Legends>
+                <asp:Legend IsTextAutoFit="False" Name="Default" BackColor="Transparent" Font="Trebuchet MS, 8.25pt, style=Bold">
+                </asp:Legend>
+            </Legends>
             <Series>
                 <asp:Series Name="Series1">
                 </asp:Series>
