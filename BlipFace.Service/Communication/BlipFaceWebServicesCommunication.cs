@@ -25,6 +25,7 @@ namespace BlipFace.Service.Communication
             {
                 //jeśli były jakieś problemy z połączeniem z webservices to zignorować to
                 //todo: trzeba pomyśleć nad czymś inny, a nie ignorowaniem
+                //System.Windows.Forms.MessageBox.Show(ex.Message);
             }
         }
 
@@ -43,6 +44,7 @@ namespace BlipFace.Service.Communication
             {
                 //trzeba tylko logować zdarzenie bo w przypadku wyrzucenia wyjątku do BlipFace się zwiesza
                 //throw new Exception("Problem z połączeniem z BlipFaceWebservices");
+               // System.Windows.Forms.MessageBox.Show(ex.Message);
             }
         }
 

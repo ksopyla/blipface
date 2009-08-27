@@ -2,8 +2,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:helpers="clr-namespace:BlipFace.Helpers"
     xmlns:Controls="clr-namespace:BlipFace.View.Controls">
+
+    <Storyboard x:Key="animShow">
+        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)">
+            <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0" KeySpline="0,0,1,1"/>
+            <SplineDoubleKeyFrame KeyTime="00:00:01" Value="1" KeySpline="0.96,0,1,1"/>
+        </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
     <DataTemplate x:Key="WrapItemTemplate">
-        <Border Height="Auto" Margin="5,10,5,0">
+        <Border x:Name="statusBlock" Height="Auto" Margin="5,10,5,0">
             <Border.Style>
                 <Style>
                     <Style.Setters>
@@ -14,6 +22,7 @@
                         <Trigger Property="Border.IsMouseOver" Value="True">
                             <Setter Property="Border.BorderBrush" Value="White" />
                         </Trigger>
+                        
                     </Style.Triggers>
                 </Style>
             </Border.Style>
@@ -203,5 +212,16 @@
                 </Grid>
             </Grid>
         </Border>
+
+        <DataTemplate.Triggers>
+            <!--
+            EventTrigger RoutedEvent="FrameworkElement.Loaded" SourceName="rectangle">
+            <BeginStoryboard Storyboard="{StaticResource animShow}"/>
+            </EventTrigger>
+            -->
+            <EventTrigger RoutedEvent="FrameworkElement.Loaded" SourceName="statusBlock">
+                <BeginStoryboard Storyboard="{StaticResource animShow}"/>
+            </EventTrigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
 </ResourceDictionary>
