@@ -236,7 +236,9 @@ namespace BlipFace.Presenter
             view.Error = e.Error;
 
             //gdy licznik jest zatrzymany to go uruchamiamy
-            updateStatusTimer.Start();
+           
+            //updateStatusTimer.Start();
+            StartListeningForUpdates(refreshTimeSec);
         }
 
 
@@ -256,7 +258,7 @@ namespace BlipFace.Presenter
             }
 
             //gdy licznik jest zatrzymany to go uruchamiamy
-            updateStatusTimer.Start();
+            StartListeningForUpdates(refreshTimeSec);
         }
 
 
