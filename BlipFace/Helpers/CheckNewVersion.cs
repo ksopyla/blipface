@@ -18,8 +18,22 @@ namespace BlipFace.Helpers
 
         private void CheckInNewThread()
         {
-            BlipFaceServicesCommunication com = new BlipFaceServicesCommunication();
-            LatestVersionChecked(null, new BlipFaceVersionEventArgs(com.LatestVersion, com.DownloadLink));
+            try
+            {
+                BlipFaceServicesCommunication com = new BlipFaceServicesCommunication();
+
+                
+                LatestVersionChecked(null, new BlipFaceVersionEventArgs(com.LatestVersion, com.DownloadLink));
+            }
+            catch (Exception ex)
+            {
+                string mes = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    mes += Environment.NewLine + "Inner exp: " + ex.InnerException.Message;
+                }
+                System.Windows.Forms.MessageBox.Show(mes);
+            }
         }
 
         /// <summary>
@@ -35,7 +49,7 @@ namespace BlipFace.Helpers
     {
         public Version Version { get; private set; }
 
-        public Uri DownloadLink {get; private set;}
+        public Uri DownloadLink { get; private set; }
 
         public BlipFaceVersionEventArgs(Version version, Uri downloadLink)
         {

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BlipFace.Service.BlipFaceServices;
+using BlipFace.Service.StatService;
 
 namespace BlipFace.Service.Communication
 {
@@ -15,18 +12,18 @@ namespace BlipFace.Service.Communication
         /// <param name="version"></param>
         public void NotifyUseBlipFace(Guid guid, string version)
         {
+            //try{
             BlipFaceServicesClient client = new BlipFaceServicesClient();
-            try
-            {
+            
                 client.NotifyUseBlipFace(guid.ToString(), version);
                 client.Close();
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
                 //jeśli były jakieś problemy z połączeniem z webservices to zignorować to
                 //todo: trzeba pomyśleć nad czymś inny, a nie ignorowaniem
                 //System.Windows.Forms.MessageBox.Show(ex.Message);
-            }
+            //}
         }
 
         private BlipFaceVersion blipFaceVersion;
@@ -35,17 +32,17 @@ namespace BlipFace.Service.Communication
         {
             blipFaceVersion = new BlipFaceVersion() { Version = new Version("0.0.0.0"), DownloadLink = "http://blipface.pl" };
 
-            try
-            {
+            //try
+            //{
                 BlipFaceServicesClient client = new BlipFaceServicesClient();
                 blipFaceVersion = client.GetLatestVersion();
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
                 //trzeba tylko logować zdarzenie bo w przypadku wyrzucenia wyjątku do BlipFace się zwiesza
                 //throw new Exception("Problem z połączeniem z BlipFaceWebservices");
                // System.Windows.Forms.MessageBox.Show(ex.Message);
-            }
+            //}
         }
 
         public Version LatestVersion
