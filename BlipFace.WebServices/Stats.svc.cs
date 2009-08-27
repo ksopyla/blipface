@@ -8,7 +8,7 @@ using System.Text;
 namespace BlipFace.WebServices
 {
     // NOTE: If you change the class name "BlipFaceServices" here, you must also update the reference to "BlipFaceServices" in Web.config.
-    public class BlipFaceServices : IBlipFaceServices
+    public class StatServices : IStatServices
     {
 
         #region IBlipFaceServices Members
@@ -29,7 +29,8 @@ namespace BlipFace.WebServices
 
         public BlipFaceVersion GetLatestVersion()
         {
-            return new BlipFaceVersion() { Version = new Version(Properties.Settings.Default.LatestVersion), DownloadLink = Properties.Settings.Default.DownloadLink };
+           return new BlipFaceVersion() { Version = Properties.Settings.Default.LatestVersion, DownloadLink = Properties.Settings.Default.DownloadLink };
+            //return new BlipFaceVersion(){  DownloadLink = Properties.Settings.Default.DownloadLink };
         }
 
         #endregion

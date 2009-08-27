@@ -651,7 +651,7 @@ namespace BlipFace.Presenter
         /// <param name="e"></param>
         private void CheckVersion(object sender, BlipFaceVersionEventArgs e)
         {
-            LatestVersionViewModel latestVersion = new LatestVersionViewModel() { Version = e.Version, DownloadLink = e.DownloadLink };
+            LatestVersionViewModel latestVersion = new LatestVersionViewModel() { Version = new Version(e.Version), DownloadLink = e.DownloadLink };
 
             Version currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             if(currentVersion.CompareTo(e.Version) < 0)

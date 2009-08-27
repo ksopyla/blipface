@@ -74,40 +74,9 @@
     <Compile Include="Entities\BlipUser.cs" />
     <Compile Include="Entities\StatusesList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\BlipFaceServices\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices.wsdl" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices.xsd" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices1.xsd" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices2.xsd" />
-    <None Include="Service References\BlipFaceServices\BlipFaceServices3.xsd" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\BlipFaceServices\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\BlipFaceServices\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\BlipFaceServices\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\BlipFaceServices\BlipFace.Service.BlipFaceServices.BlipFaceVersion.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\BlipFaceServices\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

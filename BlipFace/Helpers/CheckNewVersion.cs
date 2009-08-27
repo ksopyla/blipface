@@ -47,11 +47,11 @@ namespace BlipFace.Helpers
     /// </summary>
     public class BlipFaceVersionEventArgs : EventArgs
     {
-        public Version Version { get; private set; }
+        public string Version { get; private set; }
 
         public Uri DownloadLink { get; private set; }
 
-        public BlipFaceVersionEventArgs(Version version, Uri downloadLink)
+        public BlipFaceVersionEventArgs(string version, Uri downloadLink)
         {
             Version = version;
             DownloadLink = downloadLink;

@@ -1,5 +1,5 @@
 ﻿using System;
-using BlipFace.Service.StatService;
+
 
 namespace BlipFace.Service.Communication
 {
@@ -30,12 +30,14 @@ namespace BlipFace.Service.Communication
 
         private void GetBlipFaceVersion()
         {
-            blipFaceVersion = new BlipFaceVersion() { Version = new Version("0.0.0.0"), DownloadLink = "http://blipface.pl" };
+            //blipFaceVersion = new BlipFaceVersion() { Version = new Version("0.0.0.0"), DownloadLink = "http://blipface.pl" };
 
             //try
             //{
                 BlipFaceServicesClient client = new BlipFaceServicesClient();
                 blipFaceVersion = client.GetLatestVersion();
+
+                
             //}
             //catch (Exception ex)
             //{
@@ -45,7 +47,7 @@ namespace BlipFace.Service.Communication
             //}
         }
 
-        public Version LatestVersion
+        public string LatestVersion
         {
             get
             {

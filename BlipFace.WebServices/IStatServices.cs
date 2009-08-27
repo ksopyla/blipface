@@ -9,7 +9,7 @@ namespace BlipFace.WebServices
 {
     // NOTE: If you change the interface name "IBlipFaceServices" here, you must also update the reference to "IBlipFaceServices" in Web.config.
     [ServiceContract]
-    public interface IBlipFaceServices
+    public interface IStatServices
     {
         [OperationContract]
         void NotifyUseBlipFace(string guid, string version);

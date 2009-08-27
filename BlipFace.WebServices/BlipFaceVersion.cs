@@ -11,7 +11,7 @@ namespace BlipFace.WebServices
     public class BlipFaceVersion
     {
         [DataMember]
-        public Version Version { get; set; }
+        public string Version { get; set; }
 
         [DataMember]
         public string DownloadLink { get; set; }
