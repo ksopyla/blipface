@@ -1,4 +1,5 @@
 ﻿using System;
+using BlipFace.Service.StatServices;
 
 
 namespace BlipFace.Service.Communication
@@ -13,7 +14,7 @@ namespace BlipFace.Service.Communication
         public void NotifyUseBlipFace(Guid guid, string version)
         {
             //try{
-            BlipFaceServicesClient client = new BlipFaceServicesClient();
+            StatServicesClient client = new StatServicesClient();
             
                 client.NotifyUseBlipFace(guid.ToString(), version);
                 client.Close();
@@ -34,7 +35,7 @@ namespace BlipFace.Service.Communication
 
             //try
             //{
-                BlipFaceServicesClient client = new BlipFaceServicesClient();
+            StatServicesClient client = new StatServicesClient();
                 blipFaceVersion = client.GetLatestVersion();
 
                 

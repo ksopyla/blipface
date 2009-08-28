@@ -74,7 +74,7 @@
     <Compile Include="Entities\BlipUser.cs" />
     <Compile Include="Entities\StatusesList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\StatService\Reference.cs">
+    <Compile Include="Service References\StatServices\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -82,31 +82,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Service References\StatServices\StatServices.wsdl" />
+    <None Include="Service References\StatServices\StatServices.xsd" />
+    <None Include="Service References\StatServices\StatServices1.xsd" />
+    <None Include="Service References\StatServices\StatServices2.xsd" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\StatService\" />
+    <WCFMetadataStorage Include="Service References\StatServices\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\StatService\Stats.disco" />
-    <None Include="Service References\StatService\Stats.xsd" />
-    <None Include="Service References\StatService\Stats1.xsd" />
-    <None Include="Service References\StatService\Stats2.xsd" />
-    <None Include="Service References\StatService\StatServices.wsdl" />
+    <None Include="Service References\StatServices\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\StatService\configuration91.svcinfo" />
+    <None Include="Service References\StatServices\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\StatService\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\StatService\BlipFace.Service.StatService.BlipFaceVersion.datasource">
+    <None Include="Service References\StatServices\BlipFace.Service.StatServices.BlipFaceVersion.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\StatService\Reference.svcmap">
+    <None Include="Service References\StatServices\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

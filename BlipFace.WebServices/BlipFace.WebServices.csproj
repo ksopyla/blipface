@@ -67,13 +67,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Stats.svc" />
+    <Content Include="StatServices.svc" />
     <Content Include="Default.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Stats.svc.cs">
-      <DependentUpon>Stats.svc</DependentUpon>
+    <Compile Include="StatServices.svc.cs">
+      <DependentUpon>StatServices.svc</DependentUpon>
     </Compile>
     <Compile Include="BlipFaceVersion.cs" />
     <Compile Include="DataClasses.designer.cs">

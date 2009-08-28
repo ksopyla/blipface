@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="BlipFace.WebServices.StatServices" CodeBehind="StatServices.svc.cs" %>
