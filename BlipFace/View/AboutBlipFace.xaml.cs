@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BlipFace.Properties;
 
 namespace BlipFace.View
 {
@@ -21,6 +22,10 @@ namespace BlipFace.View
         public AboutBlipFace()
         {
             InitializeComponent();
+
+            string releaseInfo = string.Format("Wersja: {0} Data wydania: {1}", Settings.Default.Version,
+                                               Settings.Default.ReleaseDate);
+            tblRelease.Text = releaseInfo;
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Hardcodet.Wpf.TaskbarNotification;
+using BlipFace.Properties;
 
 namespace BlipFace
 {
@@ -32,6 +33,7 @@ namespace BlipFace
         {
             InitializeComponent();
 
+            lblVersion.Content = "BlipFace v"+ Settings.Default.Version.Substring(0,5);
             //położenie okna 
             this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width - 20;
 

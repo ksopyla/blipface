@@ -28,28 +28,37 @@
 
             </Label>
 
-            <Button x:Name="btnCloseApp" ToolTip="Zamknij" 
+            <Button x:Name="btnCloseApp" ToolTip="Zamknij okno, nie zapisuje ustawień" 
                     Canvas.Right="25" Canvas.Top="5" Style="{StaticResource RedCrossButton}"
                     Click="btnCloseApp_Click">
             </Button>
         </Canvas>
         <StackPanel Grid.Row="1" x:Name="LayoutRoot" Orientation="Vertical" VerticalAlignment="Stretch" Margin="0,20,0,0">
-                <CheckBox x:Name="chbAutoLogon" Width="300" Height="25" 
-                      Content="Automatycznie loguj" Foreground="#FFFFFFFF" FontSize="14" />
-            <CheckBox x:Name="chbAutoStart" Width="300" Height="25" 
-                      Content="Uruchamiaj wraz z startem systemu" Foreground="#FFFFFFFF" FontSize="14" />
-            <CheckBox x:Name="chbAlwaysInTray" Width="300" Height="25" 
-                      Content="Zawsze w tray'u" Foreground="#FFFFFFFF" FontSize="14" />
-            <CheckBox x:Name="chbMinimalizeToTray" Width="300" Height="25" 
-                      Content="Minimalizuj do tray'a" Foreground="#FFFFFFFF" FontSize="14" />
-            <CheckBox x:Name="chbPlaySoundWhenNewStatus" Width="300" Height="25" 
-                      Content="Dzwięk gdy przyjdą nowa statusy" Foreground="#FFFFFFFF" FontSize="14" />
+            <CheckBox x:Name="chbAutoLogon" Width="300">
+                <Label Style="{StaticResource LabelWhite}" Content="Automatycznie zaloguj" ToolTip="Automatycznie loguje użytkownika"/>
+            </CheckBox>
+            <CheckBox x:Name="chbAutoStart" Width="300" >
+                <Label Style="{StaticResource LabelWhite}"
+                      Content="Uruchamiaj wraz z startem systemu" ToolTip="Uruchamia blipface zaraz po starcie sytemu"/>
+            </CheckBox>
+            <CheckBox x:Name="chbAlwaysInTray" Width="300" >
+                <Label Style="{StaticResource LabelWhite}"
+                      Content="Zawsze w tray'u" ToolTip="Ikona widoczna cały czas w tray'u" />
+            </CheckBox>
+            <CheckBox x:Name="chbMinimalizeToTray" Width="300" >
+                <Label Style="{StaticResource LabelWhite}"
+                      Content="Minimalizuj do tray'a" ToolTip="Przy minimalizacji ikona widoczna tylko w tray'u" />
+            </CheckBox>
+            <CheckBox x:Name="chbPlaySoundWhenNewStatus" Width="300" >
+                <Label Style="{StaticResource LabelWhite}"
+                      Content="Dzwięk gdy przyjdą nowa statusy" ToolTip="Odtwórz dźwięk wraz z przyjściem nowego statusu"  />
+            </CheckBox>
         </StackPanel>
         
         <StackPanel Grid.Row="2" x:Name="LayoutRoota" Orientation="Vertical" VerticalAlignment="Stretch">
             <Button Height="35"  x:Name="btnSave"  Click="btnSave_Click"
                      Style="{StaticResource BlackButton}" 
-					 Content="Zapisz" Width="160" 
+					 Content="Zapisz ustawienia" Width="160" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" />
         </StackPanel>
         

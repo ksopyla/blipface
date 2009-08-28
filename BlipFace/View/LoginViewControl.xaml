@@ -7,21 +7,21 @@
 	x:Class="BlipFace.View.LoginViewControl"
 	x:Name="LoginView"
 	KeyDown="UserControl_KeyDown" Loaded="UserControl_Loaded">
-	<UserControl.Resources>
-		<Storyboard x:Key="AnimatedDotLabel">
-			<ObjectAnimationUsingKeyFrames BeginTime="00:00:00" 
+    <UserControl.Resources>
+        <Storyboard x:Key="AnimatedDotLabel">
+            <ObjectAnimationUsingKeyFrames BeginTime="00:00:00" 
                                            Storyboard.TargetName="lblLoginAnimation" 
                                            Storyboard.TargetProperty="(ContentControl.Content)" 
                                            RepeatBehavior="Forever">
-				<DiscreteObjectKeyFrame KeyTime="00:00:00.5000000" Value="Trwa logowanie ."/>
-				<DiscreteObjectKeyFrame KeyTime="00:00:01" Value="Trwa logowanie . ."/>
-				<DiscreteObjectKeyFrame KeyTime="00:00:01.5000000" Value="Trwa logowanie . . ."/>
-				<DiscreteObjectKeyFrame KeyTime="00:00:02" Value="Trwa logowanie . ."/>
-				<DiscreteObjectKeyFrame KeyTime="00:00:02.5000000" Value="Trwa logowanie ."/>
-				<DiscreteObjectKeyFrame KeyTime="00:00:03" Value="Trwa logowanie"/>
-			</ObjectAnimationUsingKeyFrames>
-		</Storyboard>
-	</UserControl.Resources>
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.5000000" Value="Trwa logowanie ."/>
+                <DiscreteObjectKeyFrame KeyTime="00:00:01" Value="Trwa logowanie . ."/>
+                <DiscreteObjectKeyFrame KeyTime="00:00:01.5000000" Value="Trwa logowanie . . ."/>
+                <DiscreteObjectKeyFrame KeyTime="00:00:02" Value="Trwa logowanie . ."/>
+                <DiscreteObjectKeyFrame KeyTime="00:00:02.5000000" Value="Trwa logowanie ."/>
+                <DiscreteObjectKeyFrame KeyTime="00:00:03" Value="Trwa logowanie"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
     <!--
 	<UserControl.Triggers>
 		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
@@ -46,11 +46,13 @@
             <PasswordBox  x:Name="pswPassword" 
                 Height="35" FontSize="16" 
                 FontWeight="Bold" HorizontalAlignment="Stretch" Margin="0,0,0,10" />
-            <CheckBox x:Name="chbRememberPassword" Width="220" Height="25" 
-                      Content="Zapamiętaj hasło" Foreground="#FFFFFFFF" FontSize="14"/>
-            <CheckBox x:Name="chbAutoLogon" Width="220" Height="25" 
-                      Content="Automatycznie loguj" Foreground="#FFFFFFFF" FontSize="14" />
+            <CheckBox x:Name="chbRememberPassword" Width="220" >
+                <Label Style="{StaticResource LabelWhite}" Content="Zapamiętaj hasło" />
+            </CheckBox>
 
+            <CheckBox x:Name="chbAutoLogon" Width="220" >
+                <Label Content="Automatycznie loguj" Style="{StaticResource LabelWhite}" />
+            </CheckBox>
             <Button Height="35"  x:Name="btnLogin"  Click="btnLogin_Click"
                      Style="{StaticResource BlackButton}" 
 					 Content="Zaloguj" Width="160" 
@@ -58,14 +60,14 @@
             <Label Foreground="#FFFFFF00" 
 			   VerticalAlignment="Top" Content="Trwa logowanie" 
 			   x:Name="lblLoginAnimation" Height="30" FontSize="14" Visibility="Hidden"/>
-				
-            
+
+
             <TextBlock x:Name="tblError" Foreground="Red"  FontSize="14" 
                        FontWeight="Normal" 
                    Text="" 
                        Visibility="Hidden" TextWrapping="WrapWithOverflow"
                        Padding="5"/>
-            
+
         </StackPanel>
     </StackPanel>
 </UserControl>

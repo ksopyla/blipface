@@ -34,7 +34,7 @@
     <Style x:Key="LabelWhite" TargetType="{x:Type Label}" >
         <Setter Property="Foreground" Value="white"/>
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Margin" Value="0,15,0,10"/>
+        <!-- Setter Property="Margin" Value="0,15,0,10"/ -->
     </Style>
 
     <!--Style dla texboxa z wpisywaną wiadomością aby był zaokrąglony-->

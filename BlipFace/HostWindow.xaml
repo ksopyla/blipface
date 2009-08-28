@@ -34,7 +34,7 @@
         </Grid.RowDefinitions>
 
         <Canvas Grid.Column="0" Grid.Row="0"  MouseLeftButtonDown="NonRectangularWindow_MouseLeftButtonDown">
-            <Label Canvas.Top="0" Canvas.Left="0" Padding="10,8" 
+            <Label x:Name="lblVersion" Canvas.Top="0" Canvas.Left="0" Padding="10,8" 
 			Foreground="White" FontFamily="Verdana" Width="2000" 
 			FontSize="14"
 			Content="BlipFace v0.6.0" >
