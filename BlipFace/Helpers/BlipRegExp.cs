@@ -45,7 +45,7 @@ namespace BlipFace.Helpers
         /// dlatego dobrze działa i zamienia gdy drugi raz klikniemy wiadomość prywatna
         /// a dotychczasowa wiadomość jest już prywatna
         /// </summary>
-        public static Regex DirectStart = new Regex(@"^>.*:?");
+        public static Regex DirectStart = new Regex(@"^>.*?:");
 
 
         /// <summary>
