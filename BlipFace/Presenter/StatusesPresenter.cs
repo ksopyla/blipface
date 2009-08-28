@@ -654,7 +654,7 @@ namespace BlipFace.Presenter
             LatestVersionViewModel latestVersion = new LatestVersionViewModel() { Version = new Version(e.Version), DownloadLink = e.DownloadLink };
 
             Version currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            if(currentVersion.CompareTo(e.Version) < 0)
+            if(currentVersion.CompareTo(new Version(e.Version)) < 0)
                 view.LatestVersion = latestVersion;
         }
 
