@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?define ProductName = "BlipFace"?>
-<?define ProductVersion = "0.6.0.2"?>
+<?define ProductVersion = "0.6.0.3"?>
 <?define UpgradeCode = "966bfcd3-305f-4eef-8b19-a001b6bee2dc"?>
 <!--Guidy from http://www.guidgen.com/Index.aspx -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" 
@@ -8,7 +8,7 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
      >
   
-  <Product Id="325e04e3-a644-44dd-8835-687cd4aecc2f" 
+  <Product Id="65995e51-9c12-496f-abab-6cb6691e8db1" 
            Name="$(var.ProductName)" 
            Language="1045" 
            Version="$(var.ProductVersion)" 
