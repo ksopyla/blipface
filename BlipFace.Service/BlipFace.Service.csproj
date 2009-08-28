@@ -74,9 +74,42 @@
     <Compile Include="Entities\BlipUser.cs" />
     <Compile Include="Entities\StatusesList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\StatService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\StatService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StatService\Stats.disco" />
+    <None Include="Service References\StatService\Stats.xsd" />
+    <None Include="Service References\StatService\Stats1.xsd" />
+    <None Include="Service References\StatService\Stats2.xsd" />
+    <None Include="Service References\StatService\StatServices.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StatService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StatService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\StatService\BlipFace.Service.StatService.BlipFaceVersion.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\StatService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
