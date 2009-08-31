@@ -35,7 +35,7 @@ namespace BlipFace
 
             lblVersion.Content = "BlipFace v"+ Settings.Default.Version.Substring(0,5);
             //położenie okna 
-            this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width - 20;
+            //this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width - 20;
 
 
             //ikona dla aplikacji, pozakuje się na pasku
@@ -233,7 +233,7 @@ namespace BlipFace
 
         public void StatusAdded()
         {
-            if (currentIconState == IconInTrayState.Normal)
+            if (currentIconState == IconInTrayState.Normal && IsActive == false)
             {
                 ChangeIconInTray(IconInTrayState.NewStatus);
             }

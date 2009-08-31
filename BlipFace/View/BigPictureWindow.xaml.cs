@@ -48,8 +48,8 @@ namespace BlipFace.View
         {
             InitializeComponent();
 
-            Width = SystemParameters.WorkArea.Width*0.9;
-            Height = SystemParameters.WorkArea.Height*0.9;
+            //Width = SystemParameters.WorkArea.Width*0.9;
+            //Height = SystemParameters.WorkArea.Height*0.9;
 
             //imgBigPicture.MaxHeight = SystemParameters.WorkArea.Height*0.9;
             //imgBigPicture.MaxWidth = SystemParameters.WorkArea.Width * 0.88;

@@ -1,10 +1,11 @@
 ﻿<Window x:Class="BlipFace.View.VideoViewWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:settings="clr-namespace:BlipFace.Helpers"
+    settings:WindowSettings.Save="True"
     Title="VideoViewWindow" Height="600" Width="650"
     BorderBrush="#FF686868" BorderThickness="1" 
     WindowStyle="None" 
-    WindowStartupLocation="CenterScreen"
     ResizeMode="CanResizeWithGrip"
     >
     <Grid x:Name="grPicBackground">

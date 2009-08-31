@@ -172,6 +172,7 @@
     <Compile Include="Helpers\UseageStatistics.cs" />
     <Compile Include="Helpers\IsolatedStorageAccess.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
+    <Compile Include="Helpers\WindowSettings.cs" />
     <Compile Include="Model\LatestVersionViewModel.cs" />
     <Compile Include="Model\TitleMessageViewModel.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

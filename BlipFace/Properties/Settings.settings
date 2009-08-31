@@ -32,5 +32,17 @@
     <Setting Name="ReleaseDate" Type="System.String" Scope="Application">
       <Value Profile="(Default)">2009.08.29</Value>
     </Setting>
+    <Setting Name="DefaultSound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="HostWindow" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Empty</Value>
+    </Setting>
+    <Setting Name="BigPictureWindow" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Empty</Value>
+    </Setting>
+    <Setting Name="VideoViewWindow" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Empty</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
