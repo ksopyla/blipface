@@ -195,7 +195,7 @@ namespace BlipFace
                 ChangeIconInTray(IconInTrayState.Normal);
                 if (showBallon)
                 {
-                    taskbarIcon.ShowBalloonTip("BlipFace", "BlipFace został zminimzlizowany, jeżeli chcesz go zobaczyć jeszcze raz kliknij na ikonę.", BalloonIcon.Info);
+                    taskbarIcon.ShowBalloonTip("BlipFace", "BlipFace został zminimalizowany, jeżeli chcesz go zobaczyć jeszcze raz kliknij na ikonę.", BalloonIcon.Info);
                     showBallon = false;
                 }
                 currentState = BlipFaceWindowsState.InTray;
@@ -212,7 +212,7 @@ namespace BlipFace
         /// <summary>
         /// Logika przywracania BlipFace do normalnego wyglądu
         /// </summary>
-        private void ToNormalBlipFaceWindows()
+        public void ToNormalBlipFaceWindows()
         {
             if (!IsVisible)
                 Show();

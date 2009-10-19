@@ -20,6 +20,8 @@ namespace BlipFace.View
     /// </summary>
     public partial class SettingsWindow : Window
     {
+        private string[] availableKeys = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "W", "Y", "Z" };
+
         public SettingsWindow()
         {
             InitializeComponent();
@@ -29,6 +31,12 @@ namespace BlipFace.View
             chbAlwaysInTray.IsChecked = Settings.Default.AlwaysInTray;
             chbMinimalizeToTray.IsChecked = Settings.Default.MinimalizeToTray;
             chbPlaySoundWhenNewStatus.IsChecked = Settings.Default.PlaySoundWhenNewStatus;
+
+            foreach (var key in availableKeys)
+            {
+                HotKeyComboBox.Items.Add(key);
+            }
+            HotKeyComboBox.SelectedItem = Settings.Default.HotKey.ToString();
         }
 
         private void btnCloseApp_Click(object sender, RoutedEventArgs e)
@@ -40,7 +48,7 @@ namespace BlipFace.View
         {
             if (chbAutoLogon.IsChecked.HasValue)
             {
-                Settings.Default.AutoLogon = chbAutoLogon.IsChecked.Value;                
+                Settings.Default.AutoLogon = chbAutoLogon.IsChecked.Value;
             }
 
             if (chbAutoStart.IsChecked.HasValue)
@@ -63,6 +71,9 @@ namespace BlipFace.View
             {
                 Settings.Default.PlaySoundWhenNewStatus = chbPlaySoundWhenNewStatus.IsChecked.Value;
             }
+
+            System.Windows.Forms.KeysConverter keysConverter = new System.Windows.Forms.KeysConverter();
+            Settings.Default.HotKey = (System.Windows.Forms.Keys)keysConverter.ConvertFromString(HotKeyComboBox.SelectedItem.ToString());
 
             Settings.Default.Save();
             Close();

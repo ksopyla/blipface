@@ -44,5 +44,8 @@
     <Setting Name="VideoViewWindow" Type="System.String" Scope="User">
       <Value Profile="(Default)">Empty</Value>
     </Setting>
+    <Setting Name="HotKey" Type="System.Windows.Forms.Keys" Scope="User">
+      <Value Profile="(Default)">B</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
