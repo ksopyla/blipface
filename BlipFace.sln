@@ -11,6 +11,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{BE6B08B1-ECC2-411C-B31F-6579ADD520BA}"
 	ProjectSection(SolutionItems) = preProject
 		Libs\Hardcodet.Wpf.TaskbarNotification.dll = Libs\Hardcodet.Wpf.TaskbarNotification.dll
+		Libs\ManagedWinapi.dll = Libs\ManagedWinapi.dll
 		Libs\Microsoft.Http.dll = Libs\Microsoft.Http.dll
 		Libs\Microsoft.Http.Extensions.dll = Libs\Microsoft.Http.Extensions.dll
 		Libs\obout_Calendar2_Net.dll = Libs\obout_Calendar2_Net.dll

@@ -187,5 +187,17 @@ namespace BlipFace.Properties {
                 this["HotKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HotKeyEnabled {
+            get {
+                return ((bool)(this["HotKeyEnabled"]));
+            }
+            set {
+                this["HotKeyEnabled"] = value;
+            }
+        }
     }
 }

@@ -53,6 +53,10 @@
                 <Label Style="{StaticResource LabelWhite}"
                       Content="Dzwięk gdy przyjdą nowa statusy" ToolTip="Odtwórz dźwięk wraz z przyjściem nowego statusu"  />
             </CheckBox>
+            <CheckBox x:Name="chbHotKeyEnabled" Width="300" Click="chbHotKeyEnabled_Click">
+                <Label Style="{StaticResource LabelWhite}"
+                      Content="Aktywne HotKey" ToolTip="Możliwość przywołania okna za pomocą HotKey"  />
+            </CheckBox>
             <StackPanel Orientation="Horizontal" Width="300"><Label Style="{StaticResource LabelWhite}"
                       Content="Maksymalizacja okna. CRTL + " ToolTip="Wciśnięcie kombinacji CTRL + "  />
                 <ComboBox x:Name="HotKeyComboBox"></ComboBox>

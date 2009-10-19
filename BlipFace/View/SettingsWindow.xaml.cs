@@ -31,6 +31,7 @@ namespace BlipFace.View
             chbAlwaysInTray.IsChecked = Settings.Default.AlwaysInTray;
             chbMinimalizeToTray.IsChecked = Settings.Default.MinimalizeToTray;
             chbPlaySoundWhenNewStatus.IsChecked = Settings.Default.PlaySoundWhenNewStatus;
+            chbHotKeyEnabled.IsChecked = Settings.Default.HotKeyEnabled;
 
             foreach (var key in availableKeys)
             {
@@ -72,11 +73,31 @@ namespace BlipFace.View
                 Settings.Default.PlaySoundWhenNewStatus = chbPlaySoundWhenNewStatus.IsChecked.Value;
             }
 
+            if (chbHotKeyEnabled.IsChecked.HasValue)
+            {
+                Settings.Default.HotKeyEnabled = chbHotKeyEnabled.IsChecked.Value;
+            }
+
             System.Windows.Forms.KeysConverter keysConverter = new System.Windows.Forms.KeysConverter();
             Settings.Default.HotKey = (System.Windows.Forms.Keys)keysConverter.ConvertFromString(HotKeyComboBox.SelectedItem.ToString());
 
             Settings.Default.Save();
             Close();
+        }
+
+        private void chbHotKeyEnabled_Click(object sender, RoutedEventArgs e)
+        {
+            if (chbHotKeyEnabled.IsChecked.HasValue)
+            {
+                if (chbHotKeyEnabled.IsChecked.Value)
+                {
+                    HotKeyComboBox.IsEnabled = true;
+                }
+                else
+                {
+                    HotKeyComboBox.IsEnabled = false;
+                }
+            }
         }
     }
 }

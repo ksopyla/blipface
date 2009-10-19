@@ -47,5 +47,8 @@
     <Setting Name="HotKey" Type="System.Windows.Forms.Keys" Scope="User">
       <Value Profile="(Default)">B</Value>
     </Setting>
+    <Setting Name="HotKeyEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
